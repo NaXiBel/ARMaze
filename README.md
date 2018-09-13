@@ -1,6 +1,6 @@
 # ARMaze
 
-One Paragraph of project description goes here
+Augmented reality maze made in image processing classroom
 
 ## Getting Started
 
