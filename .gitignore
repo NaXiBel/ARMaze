@@ -1,11 +1,11 @@
 # =============== #
 # Unity generated #
 # =============== #
-gui/[Tt]emp/
-gui/[Oo]bj/
-gui/[Bb]uild
-gui/[Bb]uilds/
-gui/[Ll]ibrary/
+gui/Temp/
+gui/Obj/
+gui/Build
+gui/Builds/
+gui/Library/
 gui/sysinfo.txt
 gui/*.stackdump
 gui/Assets/AssetStoreTools*
