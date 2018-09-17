@@ -30,6 +30,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 -->
 ## Authors
 
+* **Benjamin Betti** - [Fra-592](https://github.com/Fra-592)
 * **Loic Bizot** 
 * **Amélie Lupo** - [NaXiBel](https://github.com/NaXiBel)
 * **Julien Marie** - [JulienMARIE1](https://github.com/JulienMARIE1)
