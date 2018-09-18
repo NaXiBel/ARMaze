@@ -32,7 +32,6 @@ vector<Point2d> sortPoints(vector<Point2d> coord) {
 
 	return coord;
 }
-
 /// utilise la matrice intrinsèque par défault
 MazeTransform::MazeTransform() {
 
@@ -68,6 +67,14 @@ void MazeTransform::compute_homography(vector<Point2d> corners) {
 	decomposeHomographyMat(H, *K, rots, trans, normals);
 
 	cout << "homographie décomposée" << endl;
+	if (K == 0) {
+		K = new Mat(getIntrinsicMatrix());
+	}
+
+	decomposeHomographyMat(H, *K, rots, trans, normals);
+
+	cout << "homographie décomposée" << endl;
+
 }
 
 Mat MazeTransform::get_H() {
