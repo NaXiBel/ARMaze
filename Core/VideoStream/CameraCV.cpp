@@ -20,6 +20,16 @@ cv::Mat CameraCV::getFrame() {
 	return this->frame;
 }
 
+void CameraCV::displayStream() {
+	cv::namedWindow("Debug CameraCV frame");
+
+	int c = cvWaitKey(10);
+	while((char)c != 'q') {
+		cv::imshow("Debug CameraCV frame", this->getFrame());
+		int c = cvWaitKey(10);
+	}
+}
+
 byte * CameraCV::getLiveFrame() {
 	this->capture.read(this->frame);
 

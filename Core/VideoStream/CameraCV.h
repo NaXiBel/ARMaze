@@ -13,11 +13,13 @@ class CameraCV {
 	private :
 		cv::VideoCapture capture;
 		cv::Mat frame;
+
 	public :
 		CameraCV();
 		~CameraCV();
 		void openStream();
 		cv::Mat getFrame();
+		void displayStream();
 		byte * getLiveFrame();
 };
 

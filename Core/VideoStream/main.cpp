@@ -1,24 +1,29 @@
 #include "main.h"
 
-DllExport CameraCV * createCamera() {
+CameraCV * createCamera() {
+	std::cout << " Creating camera..." << std::endl;
 	return new CameraCV();
 }
 
-DllExport void disposeCamera(CameraCV * cam) {
+void disposeCamera(CameraCV * cam) {
 	if(cam != NULL) {
 		delete cam;
 		cam = NULL;
+		std::cout << "Camera deleted." << std::endl;
 	}
 }
 
-DllExport void openStream(CameraCV * cam) {
+void openStream(CameraCV * cam) {
 	cam->openStream();
+	std::cout << "Camera stream opened." << std::endl;
 }
 
-DllExport byte * getLiveFrame(CameraCV * cam) {
+void displayStream(CameraCV * cam) {
+	cam->displayStream();
+	std::cout << "Frame displayed." << std::endl;
+}
+
+byte * getLiveFrame(CameraCV * cam) {
 	return cam->getLiveFrame();
 }
 
-DllExport TestDLL * createTest() {
-	return new TestDLL();
-}

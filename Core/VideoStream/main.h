@@ -11,6 +11,5 @@
 DllExport CameraCV * createCamera();
 DllExport void disposeCamera(CameraCV * cam);
 DllExport void openStream(CameraCV * cam);
+DllExport void displayStream(CameraCV * cam);
 DllExport byte * getLiveFrame(CameraCV * cam);
-
-DllExport TestDLL * createTest();
