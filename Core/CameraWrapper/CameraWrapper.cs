@@ -8,9 +8,9 @@ namespace Wrapper {
             //const string dllpath = @"C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll";
             [DllImport(dllpath, EntryPoint = "createCamera")]static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")]static public extern void DisposeCameraInput(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "openStream")]static public extern void OpenStream(IntPtr pCam, int id);
+            [DllImport(dllpath, EntryPoint = "openStream")]static public extern void OpenStream(IntPtr pCam, int id = 0);
             [DllImport(dllpath, EntryPoint = "displayStream")] static public extern void DisplayStream(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "getLiveFrame")]static public extern byte GetLiveFrame(IntPtr pCam);
+            [DllImport(dllpath, EntryPoint = "getLiveFrame")]static public extern IntPtr GetLiveFrame(IntPtr pCam, out int sizeofMat);
             [DllImport(dllpath, EntryPoint = "getWidth")]static public extern int GetWidth(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "getHeight")]static public extern int GetHeight(IntPtr pCam);
         }
@@ -36,8 +36,13 @@ namespace Wrapper {
             embededFunctions.OpenStream(this.camera, id);
         }
 
-        public byte GetCameraFrame() {
-            return embededFunctions.GetLiveFrame(this.camera);
+        public byte[] GetCameraFrame() {
+            int sizeofMat;
+            IntPtr buffer = embededFunctions.GetLiveFrame(this.camera, out sizeofMat); 
+            byte[] bytes = new byte[sizeofMat];
+            Marshal.Copy(buffer, bytes, 0, sizeofMat);
+
+            return bytes;
         }
 
         public int GetFrameWidth() {
@@ -56,19 +61,20 @@ namespace Wrapper {
             embededFunctions.DisposeCameraInput(this.camera);
         }
 
-        //static void Main(string[] args) {
-        //    Console.WriteLine("Testing VideoStream.dll...");
-        //    IntPtr test = embededFunctions.CreateCameraInput();
-        //    embededFunctions.OpenStream(test);
-        //    embededFunctions.DisplayStream(test);
+        static void Main(string[] args) {
+            //Console.WriteLine("Testing VideoStream.dll...");
+            //IntPtr test = embededFunctions.CreateCameraInput();
+            //embededFunctions.OpenStream(test);
+            //embededFunctions.DisplayStream(test);
 
-        //    Console.WriteLine("Testing Wrapper...");
-        //    CameraWrapper wrap = CameraWrapper.GetInstance();
-        //    wrap.InitCamera();
-        //    wrap.OpenVideoStream();
-        //    wrap.DisplayCameraStream();
+            Console.WriteLine("Testing Wrapper...");
+            CameraWrapper wrap = CameraWrapper.GetInstance();
+            wrap.InitCamera();
+            wrap.OpenVideoStream();
+            byte[] test = wrap.GetCameraFrame();
+            //wrap.DisplayCameraStream();
 
-        //    Console.ReadKey();
-        //}
+            Console.ReadKey();
+        }
     }
 }

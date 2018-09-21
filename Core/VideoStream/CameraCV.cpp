@@ -1,7 +1,7 @@
 #include "CameraCV.h"
 
 CameraCV::CameraCV() {
-	//this->capture = cv::VideoCapture();
+	this->capture = cv::VideoCapture();
 }
 
 CameraCV::~CameraCV() {
@@ -38,12 +38,10 @@ void CameraCV::displayStream() {
 	}
 }
 
-byte * CameraCV::getLiveFrame() {
+uchar * CameraCV::getLiveFrame(int * sizeofMat) {
 	this->capture.read(this->frame);
+	cv::cvtColor(this->frame, this->frame, CV_BGR2BGRA, 4);
+	*sizeofMat = this->frame.rows * this->frame.cols * 4; //this->frame.total() * this->frame.elemSize();
 
-	int size = this->frame.total() * this->frame.elemSize();
-	byte * bytes = new byte[size];  // you will have to delete[] that later
-	std::memcpy(bytes, this->frame.data, size * sizeof(byte));
-
-	return bytes;
+	return this->frame.data;
 }

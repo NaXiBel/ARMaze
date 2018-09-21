@@ -1,6 +1,6 @@
 #pragma once
 #ifdef _WIN32
-#define DllExport  extern "C" __declspec(dllexport)
+#define DllExport extern "C" __declspec(dllexport)
 #else
 #define DllExport extern "C"
 #endif
@@ -13,4 +13,4 @@ DllExport void openStream(CameraCV * cam, int id);
 DllExport void displayStream(CameraCV * cam);
 DllExport int getWidth(CameraCV * cam);
 DllExport int getHeight(CameraCV * cam);
-DllExport byte * getLiveFrame(CameraCV * cam);
+DllExport uchar * getLiveFrame(CameraCV * cam, int * sizeofMat);

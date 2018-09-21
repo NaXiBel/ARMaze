@@ -1,7 +1,7 @@
 #include "main.h"
 
 CameraCV * createCamera() {
-	std::cout << " Creating camera..." << std::endl;
+	std::cout << "Creating camera..." << std::endl;
 	return new CameraCV();
 }
 
@@ -35,7 +35,6 @@ int getHeight(CameraCV * cam) {
 	return height;
 }
 
-byte * getLiveFrame(CameraCV * cam) {
-	return cam->getLiveFrame();
+uchar * getLiveFrame(CameraCV * cam, int * sizeofMat) {
+	return cam->getLiveFrame(sizeofMat);
 }
-

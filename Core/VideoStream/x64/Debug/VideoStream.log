@@ -1,5 +1,5 @@
-﻿  CameraCV.cpp
-c:\users\alexm\documents\armaze\core\videostream\cameracv.cpp(44): warning C4267: 'initialisation' : conversion de 'size_t' en 'int', perte possible de données
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets(76,5): warning : L'accès au chemin d'accès 'c:\users\alexm\documents\armaze\core\x64\debug\videostream.dll' est refusé.
+  CameraCV.cpp
   main.cpp
   TestStream.cpp
   Génération de code en cours...

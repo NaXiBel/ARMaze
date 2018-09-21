@@ -22,7 +22,7 @@ class CameraCV {
 		int getWidth();
 		int getHeigth();
 		void displayStream();
-		byte * getLiveFrame();
+		uchar * getLiveFrame(int * sizeofMat);
 };
 
 #endif
