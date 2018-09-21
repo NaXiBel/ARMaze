@@ -7,8 +7,8 @@ CameraCV::CameraCV() {
 CameraCV::~CameraCV() {
 }
 
-void CameraCV::openStream() {
-	this->capture.open(0);
+void CameraCV::openStream(int inputId /* = 0 */) {
+	this->capture.open(inputId);
 	if(!this->capture.isOpened()) {
 		printf("--(!)Error opening video capture\n");
 		return;
@@ -18,6 +18,14 @@ void CameraCV::openStream() {
 cv::Mat CameraCV::getFrame() {
 	this->capture.read(this->frame);
 	return this->frame;
+}
+
+int CameraCV::getWidth() {
+	return this->frame.cols;
+}
+
+int CameraCV::getHeigth() {
+	return this->frame.rows;
 }
 
 void CameraCV::displayStream() {

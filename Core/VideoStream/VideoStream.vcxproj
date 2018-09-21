@@ -21,13 +21,11 @@
   <ItemGroup>
     <ClCompile Include="CameraCV.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TestDLL.cpp" />
     <ClCompile Include="TestStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraCV.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="TestDLL.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -90,7 +88,9 @@
       <AdditionalIncludeDirectories>C:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)..\gui\$(TargetName)$(TargetExt)" /Y</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)..\gui\$(TargetName)$(TargetExt)" /Y
+copy "$(SolutionDir)$(TargetName)\opencv_world343.dll" "$(SolutionDir)..\gui\opencv_world343.dll" /Y
+copy "$(SolutionDir)$(TargetName)\opencv_world343d.dll" "$(SolutionDir)..\gui\opencv_world343d.dll" /Y</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>C:\Users\alexm\Documents\ARMaze\Core\VideoStream\opencv_world343.lib;C:\Users\alexm\Documents\ARMaze\Core\VideoStream\opencv_world343d.lib;%(AdditionalDependencies)</AdditionalDependencies>

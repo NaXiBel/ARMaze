@@ -17,8 +17,10 @@ class CameraCV {
 	public :
 		CameraCV();
 		~CameraCV();
-		void openStream();
+		void openStream(int inputId = 0);
 		cv::Mat getFrame();
+		int getWidth();
+		int getHeigth();
 		void displayStream();
 		byte * getLiveFrame();
 };

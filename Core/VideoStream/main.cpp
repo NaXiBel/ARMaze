@@ -13,14 +13,26 @@ void disposeCamera(CameraCV * cam) {
 	}
 }
 
-void openStream(CameraCV * cam) {
-	cam->openStream();
+void openStream(CameraCV * cam, int id /* = 0 */) {
+	cam->openStream(id);
 	std::cout << "Camera stream opened." << std::endl;
 }
 
 void displayStream(CameraCV * cam) {
 	cam->displayStream();
 	std::cout << "Frame displayed." << std::endl;
+}
+
+int getWidth(CameraCV * cam) {
+	int width = cam->getWidth();
+	std::cout << "width : " << width << std::endl;
+	return width;
+}
+
+int getHeight(CameraCV * cam) {
+	int height = cam->getHeigth();
+	std::cout << "width : " << height << std::endl;
+	return height;
 }
 
 byte * getLiveFrame(CameraCV * cam) {

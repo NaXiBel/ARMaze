@@ -1,4 +1,10 @@
-﻿  main.cpp
-     CrÚation de la bibliothÞque C:\Users\alexm\Documents\testclone\Core\x64\Debug\VideoStream.lib et de l'objet C:\Users\alexm\Documents\testclone\Core\x64\Debug\VideoStream.exp
-  VideoStream.vcxproj -> C:\Users\alexm\Documents\testclone\Core\x64\Debug\VideoStream.dll
+﻿  CameraCV.cpp
+c:\users\alexm\documents\armaze\core\videostream\cameracv.cpp(44): warning C4267: 'initialisation' : conversion de 'size_t' en 'int', perte possible de données
+  main.cpp
+  TestStream.cpp
+  Génération de code en cours...
+     Création de la bibliothèque C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.lib et de l'objet C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.exp
+  VideoStream.vcxproj -> C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll
+          1 fichier(s) copié(s).
+          1 fichier(s) copié(s).
           1 fichier(s) copié(s).
