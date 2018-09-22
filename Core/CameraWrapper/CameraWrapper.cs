@@ -37,8 +37,7 @@ namespace Wrapper {
         }
 
         public byte[] GetCameraFrame() {
-            int sizeofMat;
-            IntPtr buffer = embededFunctions.GetLiveFrame(this.camera, out sizeofMat); 
+            IntPtr buffer = embededFunctions.GetLiveFrame(this.camera, out int sizeofMat);
             byte[] bytes = new byte[sizeofMat];
             Marshal.Copy(buffer, bytes, 0, sizeofMat);
 

@@ -1,5 +1,4 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets(76,5): warning : L'accès au chemin d'accès 'c:\users\alexm\documents\armaze\core\x64\debug\videostream.dll' est refusé.
-  CameraCV.cpp
+﻿  CameraCV.cpp
   main.cpp
   TestStream.cpp
   Génération de code en cours...
