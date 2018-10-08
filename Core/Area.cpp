@@ -44,7 +44,7 @@ bool Area::buildEdge(const Mat & canny) {
 
 	double max = 0;
 	for (int index = 0; index < contours.size(); ++index) {
-		if (fabs(contourArea(Mat(contours[index]))) <= 1000) {
+		if (fabs(contourArea(Mat(contours[index]))) <= 1800) {
 			continue;
 		}
 		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);

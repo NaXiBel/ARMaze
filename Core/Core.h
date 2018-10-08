@@ -21,13 +21,14 @@ class Core {
 	private:
 		VideoCapture m_Capture;
 		Mat			 m_Frame;
+		Mat			 m_MaskTracker;
 		Area         m_Area;
 		bool		 m_IsBuilt;
 		Rect2d       m_TrackBox;
 
 		void Video();
 		void BuildMaze();
-		void TrackingArea(Ptr<Tracker> tracker);
+		void TrackingArea();
 		
 	public:
 		Core();

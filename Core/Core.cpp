@@ -29,46 +29,21 @@ void Core::BuildMaze() {
 	int Xmax = INT_MIN;
 	int Ymin = INT_MAX;
 	int Ymax = INT_MIN;
-	int width = m_Frame.cols / 2;
-	int height = m_Frame.rows / 2;
 
-	std::cout << "SIZE : " << width << " " << height << std::endl;
 
-	// create first mask with min area
-	Point p1(width - (width / 2 + width / 4), height - (height / 2 + height / 4));
-	Point p2(width + (width / 2 + width / 4), height - (height / 2 + height / 4));
-	Point p3(width + (width / 2 + width / 4), height + (height / 2 + height / 4));
-	Point p4(width - (width / 2 + width / 4), height + (height / 2 + height / 4));
 
-	line(m_Frame, p1, p2, Scalar(0, 0, 0), 2);
-	line(m_Frame, p2, p3, Scalar(0, 0, 0), 2);
-	line(m_Frame, p3, p4, Scalar(0, 0, 0), 2);
-	line(m_Frame, p4, p1, Scalar(0, 0, 0), 2);
-
-	Mat minMask = Mat::zeros(m_Frame.rows, m_Frame.cols, CV_8UC1);
-	std::vector <std::vector <Point>> points;
-	std::vector <Point> mins;
-	mins.push_back(p1);
-	mins.push_back(p2);
-	mins.push_back(p3);
-	mins.push_back(p4);
-	points.push_back(mins);
-	drawContours(minMask, points, -1, Scalar(255), -1);
-	m_Frame.copyTo(minMask, minMask);
-
-	Mat dst = minMask.clone(); // ONLY FOR TEST 
+	Mat dst = m_Frame.clone(); // ONLY FOR TEST 
 
 	m_Area = Area();
 
 	bool isOk = true;
-	if (minMask.empty()) {
+	if (m_Frame.empty()) {
 		std::cout << "(!) No captured frame -- Break!" << std::endl;
 		return;
 	}
-	imshow("Capture", minMask); // display video 
-	cvtColor(minMask, minMask, CV_BGR2GRAY); // convert gray 
+	cvtColor(m_Frame, m_Frame, CV_BGR2GRAY); // convert gray 
 	Mat canny;
-	Canny(minMask, canny, 100, 200, 3); // NEED THRESHOLD
+	Canny(m_Frame, canny, 100, 200, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(7, 7));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -92,8 +67,8 @@ void Core::BuildMaze() {
 			}
 
 			// get Rect2d of area, for tracking 
-			Rect2d bbox(Xmin-15, Ymin-15, abs((Xmax-Xmin)), abs((Ymax-Ymin)));
-			m_TrackBox = bbox;
+			//Rect2d bbox(Xmin-15, Ymin-15, abs((Xmax-Xmin)), abs((Ymax-Ymin)));
+			//m_TrackBox = bbox;
 		}
 		std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[1] << std::endl;
 		std::cout << m_Area.getArea()[1] << " " << m_Area.getArea()[2] << std::endl;
@@ -120,6 +95,7 @@ void Core::BuildMaze() {
 		pointMask.push_back(newArea);
 		drawContours(mask, pointMask, -1, Scalar(255), -1);
 		canny.copyTo(mask, mask);
+
 
 		// find start/end
 		isOk = isOk & m_Area.buildStartEnd(mask, Xmin, Xmax, Ymin, Ymax);
@@ -166,31 +142,88 @@ void Core::BuildMaze() {
 	}
 
 }
-void Core::TrackingArea(Ptr<Tracker> tracker) {
-	// Start timer
-	double timer = (double)getTickCount();
+void Core::TrackingArea() {
 
-	// Update the tracking result
-	bool ok = tracker->update(m_Frame, m_TrackBox);
+	Mat dst = m_Frame.clone(); // ONLY FOR TEST 
 
-	// Calculate Frames per second (FPS)
-	float fps = getTickFrequency() / ((double)getTickCount() - timer);
-
-	if (ok)
-	{
-		// Tracking success : Draw the tracked object
-		rectangle(m_Frame, m_TrackBox, Scalar(255, 0, 0), 2, 1);
-		
+	if (m_Frame.empty()) {
+		std::cout << "(!) No captured frame -- Break!" << std::endl;
+		return;
 	}
-	else
-	{
-		// Tracking failure detected.
-		putText(m_Frame, "Tracking failure detected", Point(100, 80), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 0, 255), 2);
+	Mat canny;
+	Canny(m_Frame, canny, 100, 200, 3); // NEED THRESHOLD
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(7, 7));
+	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
+
+	// initialisation 
+	int Xmin = INT_MAX;
+	int Xmax = INT_MIN;
+	int Ymin = INT_MAX;
+	int Ymax = INT_MIN;
+
+
+	for (int i = 0; i < m_Area.getArea().size(); ++i) {
+		if (m_Area.getArea()[i].x < Xmin) {
+			Xmin = m_Area.getArea()[i].x;
+		}
+		else if (m_Area.getArea()[i].x > Xmax) {
+			Xmax = m_Area.getArea()[i].x;
+		}
+		if (m_Area.getArea()[i].y < Ymin) {
+
+			Ymin = m_Area.getArea()[i].y;
+		}
+		else if (m_Area.getArea()[i].y > Ymax) {
+			Ymax = m_Area.getArea()[i].y;
+		}
 	}
+	Mat mask = Mat::zeros(canny.rows, canny.cols, CV_8UC1);
+	std::vector <std::vector <Point>> pointMask2;
+	std::vector <Point> newArea2;
+	newArea2.push_back(Point(Xmin-50, Ymin-50));
+	newArea2.push_back(Point(Xmax+50, Ymin-50));
+	newArea2.push_back(Point(Xmax+50, Ymax+50));
+	newArea2.push_back(Point(Xmin-50, Ymax+50));
+	pointMask2.push_back(newArea2);
+	drawContours(mask, pointMask2, -1, Scalar(255), -1);
+	
+	canny.copyTo(mask, mask);
+
+	imshow("MaskTracker", mask);
+
+	m_Area.buildEdge(mask);
+
+	// ONLY TEST DISPLAY AREA
+	line(dst, m_Area.getArea()[0], m_Area.getArea()[1], Scalar(133, 255, 50), 2);
+	line(dst, m_Area.getArea()[1], m_Area.getArea()[2], Scalar(133, 255, 50), 2);
+	line(dst, m_Area.getArea()[2], m_Area.getArea()[3], Scalar(133, 255, 50), 2);
+	line(dst, m_Area.getArea()[0], m_Area.getArea()[3], Scalar(133, 255, 50), 2);
+	imshow("MaskTracker", dst);
+	// create mask for tracker area coord 
+
+		// Start timer
+		/*double timer = (double)getTickCount();
+
+		// Update the tracking result
+		bool ok = tracker->update(m_Frame, m_TrackBox);
+
+		// Calculate Frames per second (FPS)
+		float fps = getTickFrequency() / ((double)getTickCount() - timer);
+
+		if (ok)
+		{
+			// Tracking success : Draw the tracked object
+			rectangle(m_Frame, m_TrackBox, Scalar(255, 0, 0), 2, 1);
+
+		}
+		else
+		{
+			// Tracking failure detected.
+			putText(m_Frame, "Tracking failure detected", Point(100, 80), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 0, 255), 2);
+		}
 
 
-	// Display frame.
-	imshow("Tracking", m_Frame);
+		// Display frame.*/
 
 }
 
@@ -201,28 +234,28 @@ void Core::Start() {
 	}
 
 	// declares all required variables
-	Rect2d roi;
+//	Rect2d roi;
 	// create a tracker object
-	TrackerKCF::Params p;
-	p.desc_npca = COLOR_BayerBG2BGR;
-	p.desc_pca = COLOR_BayerBG2BGR; // set to CN by default !
-	Ptr<Tracker> tracker = TrackerKCF::create(p);
+//	TrackerKCF::Params p;
+//	p.desc_npca = COLOR_BayerBG2BGR;
+//	p.desc_pca = COLOR_BayerBG2BGR; // set to CN by default !
+//	Ptr<Tracker> tracker = TrackerKCF::create(p);
 	// Define initial bounding box 
 	//Rect2d bbox(m_Area.getArea()[0], 23, 86, 32);
 
 	// Uncomment the line below to select a different bounding box 
-	m_Capture.read(m_Frame);
+	//m_Capture.read(m_Frame);
 	//bbox = selectROI(m_Frame, false); 
 	// Display bounding box. 
 
 	//rectangle(m_Frame, bbox, Scalar(255, 0, 0), 2, 1);
 
-	imshow("Tracking", m_Frame);
-	tracker->init(m_Frame, m_TrackBox);
+	//imshow("Tracking", m_Frame);
+	//tracker->init(m_Frame, m_TrackBox);
 
 	while (m_Capture.read(m_Frame))
 	{
-		TrackingArea(tracker);
+		TrackingArea();
 		// Exit if ESC pressed.
 		int k = waitKey(1);
 		if (k == 27)
