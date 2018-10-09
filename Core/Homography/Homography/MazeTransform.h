@@ -5,20 +5,18 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <vector>
 #include <string>
 
 using namespace std;
 using namespace cv;
 
-double dimX = 297.;
-double dimY = 210.;
-int FX = 1200;
-int FY = 1200;
-int X0 = 320;
-int Y0 = 240;
+double dimX = 1.41428571429;
+double dimY = 1.00000000000;
+double FX = 640.;
+double FY = 480.;
+double X0 = 320.;
+double Y0 = 240.;
 
 class MazeTransform
 {
@@ -26,56 +24,33 @@ class MazeTransform
 private:
 
 	Mat H;
-	Mat* K;
-	vector<Mat> rots;
-	vector<Mat> trans;
-	vector<Mat> normals;
+	Mat K;
+	Mat rots;
+	Mat trans;
 
 public:
 
 	MazeTransform();
-	MazeTransform(Mat intrinsicMatrix);
+	MazeTransform(Mat intrinsic_matrix);
 
 	~MazeTransform();
 
-	void compute_homography(vector<Point2d> corners);
+	void compute_transform(vector<Point2d> corners);
 	Mat get_H();
-	vector<Mat> get_rots();
-	vector<Mat> get_trans();
-	vector<Mat> get_normals();
+	Mat get_rots();
+	Mat get_trans();
 
 };
 
-void MazeTransform::compute_homography(vector<Point2d> corners) {
+#ifdef _WIN32
+#define DllExport extern "C" __declspec(dllexport)
+#else
+#define DllExport extern "C"
+#endif
 
-	corners = sortPoints(corners);
-
-	vector<Point2d> a4points;
-	a4points.push_back(Point2d(0, 0));
-	a4points.push_back(Point2d(dimX, 0));
-	a4points.push_back(Point2d(dimX, dimY));
-	a4points.push_back(Point2d(0, dimY));
-
-	H = findHomography(a4points, corners);
-
-	decomposeHomographyMat(H, getIntrinsicMatrix(), rots, trans, normals);
-
-	cout << "homographie décomposée" << endl;
-
-}
-
-Mat MazeTransform::get_H() {
-	return H;
-}
-
-vector<Mat> MazeTransform::get_rots() {
-	return rots;
-}
-
-vector<Mat> MazeTransform::get_trans() {
-	return trans;
-}
-
-vector<Mat> MazeTransform::get_normals() {
-	return normals;
-}
+DllExport MazeTransform* createMazeTransform();
+DllExport MazeTransform* createMazeTransformIM(double** intrinsic_matrix);
+DllExport void compute_transform(double corners[][2], MazeTransform* mazeTransform);
+DllExport double** get_H(MazeTransform* mazeTransform);
+DllExport double** get_rots(MazeTransform* mazeTransform);
+DllExport double** get_trans(MazeTransform* mazeTransform);

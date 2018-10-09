@@ -32,27 +32,19 @@ vector<Point2d> sortPoints(vector<Point2d> coord) {
 
 	return coord;
 }
-/// utilise la matrice intrinsèque par défault
+
 MazeTransform::MazeTransform() {
-
-	K = new Mat(getIntrinsicMatrix());
+	K = getIntrinsicMatrix();
 }
-
-/// utiliser la matrice intrinsèque en argument
-MazeTransform::MazeTransform(Mat intrinsicMatrix) {
-
-	K = new Mat(intrinsicMatrix);
+MazeTransform::MazeTransform(Mat intrinsic_matrix) {
+	K = intrinsic_matrix;
 }
 
 MazeTransform::~MazeTransform() {
 
-	if (K != 0) {
-		delete K;
-		K = 0;
-	}
 }
 
-void MazeTransform::compute_homography(vector<Point2d> corners) {
+void MazeTransform::compute_transform(vector<Point2d> corners) {
 
 	corners = sortPoints(corners);
 
@@ -64,14 +56,9 @@ void MazeTransform::compute_homography(vector<Point2d> corners) {
 
 	H = findHomography(a4points, corners);
 
-	decomposeHomographyMat(H, *K, rots, trans, normals);
+	Mat distCoeffs = Mat::zeros(3, 4, CV_64FC1);
 
-	cout << "homographie décomposée" << endl;
-	if (K == 0) {
-		K = new Mat(getIntrinsicMatrix());
-	}
-
-	decomposeHomographyMat(H, *K, rots, trans, normals);
+	solvePnP(a4points, corners, getIntrinsicMatrix(), distCoeffs, rots, trans);
 
 	cout << "homographie décomposée" << endl;
 
@@ -81,14 +68,80 @@ Mat MazeTransform::get_H() {
 	return H;
 }
 
-vector<Mat> MazeTransform::get_rots() {
+Mat MazeTransform::get_rots() {
 	return rots;
 }
 
-vector<Mat> MazeTransform::get_trans() {
+Mat MazeTransform::get_trans() {
 	return trans;
 }
 
-vector<Mat> MazeTransform::get_normals() {
-	return normals;
+MazeTransform* createMazeTransform() {
+	return new MazeTransform();
+}
+
+MazeTransform* createMazeTransformIM(double** intrinsic_matrix) {
+	Mat intrinsic_matrix_mat = Mat(3, 3, CV_64FC1);
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			intrinsic_matrix_mat.at<double>(i, j) = intrinsic_matrix[i][j];
+	return new MazeTransform(intrinsic_matrix_mat);
+}
+
+void compute_transform(double corners[][2], MazeTransform* mazeTransform) {
+
+	vector<Point2d> points;
+
+	for (int i = 0; i < 4; i++) {
+		Point2d point = Point2d(corners[i][0], corners[i][1]);
+		points.push_back(point);
+	}
+
+	mazeTransform->compute_transform(points);
+		
+}
+
+double** get_H(MazeTransform* mazeTransform) {
+
+	Mat H = mazeTransform->get_H();
+
+	double** res = new double*[3];
+	for (int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for (int j = 0; j < 3; j++)
+			res[i][j] = H.at<double>(i, j);
+	}
+
+	return res;
+
+}
+
+double** get_rots(MazeTransform* mazeTransform) {
+
+	Mat rots = mazeTransform->get_rots();
+
+	double** res = new double*[3];
+	for (int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for (int j = 0; j < 3; j++)
+			res[i][j] = rots.at<double>(i, j);
+	}
+
+	return res;
+
+}
+
+double** get_trans(MazeTransform* mazeTransform) {
+
+	Mat trans = mazeTransform->get_trans();
+
+	double** res = new double*[3];
+	for (int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for (int j = 0; j < 3; j++)
+			res[i][j] = trans.at<double>(i, j);
+	}
+
+	return res;
+
 }
