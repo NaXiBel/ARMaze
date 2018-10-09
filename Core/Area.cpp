@@ -15,6 +15,16 @@ std::vector<Point> Area::getStart() const
 	return m_Start;
 }
 
+int Area::getSizeX() const
+{
+	return m_SizeX;
+}
+
+int Area::getSizeY() const
+{
+	return m_SizeY;
+}
+
 std::vector<Point> Area::getEnd() const
 {
 	return m_End;
@@ -35,6 +45,16 @@ void Area::setEnd(const std::vector <Point> & end) {
 	// calcul center
 }
 
+void Area::setSizeX(const int & sizeX) {
+	m_SizeX = sizeX;
+	// calcul center
+}
+void Area::setSizeY(const int & sizeY) {
+	m_SizeY = sizeY;
+	// calcul center
+}
+
+
 bool Area::buildEdge(const Mat & canny) {
 	// find all edge
 	std::vector<std::vector<Point> > contours;
@@ -44,7 +64,7 @@ bool Area::buildEdge(const Mat & canny) {
 
 	double max = 0;
 	for (int index = 0; index < contours.size(); ++index) {
-		if (fabs(contourArea(Mat(contours[index]))) <= 1800) {
+		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
 			continue;
 		}
 		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
@@ -75,7 +95,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 		// Approximate contour with accuracy proportional
 		// to the contour perimeter
 
-		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.1, true);
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.05, true);
 
 		if (approx.size() == 3)
 		{
@@ -123,7 +143,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 
 bool Area::buildWalls(const Mat & mask) {
 	std::vector<Vec4i> Hugue;
-	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 50, 58, 10);
+	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 30, 15, 10);
 
 	std::vector<Point> square = m_Start;
 
@@ -141,8 +161,8 @@ bool Area::buildWalls(const Mat & mask) {
 		filteredPolygons = FilterInside(filteredPolygons, polygons[i], m_Area);
 		filteredPolygons.push_back(polygons[i]);
 	}
-
-	if (filteredPolygons.empty())
+	m_Wall = filteredPolygons;
+	if (filteredPolygons.empty() || m_Wall.size() < 3)
 		return false;
 	return true;
 }
@@ -234,4 +254,42 @@ std::vector<std::vector<Point>> Area::FilterInside(std::vector<std::vector<Point
 	}
 
 	return(result);
+}
+
+
+
+
+bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax) {
+	std::vector<std::vector<Point> > contours;
+	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+	std::vector<Point> approx;
+	// find start and end
+	for (int i = 0; i < contours.size(); i++)
+	{
+		if (fabs(contourArea(Mat(contours[i]))) <= 2000) {
+			continue;
+		}
+
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.1, true);
+
+
+
+		if (approx.size() == 4)
+		{
+			bool isOk = true;
+			for (int index = 0; index < approx.size(); ++index) {
+				if ((approx[index].x < Xmin && approx[index].x > Xmin - 25)|| (approx[index].x > Xmax && approx[index].x < Xmax + 25)) {
+					isOk = false;
+				}
+				if (approx[index].y < Ymin || approx[index].y > Ymax) {
+					isOk = false;
+				}
+			}
+			if (isOk) {
+				m_Area = approx;
+			}
+			
+		}
+	}
+	return true;
 }

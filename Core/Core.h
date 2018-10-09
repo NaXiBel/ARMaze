@@ -29,7 +29,7 @@ class Core {
 		void Video();
 		void BuildMaze();
 		void TrackingArea();
-		
+
 	public:
 		Core();
 		void Start();
