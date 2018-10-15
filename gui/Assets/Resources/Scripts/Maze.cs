@@ -5,27 +5,28 @@ using UnityEngine;
 public class Maze : MonoBehaviour {
 
 	private Ball ball = null;
+	private float epsilon = 1.0f;
 	private void RotateMazeTest() {
 		Vector3 eulerRotation = this.transform.eulerAngles;
 
 		if(Input.GetKey("left")) {
 			this.ball.WakeUp();
-			this.transform.Rotate(eulerRotation.x, eulerRotation.y, eulerRotation.z + 5.0f);
+			this.transform.Rotate(0.0f, 0.0f, epsilon);
 		}
 
 		if(Input.GetKey("right")) {
 			this.ball.WakeUp();
-			this.transform.Rotate(eulerRotation.x, eulerRotation.y, eulerRotation.z - 5.0f);
+			this.transform.Rotate(0.0f, 0.0f, -epsilon);
 		}
 
 		if(Input.GetKey("up")) {
 			this.ball.WakeUp();
-			this.transform.Rotate(eulerRotation.x + 5.0f, eulerRotation.y, eulerRotation.z);
+			this.transform.Rotate(epsilon, 0.0f, 0.0f);
 		}
 
 		if(Input.GetKey("down")) {
 			this.ball.WakeUp();
-			this.transform.Rotate(eulerRotation.x - 5.0f, eulerRotation.y, eulerRotation.z);
+			this.transform.Rotate(-epsilon, 0.0f, 0.0f);
 		}
 	}
 	// Use this for initialization
