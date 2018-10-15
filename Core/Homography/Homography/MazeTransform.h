@@ -11,12 +11,12 @@
 using namespace std;
 using namespace cv;
 
-double dimX = 1.41428571429;
-double dimY = 1.00000000000;
-double FX = 640.;
-double FY = 480.;
-double X0 = 320.;
-double Y0 = 240.;
+static double dimX = 1.41428571429;
+static double dimY = 1.00000000000;
+static double FX = 640.;
+static double FY = 480.;
+static double X0 = 320.;
+static double Y0 = 240.;
 
 class MazeTransform
 {
@@ -25,7 +25,7 @@ private:
 
 	Mat H;
 	Mat K;
-	Mat rots;
+	Mat rot;
 	Mat trans;
 
 public:

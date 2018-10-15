@@ -119,10 +119,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MazeInfos.h" />
     <ClInclude Include="MazeTransform.h" />
+    <ClInclude Include="TransformTracking.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MazeInfos.cpp" />
     <ClCompile Include="MazeTransform.cpp" />
+    <ClCompile Include="TransformTracking.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

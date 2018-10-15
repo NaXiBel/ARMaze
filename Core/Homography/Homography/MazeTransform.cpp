@@ -58,7 +58,7 @@ void MazeTransform::compute_transform(vector<Point2d> corners) {
 
 	Mat distCoeffs = Mat::zeros(3, 4, CV_64FC1);
 
-	solvePnP(a4points, corners, getIntrinsicMatrix(), distCoeffs, rots, trans);
+	solvePnP(a4points, corners, getIntrinsicMatrix(), distCoeffs, rot, trans);
 
 	cout << "homographie décomposée" << endl;
 
@@ -69,7 +69,7 @@ Mat MazeTransform::get_H() {
 }
 
 Mat MazeTransform::get_rots() {
-	return rots;
+	return rot;
 }
 
 Mat MazeTransform::get_trans() {
