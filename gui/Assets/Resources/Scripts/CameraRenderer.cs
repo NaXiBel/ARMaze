@@ -11,7 +11,7 @@ public class CameraRenderer : MonoBehaviour {
 	void Start() {
         this.camera = CameraWrapper.GetInstance();
         this.camera.InitCamera();
-        this.camera.OpenVideoStream(1);
+        this.camera.OpenVideoStream(0);
         this.frame = this.camera.GetCameraFrame();
         this.texture = new Texture2D(camera.GetFrameWidth(), camera.GetFrameHeight(), TextureFormat.BGRA32, false);
         this.transform.localScale = new Vector3(camera.GetFrameWidth(), camera.GetFrameHeight(), 1);

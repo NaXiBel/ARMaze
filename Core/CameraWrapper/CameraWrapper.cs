@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 namespace Wrapper {
     public class CameraWrapper {
         public struct embededFunctions {
-            const string dllpath = "./VideoStream.dll";
-            //const string dllpath = @"C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll";
+            //const string dllpath = "./VideoStream.dll";
+            const string dllpath = @"C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll";
             [DllImport(dllpath, EntryPoint = "createCamera")]static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")]static public extern void DisposeCameraInput(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "openStream")]static public extern void OpenStream(IntPtr pCam, int id = 0);
@@ -69,9 +69,9 @@ namespace Wrapper {
             Console.WriteLine("Testing Wrapper...");
             CameraWrapper wrap = CameraWrapper.GetInstance();
             wrap.InitCamera();
-            wrap.OpenVideoStream();
+            wrap.OpenVideoStream(0);
             byte[] test = wrap.GetCameraFrame();
-            //wrap.DisplayCameraStream();
+            wrap.DisplayCameraStream();
 
             Console.ReadKey();
         }
