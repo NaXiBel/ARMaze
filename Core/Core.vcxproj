@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\ARMaze\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opencv_world343.lib;opencv_world343d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -125,10 +125,16 @@
   <ItemGroup>
     <ClInclude Include="Area.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Homography\Homography\MazeInfos.h" />
+    <ClInclude Include="Homography\Homography\MazeTransform.h" />
+    <ClInclude Include="Homography\Homography\TransformTracking.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Area.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Homography\Homography\MazeInfos.cpp" />
+    <ClCompile Include="Homography\Homography\MazeTransform.cpp" />
+    <ClCompile Include="Homography\Homography\TransformTracking.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

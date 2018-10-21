@@ -133,8 +133,6 @@ void Core::BuildMaze() {
 
 	}
 
-
-
 	cv::imshow("Canny", canny);
 
 	int c = waitKey(10);
@@ -144,6 +142,9 @@ void Core::BuildMaze() {
 	}
 
 }
+
+
+
 void Core::TrackingArea() {
 
 	Mat dst = m_Frame.clone(); // ONLY FOR TEST 
@@ -212,6 +213,8 @@ void Core::TrackingArea() {
 	imshow("Tracker", dst);
 }
 
+
+
 void Core::Start() {
 	Video();
 	while (m_Capture.read(m_Frame) && !m_IsBuilt) {
@@ -230,3 +233,66 @@ void Core::Start() {
 		}
 	} while (m_Capture.read(m_Frame));
 }
+
+bool Core::get_isBuild() {
+	return m_IsBuilt;
+}
+
+bool Core::capture_read() {
+	m_Capture.read(m_Frame);
+}
+
+Area* Core::getArea() {
+	return &m_Area;
+}
+
+Core* createCore() {
+	return new Core;
+}
+
+void video(Core* core) {
+	core->Video();
+}
+
+bool check_build(Core* core) {
+	return core->capture_read() && core->get_isBuild();
+}
+
+void build(Core* core) {
+	core->BuildMaze();
+}
+
+Area* create_area(Core* core) {
+
+	core->TrackingArea();
+	return core->getArea();
+
+}
+
+MazeTransform getTransform(Area* area) {
+	MazeTransform maze;
+	vector<Point> corners = area->getArea();
+
+	vector<Point2d> cornersD;
+	for (int i = 0; i < 4; i++) {
+		Point p = corners[i];
+		cornersD.push_pack(Point2d(p.x, p.y));
+	}
+
+	maze.compute_transform(cornersD);
+}
+
+void init_transform(TransformTracking* transformTracking, Area* area) {
+	MazeTransform transform = getTransform(area);
+	transformTracking->init_from_maze(transform);
+}
+
+void update_transform(TransformTracking* transformTracking, Area* area) {
+	MazeTransform transform = getTransform(area);
+	transformTracking->update_from_maze(transform);
+}
+
+bool check_tracking(Core* core) {
+	return core->capture_read();
+}
+

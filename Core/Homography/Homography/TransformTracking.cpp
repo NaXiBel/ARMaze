@@ -57,3 +57,27 @@ void TransformTracking::init_from_maze(MazeTransform maze) {
 void TransformTracking::update_from_maze(MazeTransform maze) {
 	update(maze.get_trans(), maze.get_rots());
 }
+
+TransformTracking* create_transform_tracking() {
+	return new TransformTracking();
+}
+
+Mat* get_init_rot(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_init_rot());
+}
+
+Mat* get_delta_rot(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_delta_rot());
+}
+
+Mat* get_init_trans(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_init_trans());
+}
+
+Mat* get_delta_trans(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_delta_trans());
+}
+
+double at(int i, int j, Mat* mat) {
+	return mat->at<double>(i, j);
+}

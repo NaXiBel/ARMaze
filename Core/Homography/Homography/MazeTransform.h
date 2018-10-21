@@ -41,16 +41,3 @@ public:
 	Mat get_trans();
 
 };
-
-#ifdef _WIN32
-#define DllExport extern "C" __declspec(dllexport)
-#else
-#define DllExport extern "C"
-#endif
-
-DllExport MazeTransform* createMazeTransform();
-DllExport MazeTransform* createMazeTransformIM(double** intrinsic_matrix);
-DllExport void compute_transform(double corners[][2], MazeTransform* mazeTransform);
-DllExport double** get_H(MazeTransform* mazeTransform);
-DllExport double** get_rots(MazeTransform* mazeTransform);
-DllExport double** get_trans(MazeTransform* mazeTransform);
