@@ -27,9 +27,6 @@
     <ClInclude Include="Homography\Homography\TransformTracking.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Homography\Homography\MazeInfos.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -45,9 +42,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Homography\Homography\TransformTracking.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Homography\Homography\MazeInfos.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

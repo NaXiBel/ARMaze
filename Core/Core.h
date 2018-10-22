@@ -14,6 +14,7 @@
 #include <numeric>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace cv;
 
@@ -58,7 +59,7 @@ DllExport void build(Core*);
 DllExport void init_transform(TransformTracking*, Area*);
 DllExport void update_transform(TransformTracking*, Area*);
 
-DllExport Area* create_area(Core*);
+DllExport Area* createArea(Core*);
 DllExport bool check_tracking(Core*);
 
 #endif //CORE_H

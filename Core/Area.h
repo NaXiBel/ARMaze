@@ -9,6 +9,7 @@
 #include <opencv2/imgproc.hpp>
 #include <numeric>
 #include <iostream>
+#include <vector>
 
 using namespace cv;
 

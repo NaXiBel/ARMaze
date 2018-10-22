@@ -310,8 +310,8 @@ Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
 
 	Mat end3d(3, 1, CV_64FC1);
 
-	end3d.at<double>(0, 0) = center[0].x;
-	end3d.at<double>(1, 0) = center[0].y;
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
 	end3d.at<double>(2, 0) = 0;
 
 	Mat rot = transformTracking->get_init_rot();
@@ -332,8 +332,8 @@ Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
 
 	Mat end3d(3, 1, CV_64FC1);
 
-	end3d.at<double>(0, 0) = center[0].x;
-	end3d.at<double>(1, 0) = center[0].y;
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
 	end3d.at<double>(2, 0) = 0;
 
 	Mat rot = transformTracking->get_init_rot();
@@ -363,9 +363,9 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 
 	Mat unprojectedPoints = trans.inv() * rot.inv() * wallMat;
 
-	vector<Point2d*>* result = new vector;
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0), unprojectedPoints.at<double>(1, 0));
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1), unprojectedPoints.at<double>(1, 1));
+	vector<Point2d*>* result = new vector<Point2d*>;
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0), unprojectedPoints.at<double>(1, 0)));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1), unprojectedPoints.at<double>(1, 1)));
 
 	return result;
 
@@ -384,9 +384,9 @@ int size(vector<Point*>* points) {
 }
 
 double get_x(Point2d* point) {
-	point->x;
+	return point->x;
 }
 
 double get_y(Point2d* point) {
-	point->y;
+	return point->y;
 }

@@ -239,7 +239,7 @@ bool Core::get_isBuild() {
 }
 
 bool Core::capture_read() {
-	m_Capture.read(m_Frame);
+	return m_Capture.read(m_Frame);
 }
 
 Area* Core::getArea() {
@@ -276,10 +276,11 @@ MazeTransform getTransform(Area* area) {
 	vector<Point2d> cornersD;
 	for (int i = 0; i < 4; i++) {
 		Point p = corners[i];
-		cornersD.push_pack(Point2d(p.x, p.y));
+		cornersD.push_back(Point2d(p.x, p.y));
 	}
 
 	maze.compute_transform(cornersD);
+	return maze;
 }
 
 void init_transform(TransformTracking* transformTracking, Area* area) {
