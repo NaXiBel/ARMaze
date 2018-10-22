@@ -59,7 +59,8 @@ DllExport void build(Core*);
 DllExport void init_transform(TransformTracking*, Area*);
 DllExport void update_transform(TransformTracking*, Area*);
 
-DllExport Area* createArea(Core*);
+DllExport Area* tracking(Core*);
+
 DllExport bool check_tracking(Core*);
 
 #endif //CORE_H

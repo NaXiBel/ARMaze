@@ -262,7 +262,7 @@ void build(Core* core) {
 	core->BuildMaze();
 }
 
-Area* create_area(Core* core) {
+Area* tracking(Core* core) {
 
 	core->TrackingArea();
 	return core->getArea();
