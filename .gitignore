@@ -28,7 +28,9 @@ gui/*.unitypackage
 .consulo/
 */*.tmp
 */*.svd
- 
+Core/x64/*
+Core/Debug/*
+
 # ============ #
 # OS generated #
 # ============ #
