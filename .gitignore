@@ -22,7 +22,7 @@ gui/*.unitypackage
 */*.pidb.meta
 */*.suo
 */*.csproj
-*/*.sln
+#*/*.sln
 */*.user
 */*.booproj
 .consulo/

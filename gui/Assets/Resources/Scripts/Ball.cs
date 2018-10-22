@@ -11,12 +11,29 @@ public class Ball : MonoBehaviour {
 
 	}
 
+	/*
+	
+		La rotation de la balle se fait selon l'axe fixe de l'espace (Space.World), et
+		en fonction du déplacement de la balle selon ce même repère.
+
+	 */
 	private void UpdateRotation() {
-		Vector3 direction = this.transform.position - this.oldPosition;
-		Vector3 eulerRotation = this.transform.rotation.eulerAngles;
+		Vector3 direction = this.oldPosition - this.transform.position;
+		float xRotation = 0.0f;
+		float zRotation = 0.0f;
 
-		this.transform.rotation = Quaternion.Euler(eulerRotation.x + direction.x*50, eulerRotation.y + direction.y*50, eulerRotation.z + direction.z*50);
+		Vector3 ballVelocity = this.GetComponent<Rigidbody>().velocity;
 
+		if(Mathf.Abs(direction.z) < 0.5 ) {
+			zRotation = -ballVelocity.x;
+		}
+		
+		if(Mathf.Abs(direction.x) < 0.5) {
+			xRotation = ballVelocity.z;
+		}
+
+		this.transform.Rotate(new Vector3(xRotation, 0, zRotation) , Space.World);
+		
 	}
 
 	public void WakeUp() {
@@ -28,15 +45,17 @@ public class Ball : MonoBehaviour {
 		this.InitializeBall(); 
 	}
 
-	
-	void Update () {
 
-	}
-
+	/**
+	 */
 	void LateUpdate() {
 		this.oldPosition = this.transform.position;
 	}
 
+	/**
+		Physique Unity : lorsqu'une collision est détectée, le rigidbody
+		se met en "veille"
+	 */
 	private void OnCollisionEnter(Collision other) {
 		this.sleeping = true;
 	}
@@ -49,7 +68,6 @@ public class Ball : MonoBehaviour {
 		if(other.gameObject.GetComponent<MazeObstacle>()) {
 			this.UpdateRotation();
 			if(this.sleeping) {
-				Debug.Log("Awake !");
 				this.GetComponent<Rigidbody>().WakeUp();
 			}
 
