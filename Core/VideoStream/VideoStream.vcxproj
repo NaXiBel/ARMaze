@@ -85,7 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(SolutionDir)..\gui\$(TargetName)$(TargetExt)" /Y
@@ -93,7 +93,7 @@ copy "$(SolutionDir)$(TargetName)\opencv_world343.dll" "$(SolutionDir)..\gui\ope
 copy "$(SolutionDir)$(TargetName)\opencv_world343d.dll" "$(SolutionDir)..\gui\opencv_world343d.dll" /Y</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Users\alexm\Documents\ARMaze\Core\VideoStream\opencv_world343.lib;C:\Users\alexm\Documents\ARMaze\Core\VideoStream\opencv_world343d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\ARMaze - Copie\Core\VideoStream\opencv_world343.lib;D:\ARMaze - Copie\Core\VideoStream\opencv_world343d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
