@@ -1,10 +1,9 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets(76,5): warning : Le processus ne peut pas accéder au fichier 'd:\armaze - copie\core\videostream\x64\debug\vc141.pdb', car il est en cours d'utilisation par un autre processus.
-  CameraCV.cpp
+﻿  CameraCV.cpp
   main.cpp
   TestStream.cpp
   Génération de code en cours...
-     Création de la bibliothèque D:\ARMaze - Copie\Core\x64\Debug\VideoStream.lib et de l'objet D:\ARMaze - Copie\Core\x64\Debug\VideoStream.exp
-  VideoStream.vcxproj -> D:\ARMaze - Copie\Core\x64\Debug\VideoStream.dll
+     Création de la bibliothèque C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.lib et de l'objet C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.exp
+  VideoStream.vcxproj -> C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll
           1 fichier(s) copié(s).
           1 fichier(s) copié(s).
           1 fichier(s) copié(s).
