@@ -1,7 +1,0 @@
-D:\dev\armaze\Core\CameraWrapper\bin\Release\CameraWrapper.exe.config
-D:\dev\armaze\Core\CameraWrapper\bin\Release\CameraWrapper.exe
-D:\dev\armaze\Core\CameraWrapper\bin\Release\CameraWrapper.pdb
-D:\dev\armaze\Core\CameraWrapper\obj\Release\CameraWrapper.csprojAssemblyReference.cache
-D:\dev\armaze\Core\CameraWrapper\obj\Release\CameraWrapper.csproj.CoreCompileInputs.cache
-D:\dev\armaze\Core\CameraWrapper\obj\Release\CameraWrapper.exe
-D:\dev\armaze\Core\CameraWrapper\obj\Release\CameraWrapper.pdb
