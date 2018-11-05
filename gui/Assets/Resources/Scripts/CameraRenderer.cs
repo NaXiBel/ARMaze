@@ -16,9 +16,9 @@ public class CameraRenderer : MonoBehaviour {
         this.texture = new Texture2D(camera.GetFrameWidth(), camera.GetFrameHeight(), TextureFormat.BGRA32, false);
         this.transform.localScale = new Vector3(camera.GetFrameWidth(), camera.GetFrameHeight(), 1);
 
-        Camera.main.transform.position = this.transform.position;
-        Camera.main.transform.Translate(Vector3.back);
-        Camera.main.orthographicSize = camera.GetFrameHeight() / 2f + 2;
+        //Camera.main.transform.position = this.transform.position;
+        //Camera.main.transform.Translate(Vector3.back);
+        //Camera.main.orthographicSize = camera.GetFrameHeight() / 2f + 2;
 
         // this.camera.DisplayCameraStream();
     }
