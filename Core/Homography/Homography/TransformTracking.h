@@ -35,16 +35,3 @@ private:
 	Mat m_deltaTrans;
 
 };
-
-#ifdef _WIN32
-#define DllExport extern "C" __declspec(dllexport)
-#else
-#define DllExport extern "C"
-#endif
-
-DllExport TransformTracking* create_transform_tracking();
-DllExport Mat* get_init_rot(TransformTracking*);
-DllExport Mat* get_delta_rot(TransformTracking*);
-DllExport Mat* get_init_trans(TransformTracking*);
-DllExport Mat* get_delta_trans(TransformTracking*);
-DllExport double at(int, int, Mat*);

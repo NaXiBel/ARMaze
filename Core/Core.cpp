@@ -1,9 +1,9 @@
 #include "Core.h"
 
-
 Core::Core() {
 	m_IsBuilt = false;
 }
+
 void Core::Video() {
 	std::string window_name = "Capture";
 
@@ -20,8 +20,6 @@ void Core::Video() {
 	m_Capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
 	m_Capture.set(CV_CAP_PROP_FOURCC, CV_FOURCC('B', 'G', 'R', '3'));
 }
-
-
 
 void Core::BuildMaze() {
 	// initialisation 
@@ -217,7 +215,7 @@ void Core::TrackingArea() {
 
 void Core::Start() {
 	Video();
-	while (m_Capture.read(m_Frame) && !m_IsBuilt) {
+	while (m_Capture.read(m_Capture.getFrame()) && !m_IsBuilt) {
 
 		BuildMaze();
 	}
@@ -245,55 +243,3 @@ bool Core::capture_read() {
 Area* Core::getArea() {
 	return &m_Area;
 }
-
-Core* createCore() {
-	return new Core;
-}
-
-void video(Core* core) {
-	core->Video();
-}
-
-bool check_build(Core* core) {
-	return core->capture_read() && core->get_isBuild();
-}
-
-void build(Core* core) {
-	core->BuildMaze();
-}
-
-Area* tracking(Core* core) {
-
-	core->TrackingArea();
-	return core->getArea();
-
-}
-
-MazeTransform getTransform(Area* area) {
-	MazeTransform maze;
-	vector<Point> corners = area->getArea();
-
-	vector<Point2d> cornersD;
-	for (int i = 0; i < 4; i++) {
-		Point p = corners[i];
-		cornersD.push_back(Point2d(p.x, p.y));
-	}
-
-	maze.compute_transform(cornersD);
-	return maze;
-}
-
-void init_transform(TransformTracking* transformTracking, Area* area) {
-	MazeTransform transform = getTransform(area);
-	transformTracking->init_from_maze(transform);
-}
-
-void update_transform(TransformTracking* transformTracking, Area* area) {
-	MazeTransform transform = getTransform(area);
-	transformTracking->update_from_maze(transform);
-}
-
-bool check_tracking(Core* core) {
-	return core->capture_read();
-}
-

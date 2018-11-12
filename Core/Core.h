@@ -3,7 +3,7 @@
 
 #include "Area.h"
 #include "Homography\Homography\TransformTracking.h"
-
+#include "VideoStream\CameraCV.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/utility.hpp>
@@ -15,14 +15,14 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+ 
 using namespace cv;
 
 class Core {
 
 	private:
-		VideoCapture m_Capture;
-		Mat			 m_Frame;
+		CameraCV	 m_Capture;
+		//Mat			 m_Frame;
 		Mat			 m_MaskTracker;
 		Area         m_Area;
 		bool		 m_IsBuilt;
@@ -44,23 +44,5 @@ class Core {
 		Area* getArea();
 
 };
-
-#ifdef _WIN32
-#define DllExport extern "C" __declspec(dllexport)
-#else
-#define DllExport extern "C"
-#endif
-
-DllExport Core* createCore();
-DllExport void video(Core*);
-DllExport bool check_build(Core*);
-DllExport void build(Core*);
-
-DllExport void init_transform(TransformTracking*, Area*);
-DllExport void update_transform(TransformTracking*, Area*);
-
-DllExport Area* tracking(Core*);
-
-DllExport bool check_tracking(Core*);
 
 #endif //CORE_H

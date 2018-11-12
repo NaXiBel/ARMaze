@@ -52,23 +52,4 @@ class Area {
 		bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
 };
 
-#ifdef _WIN32
-#define DllExport extern "C" __declspec(dllexport)
-#else
-#define DllExport extern "C"
-#endif
-
-DllExport Area* create_area();
-
-DllExport Point2d* get_begin_center(Area*, TransformTracking*);
-DllExport Point2d* get_end_center(Area*, TransformTracking*);
-
-DllExport vector<Point2d*>* get_wall(Area*, TransformTracking*, int i);
-DllExport Point2d* get_point(int j, vector<Point*>*);
-DllExport int nb_of_walls(Area*);
-DllExport int size(vector<Point*>*);
-
-DllExport double get_x(Point2d*);
-DllExport double get_y(Point2d*);
-
 #endif //AREA_H
