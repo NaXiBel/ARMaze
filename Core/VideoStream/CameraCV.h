@@ -23,10 +23,10 @@ class CameraCV {
 		cv::VideoCapture capture;
 		cv::Mat frame;
 
-		cv::Mat			 m_MaskTracker;
-		Area         m_Area;
-		bool		 m_IsBuilt;
-		Rect2d       m_TrackBox;
+		cv::Mat	m_MaskTracker;
+		Area m_Area;
+		bool m_IsBuilt;
+		Rect2d m_TrackBox;
 
 	public :
 		CameraCV();

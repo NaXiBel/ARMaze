@@ -62,6 +62,7 @@ void CameraCV::BuildMaze() {
 	m_Area = Area();
 
 	bool isOk = true;
+	
 	if (this->frame.empty()) {
 		std::cout << "(!) No captured frame -- Break!" << std::endl;
 		return;
@@ -98,10 +99,10 @@ void CameraCV::BuildMaze() {
 		m_Area.setSizeX(abs((Xmax + 15) - (Xmin - 15)));
 		m_Area.setSizeY(abs((Ymax + 15) - (Ymin - 15)));
 
-		std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[1] << std::endl;
-		std::cout << m_Area.getArea()[1] << " " << m_Area.getArea()[2] << std::endl;
-		std::cout << m_Area.getArea()[2] << " " << m_Area.getArea()[3] << std::endl;
-		std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[3] << std::endl;
+		//std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[1] << std::endl;
+		//std::cout << m_Area.getArea()[1] << " " << m_Area.getArea()[2] << std::endl;
+		//std::cout << m_Area.getArea()[2] << " " << m_Area.getArea()[3] << std::endl;
+		//std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[3] << std::endl;
 //		std::cout << std::endl;
 //		std::cout << Xmin << " " << Xmax << std::endl;
 //		std::cout << Ymin << " " << Ymax << std::endl;
@@ -207,11 +208,11 @@ void CameraCV::TrackingArea() {
 	}
 	if (Ymax < 0 || Xmax < 0)
 		return;
-	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
+//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
 	int distX = abs(Xmax - Xmin);
 	int distY = abs(Ymax - Ymin);
-	std::cout << "SIZE : " << distX << " " << distY << std::endl;
-	std::cout << "SIZE AREA: " << m_Area.getSizeX() << " " << m_Area.getSizeY() << std::endl;
+	//std::cout << "SIZE : " << distX << " " << distY << std::endl;
+	//std::cout << "SIZE AREA: " << m_Area.getSizeX() << " " << m_Area.getSizeY() << std::endl;
 	Mat mask = Mat::zeros(canny.rows, canny.cols, CV_8UC1);
 	std::vector <std::vector <Point>> pointMask2;
 	std::vector <Point> newArea2;
@@ -226,7 +227,7 @@ void CameraCV::TrackingArea() {
 
 	imshow("MaskTracker", mask);
 
-	//m_Area.buildEdge(mask);
+	m_Area.buildEdge(mask);
 	m_Area.tracking(mask, Xmin, Xmax , Ymin , Ymax );
 
 	// ONLY TEST DISPLAY AREA
@@ -237,6 +238,9 @@ void CameraCV::TrackingArea() {
 	m_Area.setSizeX(abs(Xmax - Xmin));
 	m_Area.setSizeY(abs(Ymax - Ymin));
 	imshow("Tracker", dst);
+
+
+
 }
 
 
@@ -244,13 +248,23 @@ void CameraCV::TrackingArea() {
 void CameraCV::Start() {
 
 	while ( !m_IsBuilt) {
-
+		this->getFrame();
 		BuildMaze();
 	}
+	TransformTracking trtr;
+	MazeTransform mt;
+	vector<Point> corners = m_Area.getArea();
+	vector<Point2d> corners2d;
+
+	for (int i = 0; i < corners.size(); i++)
+		corners2d.push_back(corners[i]);
+
+	mt.compute_transform(corners2d);
+	trtr.init_from_maze(mt);
 
 	TrackingArea();
 	// Exit if ESC pressed.
-	int k = waitKey(1);
+//	int k = waitKey(1);
 
 }
 

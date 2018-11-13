@@ -215,7 +215,7 @@ void Core::TrackingArea() {
 
 void Core::Start() {
 	Video();
-	while (m_Capture.read(m_Capture.getFrame()) && !m_IsBuilt) {
+	while (m_Capture.read(m_Frame) && !m_IsBuilt) {
 
 		BuildMaze();
 	}

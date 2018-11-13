@@ -31,7 +31,8 @@ namespace Wrapper {
             [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
             [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area);
             [DllImport(dllpath, EntryPoint = "update_transform")] static public extern void UpdateTransform(IntPtr tranformTracking, IntPtr area);
-            [DllImport(dllpath, EntryPoint = "tracking")] static public extern IntPtr Tracking(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "tracking")] static public extern void Tracking(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "get_area")] static public extern IntPtr GetArea(IntPtr core);
             [DllImport(dllpath, EntryPoint = "check_tracking")] static public extern bool CheckTracking(IntPtr core);
 
             [DllImport(dllpath, EntryPoint = "create_transform_tracking")] static public extern IntPtr CreateTransformTracking();
@@ -100,15 +101,15 @@ namespace Wrapper {
         }
 
         public bool CheckBuid() {
-            return embededFunctions.CheckBuild(core);
+            return embededFunctions.CheckBuild(camera);
         }
 
         public void Build(){
-            embededFunctions.Build(core);
+            embededFunctions.Build(camera);
+            area = embededFunctions.GetArea(camera);
         }
 
-        public void InitTrasform() {
-            area = embededFunctions.CreateArea();
+        public void InitTransform() {
             tranformTracking = embededFunctions.CreateTransformTracking();
             embededFunctions.InitTransform(tranformTracking, area);
         }
@@ -122,11 +123,12 @@ namespace Wrapper {
         }
 
         public void Tracking() {
-            embededFunctions.Tracking(core);
+            embededFunctions.Tracking(camera);
+            area = embededFunctions.GetArea(camera);
         }
 
         public bool CheckTracking() {
-            return embededFunctions.CheckTracking(core);
+            return embededFunctions.CheckTracking(camera);
         }
 
         public double[,] GetInitRot() {
@@ -194,7 +196,7 @@ namespace Wrapper {
 
             while (wrap.CheckBuid())
                 wrap.Build();
-            wrap.InitTrasform();
+            wrap.InitTransform();
             do {
                 wrap.Tracking();
                 wrap.UpdateTranform();

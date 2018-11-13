@@ -22,7 +22,8 @@ DllExport bool check_build(CameraCV*);
 DllExport void build(CameraCV*);
 DllExport void init_transform(TransformTracking*, Area*);
 DllExport void update_transform(TransformTracking*, Area*);
-DllExport Area* tracking(CameraCV*);
+DllExport void tracking(CameraCV*);
+DllExport Area* get_area(CameraCV* core);
 DllExport bool check_tracking(CameraCV*);
 
 DllExport Area* create_area();

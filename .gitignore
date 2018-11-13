@@ -47,3 +47,9 @@ Corridor/Library/metadata/
 Core/CameraWrapper/bin/Debug/*
 Core/VideoStream/x64/*
 
+Core/*.dll
+Core/*.lib
+Core/VideoStream/*.dll
+Core/VideoStream/*.lib
+gui/*.dll
+

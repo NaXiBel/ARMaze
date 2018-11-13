@@ -19,6 +19,7 @@ int main(void) {
 	int c = waitKey(10);
 	while((char)c != 'q') {
 		Mat fraaame = cam->getFrame();
+		cam->Start();
 		imshow(window_name, fraaame);
 		int c = waitKey(10);
 	}

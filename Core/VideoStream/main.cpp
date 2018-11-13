@@ -142,20 +142,24 @@ void video(Core* core) {
 	core->Video();
 }
 
-bool check_build(Core* core) {
+bool check_build(CameraCV* core) {
 	return core->capture_read() && core->get_isBuild();
 }
 
-void build(Core* core) {
+void build(CameraCV* core) {
 	core->BuildMaze();
 }
 
-Area* tracking(Core* core) {
+void tracking(CameraCV* core) {
 
 	core->TrackingArea();
-	return core->getArea();
 
 }
+
+Area* get_area(CameraCV* core) {
+	return core->getArea();
+}
+
 
 MazeTransform getTransform(Area* area) {
 	MazeTransform maze;
@@ -181,7 +185,7 @@ void update_transform(TransformTracking* transformTracking, Area* area) {
 	transformTracking->update_from_maze(transform);
 }
 
-bool check_tracking(Core* core) {
+bool check_tracking(CameraCV* core) {
 	return core->capture_read();
 }
 

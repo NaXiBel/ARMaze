@@ -51,10 +51,10 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="..\Core.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClInclude>
     <ClInclude Include="..\Area.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
