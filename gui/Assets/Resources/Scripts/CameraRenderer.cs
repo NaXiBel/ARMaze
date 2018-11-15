@@ -36,7 +36,8 @@ public class CameraRenderer : MonoBehaviour {
 
             if (this.camera.CheckBuid()) {
                 m_FinishedBuild = true;
-                 this.camera.InitTransform();
+                this.camera.InitTransform();
+                Debug.Log("Built");
             }
         }
         else {
@@ -45,19 +46,14 @@ public class CameraRenderer : MonoBehaviour {
 
             this.camera.Tracking();
             this.camera.UpdateTranform();
+            
+            double[] rot = this.camera.GetDeltaRot();
 
-            /*
-            double[,] rot = this.camera.GetDeltaRot();
             for (int i = 0; i < 3; i++)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    Debug.Log(rot[i, j] + " ");
-                }
-                Debug.Log("\n");
+                Debug.Log(rot[i] + " ");
             }
-
-            */
+            Debug.Log("\n");
               
         }
         this.texture.LoadRawTextureData(this.frame);

@@ -131,46 +131,38 @@ namespace Wrapper {
             return embededFunctions.CheckTracking(camera);
         }
 
-        public double[,] GetInitRot() {
-            double[,] rot = new double[3, 3];
+        public double[] GetInitRot() {
+            double[] rot = new double[3];
             IntPtr matRot = embededFunctions.GetInitRot(tranformTracking);
             for(int i = 0 ; i < 3 ; i++) {
-                for(int j = 0 ; j < 3 ; j++) {
-                    rot[i, j] = embededFunctions.At(i, j, matRot);
-                }
+                rot[i] = embededFunctions.At(i, 0, matRot);
             }
             return rot;
         }
 
-        public double[,] GetInitTrans() {
-            double[,] trans = new double[3, 3];
+        public double[] GetInitTrans() {
+            double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetInitTrans(tranformTracking);
             for (int i = 0 ; i < 3 ; i++) {
-                for (int j = 0 ; j < 3 ; j++) {
-                    trans[i, j] = embededFunctions.At(i, j, matTrans);
-                }
+                trans[i] = embededFunctions.At(i, 0, matTrans);
             }
             return trans;
         }
 
-        public double[,] GetDeltaRot() {
-            double[,] rot = new double[3, 3];
+        public double[] GetDeltaRot() {
+            double[] rot = new double[3];
             IntPtr matRot = embededFunctions.GetDeltaRot(tranformTracking);
             for (int i = 0 ; i < 3 ; i++) {
-                for (int j = 0 ; j < 3 ; j++) {
-                    rot[i, j] = embededFunctions.At(i, j, matRot);
-                }
+                rot[i] = embededFunctions.At(i, 0, matRot);
             }
             return rot;
         }
 
-        public double[,] GetDeltaTrans() {
-            double[,] trans = new double[3, 3];
+        public double[] GetDeltaTrans() {
+            double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetDeltaTrans(tranformTracking);
             for (int i = 0 ; i < 3 ; i++) {
-                for (int j = 0 ; j < 3 ; j++) {
-                    trans[i, j] = embededFunctions.At(i, j, matTrans);
-                }
+                trans[i] = embededFunctions.At(i, 0, matTrans);
             }
             return trans;
         }
@@ -201,12 +193,9 @@ namespace Wrapper {
                 wrap.Tracking();
                 wrap.UpdateTranform();
 
-                double[,] rot = wrap.GetDeltaRot();
+                double[] rot = wrap.GetDeltaRot();
                 for(int i = 0 ; i < 3 ; i++) {
-                    for(int j = 0 ; j < 3 ; j++) {
-                        Console.Write(rot[i, j] + " ");
-                    }
-                    Console.WriteLine();
+                    Console.Write(rot[i] + " ");
                 }
 
             } while (wrap.CheckTracking());

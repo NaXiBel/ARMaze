@@ -50,11 +50,11 @@
     <ClInclude Include="..\Homography\Homography\TransformTracking.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\Core.h">
-      <Filter>Fichiers sources</Filter>
-    </ClInclude>
     <ClInclude Include="..\Area.h">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Core.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

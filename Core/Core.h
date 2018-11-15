@@ -28,8 +28,6 @@ class Core {
 		bool			 m_IsBuilt;
 		Rect2d			 m_TrackBox;
 
-		
-
 	public:
 		Core();
 		void Start();

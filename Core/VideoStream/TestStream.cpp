@@ -21,7 +21,7 @@ int main(void) {
 		Mat fraaame = cam->getFrame();
 		cam->Start();
 		imshow(window_name, fraaame);
-		int c = waitKey(10);
+		c = waitKey(10);
 	}
 
 	return 0;

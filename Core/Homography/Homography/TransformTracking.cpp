@@ -16,8 +16,8 @@ void TransformTracking::init(Mat trans, Mat rot) {
 }
 
 void TransformTracking::update(Mat trans, Mat rot) {
-	m_deltaTrans = trans * m_currentTrans.inv();
-	m_deltaRot = rot * m_currentRot.inv();
+	m_deltaTrans = trans - m_currentTrans;
+	m_deltaRot = rot - m_currentRot;
 	m_currentTrans = trans;
 	m_currentRot = rot;
 }

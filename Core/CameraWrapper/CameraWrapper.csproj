@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{042E4A9A-C02E-4F4A-9028-9E3BE9EBB82B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>CameraWrapper</RootNamespace>
     <AssemblyName>CameraWrapper</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>

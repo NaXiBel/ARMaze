@@ -263,6 +263,20 @@ void CameraCV::Start() {
 	trtr.init_from_maze(mt);
 
 	TrackingArea();
+	mt.compute_transform(corners2d);
+	trtr.update_from_maze(mt);
+
+	Mat deltaRot = trtr.get_current_rot();
+	double deltaRotTab[1][3];
+
+	cout << deltaRot.size() << endl;
+	cout << deltaRot.type() << ", " << CV_64FC1 << endl;
+
+	for (int i = 0; i < 1; i++) {
+		for (int j = 0; j < 3; j++)
+			cout << (deltaRotTab[i][j] = deltaRot.at<double>(j, i)) << endl;
+	}
+
 	// Exit if ESC pressed.
 //	int k = waitKey(1);
 
