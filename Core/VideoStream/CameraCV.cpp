@@ -262,20 +262,30 @@ void CameraCV::Start() {
 	mt.compute_transform(corners2d);
 	trtr.init_from_maze(mt);
 
+	vector<Point> begin = m_Area.getStart();
+	Point2d center;
+	for (int i = 0; i < 4; i++) {
+		center += Point2d(begin[i].x, begin[i].y);
+		center /= 4;
+	}
+
+	Mat end3d(3, 1, CV_64FC1);
+
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
+	end3d.at<double>(2, 0) = 1;
+
+	Mat H = trtr.get_H_init();
+
+	Mat unprojectedPoint = H.inv() * end3d;
+
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+
+	cout << "points end" << unprojectedPoint << endl;
+
 	TrackingArea();
 	mt.compute_transform(corners2d);
 	trtr.update_from_maze(mt);
-
-	Mat deltaRot = trtr.get_current_rot();
-	double deltaRotTab[1][3];
-
-	cout << deltaRot.size() << endl;
-	cout << deltaRot.type() << ", " << CV_64FC1 << endl;
-
-	for (int i = 0; i < 1; i++) {
-		for (int j = 0; j < 3; j++)
-			cout << (deltaRotTab[i][j] = deltaRot.at<double>(j, i)) << endl;
-	}
 
 	// Exit if ESC pressed.
 //	int k = waitKey(1);

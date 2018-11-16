@@ -57,12 +57,12 @@ Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
 	end3d.at<double>(1, 0) = center.y;
 	end3d.at<double>(2, 0) = 0;
 
-	Mat rot = transformTracking->get_init_rot();
-	Mat trans = transformTracking->get_init_trans();
+	Mat H = transformTracking->get_H_init();
 
-	Mat unprojectedPoint = trans.inv() * rot.inv() * end3d;
+	Mat unprojectedPoint = H.inv() * end3d;
+	unprojectedPoint = unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
-	return new Point2d(unprojectedPoint);
+	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
 }
 
 Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
@@ -79,12 +79,12 @@ Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
 	end3d.at<double>(1, 0) = center.y;
 	end3d.at<double>(2, 0) = 0;
 
-	Mat rot = transformTracking->get_init_rot();
-	Mat trans = transformTracking->get_init_trans();
+	Mat H = transformTracking->get_H_init();
 
-	Mat unprojectedPoint = trans.inv() * rot.inv() * end3d;
+	Mat unprojectedPoint = H.inv() * end3d;
+	unprojectedPoint = unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
-	return new Point2d(unprojectedPoint);
+	return new Point2d(unprojectedPoint.at<double>(0,0) / dimX, unprojectedPoint.at<double>(1,0));
 }
 
 vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int i) {
@@ -101,14 +101,19 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 	wallMat.at<double>(1, 1) = wall[1].y;
 	wallMat.at<double>(2, 1) = 0;
 
-	Mat rot = transformTracking->get_init_rot();
-	Mat trans = transformTracking->get_init_trans();
+	Mat H = transformTracking->get_H_init();
 
-	Mat unprojectedPoints = trans.inv() * rot.inv() * wallMat;
+	Mat unprojectedPoints = H.inv() * wallMat;
+
+	// normalize
+	for (int i = 0; i++; i < 2) {
+		unprojectedPoints.at<double>(0, i) /= unprojectedPoints.at<double>(2, i);
+		unprojectedPoints.at<double>(1, i) /= unprojectedPoints.at<double>(2, i);
+	}
 
 	vector<Point2d*>* result = new vector<Point2d*>;
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0), unprojectedPoints.at<double>(1, 0)));
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1), unprojectedPoints.at<double>(1, 1)));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0) / dimX, unprojectedPoints.at<double>(1, 0)));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1)));
 
 	return result;
 

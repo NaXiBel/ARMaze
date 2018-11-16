@@ -12,7 +12,7 @@ public:
 	void init_from_maze(MazeTransform maze);
 	void update_from_maze(MazeTransform maze);
 
-	void init(Mat trans, Mat rot);
+	void init(Mat trans, Mat rot, Mat H);
 	void update(Mat trans, Mat rot);
 
 	Mat get_init_rot();
@@ -23,9 +23,14 @@ public:
 	Mat get_current_trans();
 	Mat get_delta_trans();
 
+	Mat get_H_init();
+
 	static Mat affect_tranform(Mat point, Mat trans, Mat rot);
 
 private:
+
+	Mat m_initH;
+
 	Mat m_initRot;
 	Mat m_currentRot;
 	Mat m_deltaRot;
