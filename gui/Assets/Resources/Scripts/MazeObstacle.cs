@@ -21,32 +21,22 @@ public class MazeObstacle : MonoBehaviour {
 
 	private static Vector3 GetWallOrientation(Vector3 p1, Vector3 p2) {
 
+		float eps = 0.1f;
 		float slope;
-        if ((p2.z - p1.z) <= 0.05f && (p2.z - p1.z) >= -0.05f)
-        {
-            slope = 0.0f;
-        }
-        else if ((p2.x - p1.x) <= 0.05f && (p2.x - p1.x) >= -0.05f)
-        {
-            slope = 2.0f;
-        }
-        else
-        {
-            slope = 0.0f;
-        }/*
-        if(((p2.z - p1.z) <= 0.0f || (p2.z - p1.z) >= 0.0f) && ((p2.x - p1.x) <= 0.0f || (p2.x - p1.x) >= 0.0f)) {
+		
+		if(((p2.z - p1.z) >= eps || (p2.z - p1.z) <= -eps)  && ((p2.x - p1.x) >= eps || (p2.x - p1.x) <= -eps) ) {
 			slope = (p2.z - p1.z) / (p2.x - p1.x);
 		} else {
-			if((p2.z - p1.z) <= 0.01f && (p2.z - p1.z) >= -0.01f) {
+			if((p2.z - p1.z) >= -eps && (p2.z - p1.z) <= eps ) {
 				slope = 0.0f;
-			} else if ((p2.x - p1.x) <= 0.01f && (p2.x - p1.x) >= -0.01f) {
+			} else if ((p2.x - p1.x) >= -eps && (p2.x - p1.x)  <= eps) {
 				slope = 2.0f;
 			} else {
 				slope = 0.0f;
 			}
-		}*/
+		}
 
-        return new Vector3(0.0f, slope * -45.0f, 0.0f);
+		return new Vector3(0.0f, slope * -45.0f, 0.0f);
 
 	}
 
