@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23902225511127654}
   - component: {fileID: 65415581994073938}
   - component: {fileID: 114747564276803002}
-  - component: {fileID: 54941421899803546}
+  - component: {fileID: 54831341668146874}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -86,7 +86,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1929156297527512}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54941421899803546
+--- !u!54 &54831341668146874
 Rigidbody:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

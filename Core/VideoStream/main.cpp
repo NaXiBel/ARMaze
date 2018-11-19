@@ -48,41 +48,41 @@ Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
 	Point2d center;
 	for (int i = 0; i < 4; i++) {
 		center += Point2d(begin[i].x, begin[i].y);
-		center /= 4;
 	}
+	center /= 4;
 
 	Mat end3d(3, 1, CV_64FC1);
 
 	end3d.at<double>(0, 0) = center.x;
 	end3d.at<double>(1, 0) = center.y;
-	end3d.at<double>(2, 0) = 0;
+	end3d.at<double>(2, 0) = 1;
 
 	Mat H = transformTracking->get_H_init();
 
 	Mat unprojectedPoint = H.inv() * end3d;
-	unprojectedPoint = unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
 	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
 }
 
 Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
-	vector<Point> end = area->getStart();
+	vector<Point> end = area->getEnd();
 	Point2d center;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		center += Point2d(end[i].x, end[i].y);
-		center /= 4;
 	}
+	center /= 3;
 
 	Mat end3d(3, 1, CV_64FC1);
 
 	end3d.at<double>(0, 0) = center.x;
 	end3d.at<double>(1, 0) = center.y;
-	end3d.at<double>(2, 0) = 0;
+	end3d.at<double>(2, 0) = 1;
 
 	Mat H = transformTracking->get_H_init();
 
 	Mat unprojectedPoint = H.inv() * end3d;
-	unprojectedPoint = unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
 	return new Point2d(unprojectedPoint.at<double>(0,0) / dimX, unprojectedPoint.at<double>(1,0));
 }
@@ -96,17 +96,17 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 
 	wallMat.at<double>(0, 0) = wall[0].x;
 	wallMat.at<double>(1, 0) = wall[0].y;
-	wallMat.at<double>(2, 0) = 0;
+	wallMat.at<double>(2, 0) = 1;
 	wallMat.at<double>(0, 1) = wall[1].x;
 	wallMat.at<double>(1, 1) = wall[1].y;
-	wallMat.at<double>(2, 1) = 0;
+	wallMat.at<double>(2, 1) = 1;
 
 	Mat H = transformTracking->get_H_init();
 
 	Mat unprojectedPoints = H.inv() * wallMat;
 
 	// normalize
-	for (int i = 0; i++; i < 2) {
+	for (int i = 0; i < 2; i++) {
 		unprojectedPoints.at<double>(0, i) /= unprojectedPoints.at<double>(2, i);
 		unprojectedPoints.at<double>(1, i) /= unprojectedPoints.at<double>(2, i);
 	}

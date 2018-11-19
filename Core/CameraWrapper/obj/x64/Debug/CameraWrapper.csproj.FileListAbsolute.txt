@@ -43,3 +43,4 @@ C:\Users\loicb\Documents\ARMaze\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWr
 C:\Users\loicb\Documents\ARMaze\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.dll
 C:\Users\loicb\Documents\ARMaze\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csprojResolveAssemblyReference.cache
 C:\Users\loicb\Documents\ARMaze\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.dll
+D:\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csprojAssemblyReference.cache

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Wrapper {
@@ -22,8 +23,8 @@ namespace Wrapper {
             [DllImport(dllpath, EntryPoint = "get_point")] static public extern IntPtr GetPoint(int j, IntPtr vectorPoint);
             [DllImport(dllpath, EntryPoint = "nb_of_walls")] static public extern int NbOfWalls(IntPtr area);
             [DllImport(dllpath, EntryPoint = "size")] static public extern int Size(IntPtr vectorPoint);
-            [DllImport(dllpath, EntryPoint = "get_x")] static public extern int GetX(IntPtr point2d);
-            [DllImport(dllpath, EntryPoint = "get_y")] static public extern int GetY(IntPtr point2d);
+            [DllImport(dllpath, EntryPoint = "get_x")] static public extern double GetX(IntPtr point2d);
+            [DllImport(dllpath, EntryPoint = "get_y")] static public extern double GetY(IntPtr point2d);
 
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
@@ -59,6 +60,43 @@ namespace Wrapper {
 
             return instance;
         }
+        public double[] GetEndCenter()
+        {
+            IntPtr endPtr = embededFunctions.GetEndCenter(area, tranformTracking);
+            double[] endDouble = new double[2];
+            endDouble[0] = embededFunctions.GetX(endPtr);
+            endDouble[1] = embededFunctions.GetY(endPtr);
+            return endDouble;
+        }
+
+        public double[] GetBeginCenter()
+        {
+            IntPtr beginPtr = embededFunctions.GetBeginCenter(area, tranformTracking);
+            double[] beginDouble = new double[2];
+            beginDouble[0] = embededFunctions.GetX(beginPtr);
+            beginDouble[1] = embededFunctions.GetY(beginPtr);
+            return beginDouble;
+        }
+
+        public List<double[,]> GetWall()
+        {
+            List<double[,]> walls = new List<double[,]>();
+            for (int i = 0; i < embededFunctions.NbOfWalls(area); ++i)
+            {
+                IntPtr wallPtr = embededFunctions.GetWall(area, tranformTracking, i);
+                double[,] wallDouble = new double[2, 2];
+
+                for (int j = 0; j < 2; ++j)
+                {
+                    wallDouble[j, 0] = embededFunctions.GetX(embededFunctions.GetPoint(j, wallPtr));
+                    wallDouble[j, 1] = embededFunctions.GetY(embededFunctions.GetPoint(j, wallPtr));
+                }
+                walls.Add(wallDouble);
+            }
+            return walls;
+        }
+
+
 
         public void InitCamera() {
             this.camera = embededFunctions.CreateCameraInput();

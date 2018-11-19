@@ -156,12 +156,12 @@ void CameraCV::BuildMaze() {
 				line(dst, polygon[j], polygon[j + 1], color, 3, LINE_AA);
 			}
 		}
-		cv::imshow("mask", mask);
+		//cv::imshow("mask", mask);
 		cv::imshow("dst", dst);
 
 	}
 
-	cv::imshow("Canny", canny);
+	//cv::imshow("Canny", canny);
 
 	int c = waitKey(10);
 	m_IsBuilt = isOk;
@@ -225,7 +225,7 @@ void CameraCV::TrackingArea() {
 
 	canny.copyTo(mask, mask);
 
-	imshow("MaskTracker", mask);
+	//imshow("MaskTracker", mask);
 
 	m_Area.buildEdge(mask);
 	m_Area.tracking(mask, Xmin, Xmax , Ymin , Ymax );

@@ -30,7 +30,7 @@ DllExport Area* create_area();
 DllExport Point2d* get_begin_center(Area*, TransformTracking*);
 DllExport Point2d* get_end_center(Area*, TransformTracking*);
 DllExport vector<Point2d*>* get_wall(Area*, TransformTracking*, int i);
-DllExport Point2d* get_point(int j, vector<Point*>*);
+DllExport Point2d* get_point(int j, vector<Point2d*>*);
 DllExport int nb_of_walls(Area*);
 DllExport int size(vector<Point*>*);
 DllExport double get_x(Point2d*);
