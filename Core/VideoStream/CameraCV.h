@@ -23,31 +23,17 @@ class CameraCV {
 		cv::VideoCapture capture;
 		cv::Mat frame;
 
-		cv::Mat	m_MaskTracker;
-		Area m_Area;
-		bool m_IsBuilt;
-		Rect2d m_TrackBox;
-
 	public :
 		CameraCV();
 		~CameraCV();
 		void openStream(int inputId = 0);
 		cv::VideoCapture getVid();
+		bool readFrame();
 		cv::Mat getFrame();
 		int getWidth();
 		int getHeigth();
 		void displayStream();
 		uchar * getLiveFrame(int * sizeofMat);
-
-		void Start();
-
-		void BuildMaze();
-		void TrackingArea();
-
-		bool get_isBuild();
-		bool capture_read();
-
-		Area* getArea();
 };
 
 #endif
