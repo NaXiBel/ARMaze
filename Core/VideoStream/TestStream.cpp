@@ -4,24 +4,29 @@
 
 #ifdef TEST_CLASS
 #include "opencv2/opencv.hpp"
+#include "../Core.h"
 #include "CameraCV.h"
+
 
 using namespace cv;
 
 int main(void) {
 	String window_name = "Test class";
-	CameraCV * cam = new CameraCV();
+
 
 	namedWindow(window_name, WINDOW_AUTOSIZE);
 
-	cam->openStream();
+	
 
-	int c = waitKey(10);
-	while((char)c != 'q') {
-		Mat fraaame = cam->getFrame();
-		cam->Start();
-		imshow(window_name, fraaame);
-		c = waitKey(10);
+	//int c = waitKey(10);
+	Core *  core = new Core();
+	while(true) {
+		//cam->readFrame();
+		//Mat fraaame = cam->getFrame();
+
+		core->Start();
+		//imshow(window_name, fraaame);
+		//c = waitKey(10);
 	}
 
 	return 0;

@@ -3,11 +3,13 @@
 Core::Core() {
 	m_IsBuilt = false;
 	this->m_CameraCV = new CameraCV();
+	m_CameraCV->openStream();
 }
 
 Core::Core(CameraCV cam) {
 	m_IsBuilt = false;
 	this->m_CameraCV = &cam;
+	std:cout << this->m_CameraCV << endl;
 }
 
 void Core::set_camera(CameraCV * camera) {
@@ -49,7 +51,12 @@ void Core::BuildMaze() {
 		return;
 	}
 
-	cvtColor(this->m_CameraCV->getFrame(), this->m_CameraCV->getFrame(), CV_BGR2GRAY); // convert gray 
+	this->m_CameraCV->readFrame();
+	imshow("sa", this->m_CameraCV->getFrame());
+
+	char ca = waitKey(10);
+	Mat fr = this->m_CameraCV->getFrame();
+	cvtColor(this->m_CameraCV->getFrame(), fr, CV_BGR2GRAY); // convert gray 
 	Mat canny;
 	Canny(this->m_CameraCV->getFrame(), canny, 50, 200, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
@@ -219,6 +226,7 @@ void Core::TrackingArea() {
 }
 
 void Core::Start() {
+
 	while(!m_IsBuilt) {
 		this->m_CameraCV->readFrame();
 		BuildMaze();

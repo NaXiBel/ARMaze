@@ -24,6 +24,7 @@ bool CameraCV::readFrame() {
 }
 
 cv::Mat CameraCV::getFrame() {
+
 	return this->frame;
 }
 

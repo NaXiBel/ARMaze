@@ -141,9 +141,6 @@ double get_y(Point2d* point) {
 	return point->y;
 }
 
-Core* createCore() {
-	return new Core;
-}
 
 void video(Core* core) {
 	core->Video();
