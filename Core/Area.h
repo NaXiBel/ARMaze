@@ -49,7 +49,7 @@ class Area {
 		bool buildEdge(const Mat & canny);
 		bool buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
 		bool buildWalls(const Mat & mask);
-		bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
+		bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY);
 };
 
 #endif //AREA_H

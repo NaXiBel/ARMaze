@@ -178,17 +178,17 @@ void Core::TrackingArea() {
 
 	for(int i = 0; i < m_Area.getArea().size(); ++i) {
 		if(m_Area.getArea()[i].x < Xmin) {
-			Xmin = m_Area.getArea()[i].x - 40;
+			Xmin = m_Area.getArea()[i].x - 200;
 		}
 		else if(m_Area.getArea()[i].x > Xmax) {
-			Xmax = m_Area.getArea()[i].x + 40;
+			Xmax = m_Area.getArea()[i].x + 200;
 		}
 		if(m_Area.getArea()[i].y < Ymin) {
 
-			Ymin = m_Area.getArea()[i].y - 40;
+			Ymin = m_Area.getArea()[i].y - 200;
 		}
 		else if(m_Area.getArea()[i].y > Ymax) {
-			Ymax = m_Area.getArea()[i].y + 40;
+			Ymax = m_Area.getArea()[i].y + 200;
 		}
 	}
 	if(Ymax < 0 || Xmax < 0)
@@ -213,7 +213,7 @@ void Core::TrackingArea() {
 	//imshow("MaskTracker", mask);
 
 	m_Area.buildEdge(mask);
-	m_Area.tracking(mask, Xmin, Xmax, Ymin, Ymax);
+	m_Area.tracking(mask, Xmin, Xmax, Ymin, Ymax, distX, distY);
 
 	// ONLY TEST DISPLAY AREA
 	line(dst, m_Area.getArea()[0], m_Area.getArea()[1], Scalar(133, 255, 50), 2);
@@ -223,6 +223,10 @@ void Core::TrackingArea() {
 	m_Area.setSizeX(abs(Xmax - Xmin));
 	m_Area.setSizeY(abs(Ymax - Ymin));
 	imshow("Tracker", dst);
+	int c = waitKey(10);
+	if ((char)c == 'q') {
+		return;
+	}
 }
 
 void Core::Start() {
@@ -231,7 +235,7 @@ void Core::Start() {
 		this->m_CameraCV->readFrame();
 		BuildMaze();
 	}
-
+	/*
 	TransformTracking trtr;
 	MazeTransform mt;
 	vector<Point> corners = m_Area.getArea();
@@ -249,7 +253,7 @@ void Core::Start() {
 		center += Point2d(begin[i].x, begin[i].y);
 		center /= 4;
 	}
-
+	
 	Mat end3d(3, 1, CV_64FC1);
 
 	end3d.at<double>(0, 0) = center.x;
@@ -263,10 +267,14 @@ void Core::Start() {
 	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
 	cout << "points end" << unprojectedPoint << endl;
-
-	TrackingArea();
+	*/
+	if (m_IsBuilt) {
+		this->m_CameraCV->readFrame();
+		TrackingArea();
+	}
+/*
 	mt.compute_transform(corners2d);
-	trtr.update_from_maze(mt);
+	trtr.update_from_maze(mt);*/
 
 	// Exit if ESC pressed.
 //	int k = waitKey(1);

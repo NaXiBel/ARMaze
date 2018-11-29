@@ -259,29 +259,65 @@ std::vector<std::vector<Point>> Area::FilterInside(std::vector<std::vector<Point
 
 
 
-bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax) {
+bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY) {
 	std::vector<std::vector<Point> > contours;
 	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 	std::vector<Point> approx;
 	// find start and end
+
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 2000) {
+		if (fabs(contourArea(Mat(contours[i]))) <= 35000) {
 			continue;
 		}
 
 		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.1, true);
 
-
-
+		//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
+		int distX = abs(Xmax - Xmin);
+		int distY = abs(Ymax - Ymin);
 		if (approx.size() == 4)
 		{
+
+			// initialisation 
+			int Xmin2 = INT_MAX;
+			int Xmax2 = INT_MIN;
+			int Ymin2 = INT_MAX;
+			int Ymax2 = INT_MIN;
+
+			for (int i = 0; i < approx.size(); ++i) {
+				if (approx[i].x < Xmin2) {
+					Xmin2 = approx[i].x - 200;
+				}
+				else if (approx[i].x > Xmax2) {
+					Xmax2 = approx[i].x + 200;
+				}
+				if (approx[i].y < Ymin2) {
+
+					Ymin2 = approx[i].y - 200;
+				}
+				else if (approx[i].y > Ymax2) {
+					Ymax2 = approx[i].y + 200;
+				}
+			}
+			if (Ymax2 < 0 || Xmax2 < 0)
+				return;
+			int distX2 = abs(Xmax2 - Xmin2);
+			int distY2 = abs(Ymax2 - Ymin2);
+
+			int sizeX = abs(distX - distX2);
+			int sizeY = abs(distY - distY2);
+
 			bool isOk = true;
 			for (int index = 0; index < approx.size(); ++index) {
-				if ((approx[index].x < Xmin && approx[index].x > Xmin - 25)|| (approx[index].x > Xmax && approx[index].x < Xmax + 25)) {
+				if (approx[index].x < Xmax || approx[index].x > Xmin ) {
 					isOk = false;
 				}
 				if (approx[index].y < Ymin || approx[index].y > Ymax) {
+					isOk = false;
+				}
+
+				if (sizeX < 100 || sizeY < 100) {
 					isOk = false;
 				}
 			}
