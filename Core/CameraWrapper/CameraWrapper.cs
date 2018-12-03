@@ -28,7 +28,20 @@ namespace Wrapper {
 
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
-            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern void Calibrate(IntPtr area, IntPtr cameraCV, IntPtr K, IntPtr D);
+            [DllImport(dllpath, EntryPoint = "create_calibrator")] static public extern IntPtr CreateCalibrator(int image_count, int square_size);
+            [DllImport(dllpath, EntryPoint = "add_pattern_to_calibrator")] static public extern void AddPatternToCalibrator(IntPtr calibrator, IntPtr cameraCV);
+            [DllImport(dllpath, EntryPoint = "check_pattern_count")] static public extern bool CheckPatternCount(IntPtr calibrator);
+            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern bool Calibrate(IntPtr calibrator, IntPtr cameraCV);
+            /*
+            DllExport Mat* get_K(Calibrator*);
+            DllExport Mat* get_D(Calibrator*);
+            DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
+            DllExport void init_transform_import_KD(TransformTracking*, Area*,
+                double K00, double K01, double K02,
+                double K10, double K11, double K12,
+                double K20, double K21, double K22,
+                double D0, double D1, double D2, double D4);
+            */
             [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
             [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
             [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area, IntPtr K, IntPtr D);
@@ -162,10 +175,6 @@ namespace Wrapper {
 
         public void UpdateTranform() {
             embededFunctions.UpdateTransform(tranformTracking, area);
-        }
-
-        public void InitMazeData() {
-
         }
 
         public void Tracking() {

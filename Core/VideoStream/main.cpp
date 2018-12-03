@@ -39,6 +39,10 @@ uchar * getLiveFrame(CameraCV * cam, int * sizeofMat) {
 	return cam->getLiveFrame(sizeofMat);
 }
 
+Core * createCore() {
+	return new Core();
+}
+
 Area* create_area() {
 	return new Area;
 }
@@ -88,7 +92,6 @@ Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
 }
 
 vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int i) {
-
 	vector<vector<Point>> walls = area->getWall();
 	vector<Point> wall = walls[i];
 
@@ -106,9 +109,9 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 	Mat unprojectedPoints = H.inv() * wallMat;
 
 	// normalize
-	for (int i = 0; i < 2; i++) {
-		unprojectedPoints.at<double>(0, i) /= unprojectedPoints.at<double>(2, i);
-		unprojectedPoints.at<double>(1, i) /= unprojectedPoints.at<double>(2, i);
+	for (int j = 0; j < 2; j++) {
+		unprojectedPoints.at<double>(0, j) /= unprojectedPoints.at<double>(2, j);
+		unprojectedPoints.at<double>(1, j) /= unprojectedPoints.at<double>(2, j);
 	}
 
 	vector<Point2d*>* result = new vector<Point2d*>;
@@ -116,7 +119,6 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1)));
 
 	return result;
-
 }
 
 Point2d* get_point(int j, vector<Point2d*>* wall) {
@@ -139,33 +141,28 @@ double get_y(Point2d* point) {
 	return point->y;
 }
 
-Core* createCore() {
-	return new Core;
-}
-
 void video(Core* core) {
 	core->Video();
 }
 
-bool check_build(CameraCV* core) {
+bool check_build(Core* core) {
 	return core->capture_read() && core->get_isBuild();
 }
 
-void build(CameraCV* core) {
+void build(Core* core) {
 	core->BuildMaze();
 }
 
-void tracking(CameraCV* core) {
-
+void tracking(Core* core) {
 	core->TrackingArea();
-
 }
 
-Area* get_area(CameraCV* core) {
+Area* get_area(Core* core) {
 	return core->getArea();
 }
 
 MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
+
 	MazeTransform maze(*K, *D);
 	vector<Point> corners = area->getArea();
 
@@ -271,7 +268,7 @@ void update_transform(TransformTracking* transformTracking, Area* area) {
 	transformTracking->update_from_maze(maze);
 }
 
-bool check_tracking(CameraCV* core) {
+bool check_tracking(Core* core) {
 	return core->capture_read();
 }
 
@@ -280,7 +277,6 @@ MazeTransform* createMazeTransform() {
 }
 
 void compute_transform(double corners[][2], MazeTransform* mazeTransform) {
-
 	vector<Point2d> points;
 
 	for (int i = 0; i < 4; i++) {
@@ -289,11 +285,9 @@ void compute_transform(double corners[][2], MazeTransform* mazeTransform) {
 	}
 
 	mazeTransform->compute_transform(points);
-		
 }
 
 double** get_H(MazeTransform* mazeTransform) {
-
 	Mat H = mazeTransform->get_H();
 
 	double** res = new double*[3];
@@ -304,11 +298,9 @@ double** get_H(MazeTransform* mazeTransform) {
 	}
 
 	return res;
-
 }
 
 double** get_rots(MazeTransform* mazeTransform) {
-
 	Mat rots = mazeTransform->get_rots();
 
 	double** res = new double*[3];
@@ -319,11 +311,9 @@ double** get_rots(MazeTransform* mazeTransform) {
 	}
 
 	return res;
-
 }
 
 double** get_trans(MazeTransform* mazeTransform) {
-
 	Mat trans = mazeTransform->get_trans();
 
 	double** res = new double*[3];
@@ -334,7 +324,6 @@ double** get_trans(MazeTransform* mazeTransform) {
 	}
 
 	return res;
-
 }
 
 TransformTracking* create_transform_tracking() {

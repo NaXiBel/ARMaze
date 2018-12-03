@@ -18,8 +18,9 @@ DllExport int getWidth(CameraCV * cam);
 DllExport int getHeight(CameraCV * cam);
 DllExport uchar * getLiveFrame(CameraCV * cam, int * sizeofMat);
 
-DllExport bool check_build(CameraCV*);
-DllExport void build(CameraCV*);
+DllExport Core * createCore();
+DllExport bool check_build(Core*);
+DllExport void build(Core*);
 
 // calibration
 DllExport Calibrator* create_calibrator(int image_count, int square_size);
@@ -36,9 +37,9 @@ DllExport void init_transform_import_KD(TransformTracking*, Area*,
 	double D0, double D1, double D2, double D4);
 
 DllExport void update_transform(TransformTracking*, Area*);
-DllExport void tracking(CameraCV*);
-DllExport Area* get_area(CameraCV* core);
-DllExport bool check_tracking(CameraCV*);
+DllExport void tracking(Core*);
+DllExport Area* get_area(Core* core);
+DllExport bool check_tracking(Core*);
 
 DllExport Area* create_area();
 DllExport Point2d* get_begin_center(Area*, TransformTracking*);

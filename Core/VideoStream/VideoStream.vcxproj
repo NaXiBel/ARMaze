@@ -37,6 +37,9 @@
     <ClInclude Include="CameraCV.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\camerawrapper\camerawrapper.cs" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{EE710222-7E37-43DD-B35B-804110288FDA}</ProjectGuid>
