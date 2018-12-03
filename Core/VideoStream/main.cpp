@@ -165,9 +165,8 @@ Area* get_area(CameraCV* core) {
 	return core->getArea();
 }
 
-
-MazeTransform getTransform(Area* area) {
-	MazeTransform maze;
+MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
+	MazeTransform maze(*K, *D);
 	vector<Point> corners = area->getArea();
 
 	vector<Point2d> cornersD;
@@ -180,14 +179,96 @@ MazeTransform getTransform(Area* area) {
 	return maze;
 }
 
-void init_transform(TransformTracking* transformTracking, Area* area) {
-	MazeTransform transform = getTransform(area);
+Calibrator* create_calibrator(int image_count, int square_size) {
+
+	vector<Point3d> corners;
+	for (int i = 0; i < 6; ++i)
+		for (int j = 0; j < 9; ++j)
+			corners.push_back(Point3d(j*square_size, i*square_size, 0));
+
+	vector<vector<Point3d>> object_patterns;
+	for (int i = 0; i < image_count; i++)
+		object_patterns.push_back(corners);
+
+	return new Calibrator(image_count, object_patterns);
+
+}
+
+void add_pattern_to_calibrator(Calibrator* calibrator, CameraCV* cameraCV) {
+
+	// TODO : cameraCV doit quelque part pouvoir trouver un chessboard
+	// devrait s'implementer facilement avec cv::findchessboardpattern
+	// devra retourner un boolean : pattern trouvé, ou pas
+	// et en argument OUT renvera un vector<Point2d>
+
+	// vector<Point2d> pattern;
+	// boolean found = cameraCV.findChessboard(..., pattern, ...);
+	// if(found)
+	//	calibrator.add_pattern(pattern);
+
+}
+
+bool check_pattern_count(Calibrator* calibrator) {
+	return calibrator->is_ready();
+}
+
+void calibrate(Calibrator* calibrator, CameraCV* cameraCV) {
+	calibrator->run_calibration(Size(cameraCV->getWidth(), cameraCV->getHeigth()));
+}
+
+Mat* get_K(Calibrator* calibrator) {
+	return new Mat(calibrator->get_intrinsic_matrix());
+}
+
+Mat* get_D(Calibrator* calibrator) {
+	return new Mat(calibrator->get_dist_coeffs());
+}
+
+void init_transform(TransformTracking* transformTracking, Area* area, Mat* K, Mat* D) {
+	MazeTransform* transform = new MazeTransform(getTransform(area, K, D));
 	transformTracking->init_from_maze(transform);
 }
 
+void init_transform_import_KD(TransformTracking* transformTracking, Area* area,
+	double K00, double K01, double K02,
+	double K10, double K11, double K12,
+	double K20, double K21, double K22,
+	double D0, double D1, double D2, double D3, double D4, double D5, double D6, double D7) {
+
+	Mat* K = new Mat(3, 3, CV_64FC1);
+	Mat* D = new Mat(8, 1, CV_64FC1);
+	
+	K->at<double>(0, 0) = K00; K->at<double>(0, 1) = K01; K->at<double>(0, 2) = K02;
+	K->at<double>(1, 0) = K10; K->at<double>(1, 1) = K11; K->at<double>(1, 2) = K12;
+	K->at<double>(2, 0) = K20; K->at<double>(2, 1) = K21; K->at<double>(2, 2) = K22;
+
+	D->at<double>(0, 0) = D0;
+	D->at<double>(1, 0) = D1;
+	D->at<double>(2, 0) = D2;
+	D->at<double>(3, 0) = D3;
+	D->at<double>(4, 0) = D4;
+	D->at<double>(5, 0) = D5;
+	D->at<double>(6, 0) = D6;
+	D->at<double>(7, 0) = D7;
+	
+	MazeTransform* transform = new MazeTransform(getTransform(area, K, D));
+	transformTracking->init_from_maze(transform);
+
+}
+
 void update_transform(TransformTracking* transformTracking, Area* area) {
-	MazeTransform transform = getTransform(area);
-	transformTracking->update_from_maze(transform);
+	MazeTransform* maze = transformTracking->get_transform();
+
+	vector<Point> corners = area->getArea();
+
+	vector<Point2d> cornersD;
+	for (int i = 0; i < 4; i++) {
+		Point p = corners[i];
+		cornersD.push_back(Point2d(p.x, p.y));
+	}
+
+	maze->compute_transform(cornersD);
+	transformTracking->update_from_maze(maze);
 }
 
 bool check_tracking(CameraCV* core) {
@@ -196,14 +277,6 @@ bool check_tracking(CameraCV* core) {
 
 MazeTransform* createMazeTransform() {
 	return new MazeTransform();
-}
-
-MazeTransform* createMazeTransformIM(double** intrinsic_matrix) {
-	Mat intrinsic_matrix_mat = Mat(3, 3, CV_64FC1);
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-			intrinsic_matrix_mat.at<double>(i, j) = intrinsic_matrix[i][j];
-	return new MazeTransform(intrinsic_matrix_mat);
 }
 
 void compute_transform(double corners[][2], MazeTransform* mazeTransform) {

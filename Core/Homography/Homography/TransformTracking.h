@@ -6,14 +6,17 @@ class TransformTracking
 {
 
 public:
+
 	TransformTracking();
 	~TransformTracking();
 
-	void init_from_maze(MazeTransform maze);
-	void update_from_maze(MazeTransform maze);
+	void init_from_maze(MazeTransform* maze);
+	void update_from_maze(MazeTransform* maze);
 
 	void init(Mat trans, Mat rot, Mat H);
 	void update(Mat trans, Mat rot);
+
+	MazeTransform* get_transform();
 
 	Mat get_init_rot();
 	Mat get_current_rot();
@@ -25,9 +28,9 @@ public:
 
 	Mat get_H_init();
 
-	static Mat affect_tranform(Mat point, Mat trans, Mat rot);
-
 private:
+
+	MazeTransform * current_transform;
 
 	Mat m_initH;
 

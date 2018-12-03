@@ -260,7 +260,7 @@ void CameraCV::Start() {
 		corners2d.push_back(corners[i]);
 
 	mt.compute_transform(corners2d);
-	trtr.init_from_maze(mt);
+	trtr.init_from_maze(&mt);
 
 	vector<Point> begin = m_Area.getStart();
 	Point2d center;
@@ -285,7 +285,7 @@ void CameraCV::Start() {
 
 	TrackingArea();
 	mt.compute_transform(corners2d);
-	trtr.update_from_maze(mt);
+	trtr.update_from_maze(&mt);
 
 	// Exit if ESC pressed.
 //	int k = waitKey(1);
