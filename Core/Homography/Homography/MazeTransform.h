@@ -23,6 +23,7 @@ class MazeTransform
 
 private:
 
+	vector<double> D;
 	Mat H;
 	Mat K;
 	Mat rot;
@@ -31,7 +32,7 @@ private:
 public:
 
 	MazeTransform();
-	MazeTransform(Mat intrinsic_matrix);
+	MazeTransform(Mat intrinsic_matrix, Mat dist_coefs);
 
 	~MazeTransform();
 

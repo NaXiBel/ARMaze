@@ -23,6 +23,7 @@
     <ClCompile Include="..\Core.cpp" />
     <ClCompile Include="..\Homography\Homography\MazeTransform.cpp" />
     <ClCompile Include="..\Homography\Homography\TransformTracking.cpp" />
+    <ClCompile Include="Calibrator.cpp" />
     <ClCompile Include="CameraCV.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestStream.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\Core.h" />
     <ClInclude Include="..\Homography\Homography\MazeTransform.h" />
     <ClInclude Include="..\Homography\Homography\TransformTracking.h" />
+    <ClInclude Include="Calibrator.h" />
     <ClInclude Include="CameraCV.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
@@ -56,10 +58,10 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -93,7 +95,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\ARMaze\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(SolutionDir)..\gui\$(TargetName)$(TargetExt)" /Y

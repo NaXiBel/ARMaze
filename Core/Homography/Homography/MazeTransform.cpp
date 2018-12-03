@@ -36,8 +36,9 @@ vector<Point2d> sortPoints(vector<Point2d> coord) {
 MazeTransform::MazeTransform() {
 	K = getIntrinsicMatrix();
 }
-MazeTransform::MazeTransform(Mat intrinsic_matrix) {
+MazeTransform::MazeTransform(Mat intrinsic_matrix, Mat dist_coefs) {
 	K = intrinsic_matrix;
+	D = dist_coefs;
 }
 
 MazeTransform::~MazeTransform() {

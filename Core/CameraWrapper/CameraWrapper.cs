@@ -28,9 +28,10 @@ namespace Wrapper {
 
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern void Calibrate(IntPtr area, IntPtr cameraCV, IntPtr K, IntPtr D);
             [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
             [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
-            [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area);
+            [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area, IntPtr K, IntPtr D);
             [DllImport(dllpath, EntryPoint = "update_transform")] static public extern void UpdateTransform(IntPtr tranformTracking, IntPtr area);
             [DllImport(dllpath, EntryPoint = "tracking")] static public extern void Tracking(IntPtr core);
             [DllImport(dllpath, EntryPoint = "get_area")] static public extern IntPtr GetArea(IntPtr core);
@@ -50,6 +51,8 @@ namespace Wrapper {
         private IntPtr core;
         private IntPtr area;
         private IntPtr tranformTracking;
+        private IntPtr K;
+        private IntPtr D;
 
         private CameraWrapper() {}
 
@@ -147,9 +150,14 @@ namespace Wrapper {
             area = embededFunctions.GetArea(camera);
         }
 
+        public void CalibrateCamera()
+        {
+            embededFunctions.Calibrate(area, camera, K, D);
+        }
+
         public void InitTransform() {
             tranformTracking = embededFunctions.CreateTransformTracking();
-            embededFunctions.InitTransform(tranformTracking, area);
+            embededFunctions.InitTransform(tranformTracking, area, K ,D);
         }
 
         public void UpdateTranform() {

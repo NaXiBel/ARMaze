@@ -8,7 +8,7 @@
 
 using namespace cv;
 
-int main(void) {
+int test(void) {
 	String window_name = "Test class";
 	CameraCV * cam = new CameraCV();
 

@@ -24,6 +24,10 @@ void TransformTracking::update(Mat trans, Mat rot) {
 	m_currentRot = rot;
 }
 
+MazeTransform* TransformTracking::get_transform() {
+	return current_transform;
+}
+
 Mat TransformTracking::get_init_rot() {
 	return m_initRot;
 }
@@ -48,20 +52,16 @@ Mat TransformTracking::get_delta_trans() {
 	return m_deltaTrans;
 }
 
-Mat TransformTracking::affect_tranform(Mat point, Mat trans, Mat rot) {
-	return rot * trans * point;
+void TransformTracking::init_from_maze(MazeTransform* maze) {
+	current_transform = maze;
+	init(maze->get_trans(), maze->get_rots(), maze->get_H());
 }
 
-void TransformTracking::init_from_maze(MazeTransform maze) {
-	init(maze.get_trans(), maze.get_rots(), maze.get_H());
-}
-
-void TransformTracking::update_from_maze(MazeTransform maze) {
-	update(maze.get_trans(), maze.get_rots());
+void TransformTracking::update_from_maze(MazeTransform* maze) {
+	current_transform = maze;
+	update(maze->get_trans(), maze->get_rots());
 }
 
 Mat TransformTracking::get_H_init() {
 	return m_initH;
 }
-
-
