@@ -1070,7 +1070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b890f30ce773d48a827c93424d586d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelToLoad: Main
+  _levelToLoad: InGame
   _optionsPanel: {fileID: 0}
   _creditsPanel: {fileID: 0}
 --- !u!4 &389911131
