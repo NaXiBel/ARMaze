@@ -1,5 +1,6 @@
 #include "main.h"
 
+/*** CameraCV functions ***/
 CameraCV * createCamera() {
 	std::cout << "Creating camera..." << std::endl;
 	return new CameraCV();
@@ -39,6 +40,7 @@ uchar * getLiveFrame(CameraCV * cam, int * sizeofMat) {
 	return cam->getLiveFrame(sizeofMat);
 }
 
+/*** Core functions ***/
 Core * createCore() {
 	return new Core();
 }
@@ -141,9 +143,9 @@ double get_y(Point2d* point) {
 	return point->y;
 }
 
-void video(Core* core) {
-	core->Video();
-}
+//void video(Core* core) {
+//	core->Video();
+//}
 
 bool check_build(Core* core) {
 	return core->capture_read() && core->get_isBuild();

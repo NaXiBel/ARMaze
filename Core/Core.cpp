@@ -23,14 +23,15 @@ void Core::Video() {
 
 	// Read the video stream
 	this->m_CameraCV->openStream(0);
-	if(!this->m_CameraCV->getVid().isOpened()) {
-		std::cout << "--(!)Error opening video capture" << std::endl;
-		//	return -1;
-	}
+	//if(!this->m_CameraCV->getVid().isOpened()) {
+	//	std::cout << "--(!)Error opening video capture" << std::endl;
+	//	return -1;
+	//}
 
-	this->m_CameraCV->getVid().set(CV_CAP_PROP_FRAME_WIDTH, 640);
-	this->m_CameraCV->getVid().set(CV_CAP_PROP_FRAME_HEIGHT, 480);
-	this->m_CameraCV->getVid().set(CV_CAP_PROP_FOURCC, CV_FOURCC('B', 'G', 'R', '3'));
+	//this->m_CameraCV->getVid().set(CV_CAP_PROP_FRAME_WIDTH, 640);
+	//this->m_CameraCV->getVid().set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+	//this->m_CameraCV->getVid().set(CV_CAP_PROP_FOURCC, CV_FOURCC('B', 'G', 'R', '3'));
+	this->m_CameraCV->displayStream();
 }
 
 void Core::BuildMaze() {

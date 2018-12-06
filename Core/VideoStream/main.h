@@ -10,6 +10,7 @@
 #include "../Homography/Homography/TransformTracking.h"
 #include "Calibrator.h"
 
+/*** CameraCV functions ***/
 DllExport CameraCV * createCamera();
 DllExport void disposeCamera(CameraCV * cam);
 DllExport void openStream(CameraCV * cam, int id);
@@ -18,6 +19,7 @@ DllExport int getWidth(CameraCV * cam);
 DllExport int getHeight(CameraCV * cam);
 DllExport uchar * getLiveFrame(CameraCV * cam, int * sizeofMat);
 
+/*** Core functions ***/
 DllExport Core * createCore();
 DllExport bool check_build(Core*);
 DllExport void build(Core*);

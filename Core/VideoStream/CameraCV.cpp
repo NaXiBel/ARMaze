@@ -41,6 +41,7 @@ void CameraCV::displayStream() {
 
 	int c = cvWaitKey(10);
 	while((char)c != 'q') {
+		this->readFrame();
 		cv::imshow("Debug CameraCV frame", this->getFrame());
 		int c = cvWaitKey(10);
 	}

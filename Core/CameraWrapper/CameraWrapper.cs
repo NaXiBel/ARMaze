@@ -6,15 +6,16 @@ namespace Wrapper {
 
     public class CameraWrapper {
         public struct embededFunctions {
-            const string dllpath = @".\VideoStream.dll";
-            //const string dllpath = @"D:\ARMaze - Copie\Core\x64\Debug\VideoStream.dll";
-            [DllImport(dllpath, EntryPoint = "createCamera")]static public extern IntPtr CreateCameraInput();
-            [DllImport(dllpath, EntryPoint = "disposeCamera")]static public extern void DisposeCameraInput(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "openStream")]static public extern void OpenStream(IntPtr pCam, int id = 0);
+            //const string dllpath = @".\VideoStream.dll";
+            const string dllpath = @"C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll";
+
+            [DllImport(dllpath, EntryPoint = "createCamera")] static public extern IntPtr CreateCameraInput();
+            [DllImport(dllpath, EntryPoint = "disposeCamera")] static public extern void DisposeCameraInput(IntPtr pCam);
+            [DllImport(dllpath, EntryPoint = "openStream")] static public extern void OpenStream(IntPtr pCam, int id = 0);
             [DllImport(dllpath, EntryPoint = "displayStream")] static public extern void DisplayStream(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "getLiveFrame")]static public extern IntPtr GetLiveFrame(IntPtr pCam, out int sizeofMat);
-            [DllImport(dllpath, EntryPoint = "getWidth")]static public extern int GetWidth(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "getHeight")]static public extern int GetHeight(IntPtr pCam);
+            [DllImport(dllpath, EntryPoint = "getLiveFrame")] static public extern IntPtr GetLiveFrame(IntPtr pCam, out int sizeofMat);
+            [DllImport(dllpath, EntryPoint = "getWidth")] static public extern int GetWidth(IntPtr pCam);
+            [DllImport(dllpath, EntryPoint = "getHeight")] static public extern int GetHeight(IntPtr pCam);
 
             [DllImport(dllpath, EntryPoint = "create_area")] static public extern IntPtr CreateArea();
             [DllImport(dllpath, EntryPoint = "get_begin_center")] static public extern IntPtr GetBeginCenter(IntPtr area, IntPtr transformTracking);
@@ -67,7 +68,7 @@ namespace Wrapper {
         private IntPtr K;
         private IntPtr D;
 
-        private CameraWrapper() {}
+        private CameraWrapper() { }
 
         static public CameraWrapper GetInstance() {
             if(instance == null) {
@@ -76,8 +77,7 @@ namespace Wrapper {
 
             return instance;
         }
-        public double[] GetEndCenter()
-        {
+        public double[] GetEndCenter() {
             IntPtr endPtr = embededFunctions.GetEndCenter(area, tranformTracking);
             double[] endDouble = new double[2];
             endDouble[0] = embededFunctions.GetX(endPtr);
@@ -85,8 +85,7 @@ namespace Wrapper {
             return endDouble;
         }
 
-        public double[] GetBeginCenter()
-        {
+        public double[] GetBeginCenter() {
             IntPtr beginPtr = embededFunctions.GetBeginCenter(area, tranformTracking);
             double[] beginDouble = new double[2];
             beginDouble[0] = embededFunctions.GetX(beginPtr);
@@ -94,16 +93,13 @@ namespace Wrapper {
             return beginDouble;
         }
 
-        public List<double[,]> GetWall()
-        {
+        public List<double[,]> GetWall() {
             List<double[,]> walls = new List<double[,]>();
-            for (int i = 0; i < embededFunctions.NbOfWalls(area); ++i)
-            {
+            for(int i = 0; i < embededFunctions.NbOfWalls(area); ++i) {
                 IntPtr wallPtr = embededFunctions.GetWall(area, tranformTracking, i);
                 double[,] wallDouble = new double[2, 2];
 
-                for (int j = 0; j < 2; ++j)
-                {
+                for(int j = 0; j < 2; ++j) {
                     wallDouble[j, 0] = embededFunctions.GetX(embededFunctions.GetPoint(j, wallPtr));
                     wallDouble[j, 1] = embededFunctions.GetY(embededFunctions.GetPoint(j, wallPtr));
                 }
@@ -112,8 +108,7 @@ namespace Wrapper {
             return walls;
         }
 
-
-
+        /*** CameraCV Wrapping ***/
         public void InitCamera() {
             this.camera = embededFunctions.CreateCameraInput();
         }
@@ -146,6 +141,7 @@ namespace Wrapper {
             embededFunctions.DisposeCameraInput(this.camera);
         }
 
+        /*** Core Wrapping ***/
         public void InitCore() {
             this.core = embededFunctions.CreateCore();
         }
@@ -158,19 +154,18 @@ namespace Wrapper {
             return embededFunctions.CheckBuild(camera);
         }
 
-        public void Build(){
+        public void Build() {
             embededFunctions.Build(camera);
             area = embededFunctions.GetArea(camera);
         }
 
-        public void CalibrateCamera()
-        {
-            embededFunctions.Calibrate(area, camera, K, D);
+        public void CalibrateCamera() {
+            //embededFunctions.Calibrate(area, camera, K, D);
         }
 
         public void InitTransform() {
             tranformTracking = embededFunctions.CreateTransformTracking();
-            embededFunctions.InitTransform(tranformTracking, area, K ,D);
+            embededFunctions.InitTransform(tranformTracking, area, K, D);
         }
 
         public void UpdateTranform() {
@@ -189,7 +184,7 @@ namespace Wrapper {
         public double[] GetInitRot() {
             double[] rot = new double[3];
             IntPtr matRot = embededFunctions.GetInitRot(tranformTracking);
-            for(int i = 0 ; i < 3 ; i++) {
+            for(int i = 0; i < 3; i++) {
                 rot[i] = embededFunctions.At(i, 0, matRot);
             }
             return rot;
@@ -198,7 +193,7 @@ namespace Wrapper {
         public double[] GetInitTrans() {
             double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetInitTrans(tranformTracking);
-            for (int i = 0 ; i < 3 ; i++) {
+            for(int i = 0; i < 3; i++) {
                 trans[i] = embededFunctions.At(i, 0, matTrans);
             }
             return trans;
@@ -207,7 +202,7 @@ namespace Wrapper {
         public double[] GetDeltaRot() {
             double[] rot = new double[3];
             IntPtr matRot = embededFunctions.GetDeltaRot(tranformTracking);
-            for (int i = 0 ; i < 3 ; i++) {
+            for(int i = 0; i < 3; i++) {
                 rot[i] = embededFunctions.At(i, 0, matRot);
             }
             return rot;
@@ -216,47 +211,40 @@ namespace Wrapper {
         public double[] GetDeltaTrans() {
             double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetDeltaTrans(tranformTracking);
-            for (int i = 0 ; i < 3 ; i++) {
+            for(int i = 0; i < 3; i++) {
                 trans[i] = embededFunctions.At(i, 0, matTrans);
             }
             return trans;
         }
 
         static void Main(string[] args) {
-            //Console.WriteLine("Testing VideoStream.dll...");
-            //IntPtr test = embededFunctions.CreateCameraInput();
-            //embededFunctions.OpenStream(test);
-            //embededFunctions.DisplayStream(test);
-
-            /*
-            Console.WriteLine("Testing Wrapper...");
-            CameraWrapper wrap = CameraWrapper.GetInstance();
-            wrap.InitCamera();
-            wrap.OpenVideoStream(0);
-            byte[] test = wrap.GetCameraFrame();
-            wrap.DisplayCameraStream();
-            */
+            //Console.WriteLine("Testing Wrapper...");
+            //CameraWrapper wrap = CameraWrapper.GetInstance();
+            //wrap.InitCamera();
+            //wrap.OpenVideoStream(0);
+            //byte[] test = wrap.GetCameraFrame();
+            //wrap.DisplayCameraStream();
+            //Console.ReadKey();
 
             CameraWrapper wrap = CameraWrapper.GetInstance();
             wrap.InitCore();
-            wrap.Video();
 
-            while (wrap.CheckBuid())
+            while(wrap.CheckBuid())
                 wrap.Build();
+
             wrap.InitTransform();
             do {
                 wrap.Tracking();
                 wrap.UpdateTranform();
 
                 double[] rot = wrap.GetDeltaRot();
-                for(int i = 0 ; i < 3 ; i++) {
+                for(int i = 0; i < 3; i++) {
                     Console.Write(rot[i] + " ");
                 }
 
-            } while (wrap.CheckTracking());
+            } while(wrap.CheckTracking());
 
             Console.ReadKey();
         }
-
     }
 }
