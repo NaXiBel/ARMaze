@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Wrapper {
 
-    public class CameraWrapper {
+    public class CoreWrapper {
         public struct embededFunctions {
             //const string dllpath = @".\VideoStream.dll";
             const string dllpath = @"C:\Users\alexm\Documents\ARMaze\Core\x64\Debug\VideoStream.dll";
@@ -64,7 +64,7 @@ namespace Wrapper {
 
         }
 
-        private static CameraWrapper instance = null;
+        private static CoreWrapper instance = null;
         public bool FinishedBuild;
         private IntPtr camera;
         private IntPtr core;
@@ -73,11 +73,11 @@ namespace Wrapper {
         private IntPtr K;
         private IntPtr D;
 
-        private CameraWrapper() { }
+        private CoreWrapper() { }
 
-        static public CameraWrapper GetInstance() {
+        static public CoreWrapper GetInstance() {
             if(instance == null) {
-                instance = new CameraWrapper();
+                instance = new CoreWrapper();
             }
 
             return instance;
@@ -219,31 +219,31 @@ namespace Wrapper {
 
         static void Main(string[] args) {
             //Console.WriteLine("Testing Wrapper...");
-            //CameraWrapper wrap = CameraWrapper.GetInstance();
+            //CoreWrapper wrap = CoreWrapper.GetInstance();
             //wrap.InitCamera();
             //wrap.OpenVideoStream(0);
             //byte[] test = wrap.GetCameraFrame();
             //wrap.DisplayCameraStream();
             //Console.ReadKey();
 
-            CameraWrapper wrap = CameraWrapper.GetInstance();
+            CoreWrapper wrap = CoreWrapper.GetInstance();
             wrap.InitCore();
             wrap.OpenVideoStream(0);
             //wrap.Start();
 
-            //while(!wrap.CheckBuid())
-            //    wrap.Build();
+            while(!wrap.CheckBuid())
+                wrap.Build();
 
-            //wrap.InitTransform();
-            //do {
-            //    wrap.Tracking();
-            //    wrap.UpdateTranform();
+            wrap.InitTransform();
+            do {
+                wrap.Tracking();
+                wrap.UpdateTranform();
 
-            //    double[] rot = wrap.GetDeltaRot();
-            //    for(int i = 0; i < 3; i++) {
-            //        Console.Write(rot[i] + " ");
-            //    }
-            //} while(wrap.CheckTracking());
+                double[] rot = wrap.GetDeltaRot();
+                for(int i = 0; i < 3; i++) {
+                    Console.Write(rot[i] + " ");
+                }
+            } while(wrap.CheckTracking());
 
             Console.ReadKey();
         }

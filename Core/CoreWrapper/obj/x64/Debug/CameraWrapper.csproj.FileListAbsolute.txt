@@ -88,3 +88,4 @@ C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.p
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.dll.config
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.dll
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.dll
+C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csprojAssemblyReference.cache

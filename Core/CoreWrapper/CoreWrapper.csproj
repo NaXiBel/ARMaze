@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{042E4A9A-C02E-4F4A-9028-9E3BE9EBB82B}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CameraWrapper</RootNamespace>
-    <AssemblyName>CameraWrapper</AssemblyName>
+    <RootNamespace>CoreWrapper</RootNamespace>
+    <AssemblyName>CoreWrapper</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -60,7 +60,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CameraWrapper.cs" />
+    <Compile Include="CoreWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
