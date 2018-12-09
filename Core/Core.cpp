@@ -107,7 +107,7 @@ void Core::BuildMaze() {
 	Mat fr = this->m_CameraCV->getFrame();
 	cvtColor(this->m_CameraCV->getFrame(), fr, CV_BGR2GRAY); // convert gray 
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, 50, 200, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -215,7 +215,7 @@ void Core::TrackingArea() {
 		return;
 	}
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, 100, 200, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny2, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -227,17 +227,17 @@ void Core::TrackingArea() {
 
 	for(int i = 0; i < m_Area.getArea().size(); ++i) {
 		if(m_Area.getArea()[i].x < Xmin) {
-			Xmin = m_Area.getArea()[i].x - 200;
+			Xmin = m_Area.getArea()[i].x - 150;
 		}
 		else if(m_Area.getArea()[i].x > Xmax) {
-			Xmax = m_Area.getArea()[i].x + 200;
+			Xmax = m_Area.getArea()[i].x + 150;
 		}
 		if(m_Area.getArea()[i].y < Ymin) {
 
-			Ymin = m_Area.getArea()[i].y - 200;
+			Ymin = m_Area.getArea()[i].y - 150;
 		}
 		else if(m_Area.getArea()[i].y > Ymax) {
-			Ymax = m_Area.getArea()[i].y + 200;
+			Ymax = m_Area.getArea()[i].y + 150;
 		}
 	}
 	if(Ymax < 0 || Xmax < 0)
@@ -261,7 +261,7 @@ void Core::TrackingArea() {
 
 	//imshow("MaskTracker", mask);
 
-	m_Area.buildEdge(mask);
+	//m_Area.buildEdge(mask);
 	m_Area.tracking(mask, Xmin, Xmax, Ymin, Ymax, distX, distY);
 
 	// ONLY TEST DISPLAY AREA
@@ -272,6 +272,7 @@ void Core::TrackingArea() {
 	m_Area.setSizeX(abs(Xmax - Xmin));
 	m_Area.setSizeY(abs(Ymax - Ymin));
 	imshow("Tracker", dst);
+	imshow("MaskTracker", mask);
 	int c = waitKey(10);
 	if ((char)c == 'q') {
 		return;

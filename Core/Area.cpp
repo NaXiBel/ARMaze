@@ -264,14 +264,14 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 	std::vector<Point> approx;
 	// find start and end
-
+	int max = -1;
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 35000) {
+		if (fabs(contourArea(Mat(contours[i]))) <= 2500) {
 			continue;
 		}
 
-		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.1, true);
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.05, true);
 
 		//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
 		int distX = abs(Xmax - Xmin);
@@ -287,17 +287,17 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 
 			for (int i = 0; i < approx.size(); ++i) {
 				if (approx[i].x < Xmin2) {
-					Xmin2 = approx[i].x - 200;
+					Xmin2 = approx[i].x - 150;
 				}
 				else if (approx[i].x > Xmax2) {
-					Xmax2 = approx[i].x + 200;
+					Xmax2 = approx[i].x + 150;
 				}
 				if (approx[i].y < Ymin2) {
 
-					Ymin2 = approx[i].y - 200;
+					Ymin2 = approx[i].y - 150;
 				}
 				else if (approx[i].y > Ymax2) {
-					Ymax2 = approx[i].y + 200;
+					Ymax2 = approx[i].y + 150;
 				}
 			}
 			if (Ymax2 < 0 || Xmax2 < 0)
@@ -310,16 +310,23 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 
 			bool isOk = true;
 			for (int index = 0; index < approx.size(); ++index) {
-				if (approx[index].x < Xmax || approx[index].x > Xmin ) {
+				if (approx[index].x < Xmin  || approx[index].x > Xmax) {
 					isOk = false;
 				}
 				if (approx[index].y < Ymin || approx[index].y > Ymax) {
 					isOk = false;
 				}
-
-				if (sizeX < 100 || sizeY < 100) {
+				
+				if (sizeX > 100 || sizeY > 100) {
 					isOk = false;
 				}
+				if (fabs(contourArea(Mat(approx))) > max) {
+					max = fabs(contourArea(Mat(approx)));
+				}
+				else {
+					isOk = false;
+				}
+				
 			}
 			if (isOk) {
 				m_Area = approx;
@@ -328,6 +335,31 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 		}
 	}
 	return true;
+	// find all edge
+/*	std::vector<std::vector<Point> > contours;
+	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+	std::vector<Point> approx;
+	sort(contours.begin(), contours.end(), compareConvexe); // sort connection
+
+	double max = 0;
+	for (int index = 0; index < contours.size(); ++index) {
+		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
+			continue;
+		}
+		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
+
+		if (approx.size() == 4) {
+			if (fabs(contourArea(Mat(approx))) > max) {
+				max = fabs(contourArea(Mat(approx)));
+				m_Area = approx;
+			}
+		}
+	}
+
+	if (max == 0)
+		return false;*/
+	return true;
+
 }
 
 
