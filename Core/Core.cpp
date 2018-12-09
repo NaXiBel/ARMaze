@@ -12,8 +12,56 @@ Core::Core(CameraCV cam) {
 	std:cout << this->m_CameraCV << endl;
 }
 
-void Core::set_camera(CameraCV * camera) {
-	this->m_CameraCV = camera;
+void Core::Start() {
+
+	while(!m_IsBuilt) {
+		this->m_CameraCV->readFrame();
+		BuildMaze();
+	}
+	/*
+	TransformTracking trtr;
+	MazeTransform mt;
+	vector<Point> corners = m_Area.getArea();
+	vector<Point2d> corners2d;
+
+	for(int i = 0; i < corners.size(); i++)
+		corners2d.push_back(corners[i]);
+
+	mt.compute_transform(corners2d);
+	trtr.init_from_maze(mt);
+
+	vector<Point> begin = m_Area.getStart();
+	Point2d center;
+	for(int i = 0; i < 4; i++) {
+		center += Point2d(begin[i].x, begin[i].y);
+		center /= 4;
+	}
+
+	Mat end3d(3, 1, CV_64FC1);
+
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
+	end3d.at<double>(2, 0) = 1;
+
+	Mat H = trtr.get_H_init();
+
+	Mat unprojectedPoint = H.inv() * end3d;
+
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+
+	cout << "points end" << unprojectedPoint << endl;
+	*/
+	if(m_IsBuilt) {
+		this->m_CameraCV->readFrame();
+		TrackingArea();
+	}
+	/*
+		mt.compute_transform(corners2d);
+		trtr.update_from_maze(mt);*/
+
+		// Exit if ESC pressed.
+	//	int k = waitKey(1);
+
 }
 
 void Core::Video() {
@@ -230,64 +278,20 @@ void Core::TrackingArea() {
 	}
 }
 
-void Core::Start() {
-
-	while(!m_IsBuilt) {
-		this->m_CameraCV->readFrame();
-		BuildMaze();
-	}
-	/*
-	TransformTracking trtr;
-	MazeTransform mt;
-	vector<Point> corners = m_Area.getArea();
-	vector<Point2d> corners2d;
-
-	for(int i = 0; i < corners.size(); i++)
-		corners2d.push_back(corners[i]);
-
-	mt.compute_transform(corners2d);
-	trtr.init_from_maze(mt);
-
-	vector<Point> begin = m_Area.getStart();
-	Point2d center;
-	for(int i = 0; i < 4; i++) {
-		center += Point2d(begin[i].x, begin[i].y);
-		center /= 4;
-	}
-	
-	Mat end3d(3, 1, CV_64FC1);
-
-	end3d.at<double>(0, 0) = center.x;
-	end3d.at<double>(1, 0) = center.y;
-	end3d.at<double>(2, 0) = 1;
-
-	Mat H = trtr.get_H_init();
-
-	Mat unprojectedPoint = H.inv() * end3d;
-
-	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
-
-	cout << "points end" << unprojectedPoint << endl;
-	*/
-	if (m_IsBuilt) {
-		this->m_CameraCV->readFrame();
-		TrackingArea();
-	}
-/*
-	mt.compute_transform(corners2d);
-	trtr.update_from_maze(mt);*/
-
-	// Exit if ESC pressed.
-//	int k = waitKey(1);
-
-}
-
 bool Core::get_isBuild() {
 	return m_IsBuilt;
 }
 
 bool Core::capture_read() {
 	return this->m_CameraCV->readFrame();
+}
+
+CameraCV * Core::get_camera() {
+	return this->m_CameraCV;
+}
+
+void Core::set_camera(CameraCV * camera) {
+	this->m_CameraCV = camera;
 }
 
 Area* Core::getArea() {

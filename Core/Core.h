@@ -31,14 +31,15 @@ class Core {
 	public:
 		Core();
 		Core(CameraCV cameraCV);
-		void Start();
 
+		void Start();
 		void Video();
 		void BuildMaze();
 		void TrackingArea();
 
 		bool get_isBuild();
 		bool capture_read();
+		CameraCV * get_camera();
 		void set_camera(CameraCV * camera);
 		Area* getArea();
 };

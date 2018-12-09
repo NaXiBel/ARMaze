@@ -29,6 +29,12 @@ namespace Wrapper {
 
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "getCameraCV")] static public extern IntPtr getCoreCamera(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "setCameraCV")] static public extern void setCoreCamera(IntPtr core, IntPtr camera);
+            [DllImport(dllpath, EntryPoint = "start")] static public extern void Start(IntPtr core);
+
             [DllImport(dllpath, EntryPoint = "create_calibrator")] static public extern IntPtr CreateCalibrator(int image_count, int square_size);
             [DllImport(dllpath, EntryPoint = "add_pattern_to_calibrator")] static public extern void AddPatternToCalibrator(IntPtr calibrator, IntPtr cameraCV);
             [DllImport(dllpath, EntryPoint = "check_pattern_count")] static public extern bool CheckPatternCount(IntPtr calibrator);
@@ -43,8 +49,6 @@ namespace Wrapper {
                 double K20, double K21, double K22,
                 double D0, double D1, double D2, double D4);
             */
-            [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
-            [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
             [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area, IntPtr K, IntPtr D);
             [DllImport(dllpath, EntryPoint = "update_transform")] static public extern void UpdateTransform(IntPtr tranformTracking, IntPtr area);
             [DllImport(dllpath, EntryPoint = "tracking")] static public extern void Tracking(IntPtr core);
@@ -77,12 +81,32 @@ namespace Wrapper {
 
             return instance;
         }
-        public double[] GetEndCenter() {
-            IntPtr endPtr = embededFunctions.GetEndCenter(area, tranformTracking);
-            double[] endDouble = new double[2];
-            endDouble[0] = embededFunctions.GetX(endPtr);
-            endDouble[1] = embededFunctions.GetY(endPtr);
-            return endDouble;
+
+        /*** CameraCV Wrapping ***/
+        public void InitCamera() {
+            this.camera = embededFunctions.CreateCameraInput();
+        }
+        public void DisposeCamera() {
+            embededFunctions.DisposeCameraInput(this.camera);
+        }
+        public void OpenVideoStream(int id = 0) {
+            embededFunctions.OpenStream(this.camera, id);
+        }
+        public void DisplayCameraStream() {
+            embededFunctions.DisplayStream(this.camera);
+        }
+        public byte[] GetCameraFrame() {
+            IntPtr buffer = embededFunctions.GetLiveFrame(this.camera, out int sizeofMat);
+            byte[] bytes = new byte[sizeofMat];
+            Marshal.Copy(buffer, bytes, 0, sizeofMat);
+
+            return bytes;
+        }
+        public int GetFrameWidth() {
+            return embededFunctions.GetWidth(this.camera);
+        }
+        public int GetFrameHeight() {
+            return embededFunctions.GetHeight(this.camera);
         }
 
         public double[] GetBeginCenter() {
@@ -92,7 +116,13 @@ namespace Wrapper {
             beginDouble[1] = embededFunctions.GetY(beginPtr);
             return beginDouble;
         }
-
+        public double[] GetEndCenter() {
+            IntPtr endPtr = embededFunctions.GetEndCenter(area, tranformTracking);
+            double[] endDouble = new double[2];
+            endDouble[0] = embededFunctions.GetX(endPtr);
+            endDouble[1] = embededFunctions.GetY(endPtr);
+            return endDouble;
+        }
         public List<double[,]> GetWall() {
             List<double[,]> walls = new List<double[,]>();
             for(int i = 0; i < embededFunctions.NbOfWalls(area); ++i) {
@@ -108,55 +138,29 @@ namespace Wrapper {
             return walls;
         }
 
-        /*** CameraCV Wrapping ***/
-        public void InitCamera() {
-            this.camera = embededFunctions.CreateCameraInput();
-        }
-
-        public void OpenVideoStream(int id = 0) {
-            embededFunctions.OpenStream(this.camera, id);
-        }
-
-        public byte[] GetCameraFrame() {
-            IntPtr buffer = embededFunctions.GetLiveFrame(this.camera, out int sizeofMat);
-            byte[] bytes = new byte[sizeofMat];
-            Marshal.Copy(buffer, bytes, 0, sizeofMat);
-
-            return bytes;
-        }
-
-        public int GetFrameWidth() {
-            return embededFunctions.GetWidth(this.camera);
-        }
-
-        public int GetFrameHeight() {
-            return embededFunctions.GetHeight(this.camera);
-        }
-
-        public void DisplayCameraStream() {
-            embededFunctions.DisplayStream(this.camera);
-        }
-
-        public void DisposeCamera() {
-            embededFunctions.DisposeCameraInput(this.camera);
-        }
-
         /*** Core Wrapping ***/
         public void InitCore() {
             this.core = embededFunctions.CreateCore();
+            this.camera = embededFunctions.getCoreCamera(this.core);
         }
-
         public void Video() {
             embededFunctions.Video(core);
         }
-
         public bool CheckBuid() {
-            return embededFunctions.CheckBuild(camera);
+            return embededFunctions.CheckBuild(this.core);
         }
-
         public void Build() {
             embededFunctions.Build(camera);
             area = embededFunctions.GetArea(camera);
+        }
+        public IntPtr GetCoreCamera() {
+            return this.camera;
+        }
+        public void SetCoreCamera(IntPtr cam) {
+            embededFunctions.setCoreCamera(this.core, cam);
+        }
+        public void Start() {
+            embededFunctions.Start(this.core);
         }
 
         public void CalibrateCamera() {
@@ -167,16 +171,13 @@ namespace Wrapper {
             tranformTracking = embededFunctions.CreateTransformTracking();
             embededFunctions.InitTransform(tranformTracking, area, K, D);
         }
-
         public void UpdateTranform() {
             embededFunctions.UpdateTransform(tranformTracking, area);
         }
-
         public void Tracking() {
             embededFunctions.Tracking(camera);
             area = embededFunctions.GetArea(camera);
         }
-
         public bool CheckTracking() {
             return embededFunctions.CheckTracking(camera);
         }
@@ -189,7 +190,6 @@ namespace Wrapper {
             }
             return rot;
         }
-
         public double[] GetInitTrans() {
             double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetInitTrans(tranformTracking);
@@ -198,7 +198,6 @@ namespace Wrapper {
             }
             return trans;
         }
-
         public double[] GetDeltaRot() {
             double[] rot = new double[3];
             IntPtr matRot = embededFunctions.GetDeltaRot(tranformTracking);
@@ -207,7 +206,6 @@ namespace Wrapper {
             }
             return rot;
         }
-
         public double[] GetDeltaTrans() {
             double[] trans = new double[3];
             IntPtr matTrans = embededFunctions.GetDeltaTrans(tranformTracking);
@@ -228,8 +226,10 @@ namespace Wrapper {
 
             CameraWrapper wrap = CameraWrapper.GetInstance();
             wrap.InitCore();
+            wrap.OpenVideoStream(0);
+            wrap.Start();
 
-            while(wrap.CheckBuid())
+/*            while(wrap.CheckBuid())
                 wrap.Build();
 
             wrap.InitTransform();
@@ -244,7 +244,7 @@ namespace Wrapper {
 
             } while(wrap.CheckTracking());
 
-            Console.ReadKey();
+            Console.ReadKey();*/
         }
     }
 }

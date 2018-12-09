@@ -23,6 +23,9 @@ DllExport uchar * getLiveFrame(CameraCV * cam, int * sizeofMat);
 DllExport Core * createCore();
 DllExport bool check_build(Core*);
 DllExport void build(Core*);
+DllExport CameraCV * getCameraCV(Core*);
+DllExport void setCameraCV(Core*, CameraCV*);
+DllExport void start(Core*);
 
 // calibration
 DllExport Calibrator* create_calibrator(int image_count, int square_size);

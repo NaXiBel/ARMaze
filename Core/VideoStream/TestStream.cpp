@@ -1,8 +1,8 @@
 // g++ -I"C:\Program Files\opencv\build\include" -L"C:\Program Files\opencv\release\lib" -g -o Test.exe TestStream.cxx -lopencv_core343 -lopencv_imgproc343 -lopencv_highgui343 -lopencv_imgcodecs343 -lopencv_videoio343
 
-#define TEST_CLASS
+#define TEST_CORE
 
-#ifdef TEST_CLASS
+#ifdef TEST_CORE
 #include "opencv2/opencv.hpp"
 #include "../Core.h"
 #include "CameraCV.h"

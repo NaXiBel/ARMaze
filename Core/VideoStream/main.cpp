@@ -45,108 +45,6 @@ Core * createCore() {
 	return new Core();
 }
 
-Area* create_area() {
-	return new Area;
-}
-
-Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
-	vector<Point> begin = area->getStart();
-	Point2d center;
-	for (int i = 0; i < 4; i++) {
-		center += Point2d(begin[i].x, begin[i].y);
-	}
-	center /= 4;
-
-	Mat end3d(3, 1, CV_64FC1);
-
-	end3d.at<double>(0, 0) = center.x;
-	end3d.at<double>(1, 0) = center.y;
-	end3d.at<double>(2, 0) = 1;
-
-	Mat H = transformTracking->get_H_init();
-
-	Mat unprojectedPoint = H.inv() * end3d;
-	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
-
-	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
-}
-
-Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
-	vector<Point> end = area->getEnd();
-	Point2d center;
-	for (int i = 0; i < 3; i++) {
-		center += Point2d(end[i].x, end[i].y);
-	}
-	center /= 3;
-
-	Mat end3d(3, 1, CV_64FC1);
-
-	end3d.at<double>(0, 0) = center.x;
-	end3d.at<double>(1, 0) = center.y;
-	end3d.at<double>(2, 0) = 1;
-
-	Mat H = transformTracking->get_H_init();
-
-	Mat unprojectedPoint = H.inv() * end3d;
-	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
-
-	return new Point2d(unprojectedPoint.at<double>(0,0) / dimX, unprojectedPoint.at<double>(1,0));
-}
-
-vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int i) {
-	vector<vector<Point>> walls = area->getWall();
-	vector<Point> wall = walls[i];
-
-	Mat wallMat(3,2,CV_64FC1);
-
-	wallMat.at<double>(0, 0) = wall[0].x;
-	wallMat.at<double>(1, 0) = wall[0].y;
-	wallMat.at<double>(2, 0) = 1;
-	wallMat.at<double>(0, 1) = wall[1].x;
-	wallMat.at<double>(1, 1) = wall[1].y;
-	wallMat.at<double>(2, 1) = 1;
-
-	Mat H = transformTracking->get_H_init();
-
-	Mat unprojectedPoints = H.inv() * wallMat;
-
-	// normalize
-	for (int j = 0; j < 2; j++) {
-		unprojectedPoints.at<double>(0, j) /= unprojectedPoints.at<double>(2, j);
-		unprojectedPoints.at<double>(1, j) /= unprojectedPoints.at<double>(2, j);
-	}
-
-	vector<Point2d*>* result = new vector<Point2d*>;
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0) / dimX, unprojectedPoints.at<double>(1, 0)));
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1)));
-
-	return result;
-}
-
-Point2d* get_point(int j, vector<Point2d*>* wall) {
-	return (*wall)[j];
-}
-
-int nb_of_walls(Area* area) {
-	return area->getWall().size();
-}
-
-int size(vector<Point*>* points) {
-	return points->size();
-}
-
-double get_x(Point2d* point) {
-	return point->x;
-}
-
-double get_y(Point2d* point) {
-	return point->y;
-}
-
-//void video(Core* core) {
-//	core->Video();
-//}
-
 bool check_build(Core* core) {
 	return core->capture_read() && core->get_isBuild();
 }
@@ -155,13 +53,21 @@ void build(Core* core) {
 	core->BuildMaze();
 }
 
-void tracking(Core* core) {
-	core->TrackingArea();
+CameraCV * getCameraCV(Core* core) {
+	return core->get_camera();
 }
 
-Area* get_area(Core* core) {
-	return core->getArea();
+void setCameraCV(Core* core, CameraCV* cam) {
+	core->set_camera(cam);
 }
+
+void start(Core* core) {
+	core->Start();
+}
+
+//void video(Core* core) {
+//	core->Video();
+//}
 
 MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
 
@@ -270,62 +176,114 @@ void update_transform(TransformTracking* transformTracking, Area* area) {
 	transformTracking->update_from_maze(maze);
 }
 
+void tracking(Core* core) {
+	core->TrackingArea();
+}
+
+Area* get_area(Core* core) {
+	return core->getArea();
+}
+
 bool check_tracking(Core* core) {
 	return core->capture_read();
 }
 
-MazeTransform* createMazeTransform() {
-	return new MazeTransform();
+Area* create_area() {
+	return new Area;
 }
 
-void compute_transform(double corners[][2], MazeTransform* mazeTransform) {
-	vector<Point2d> points;
-
-	for (int i = 0; i < 4; i++) {
-		Point2d point = Point2d(corners[i][0], corners[i][1]);
-		points.push_back(point);
+Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
+	vector<Point> begin = area->getStart();
+	Point2d center;
+	for(int i = 0; i < 4; i++) {
+		center += Point2d(begin[i].x, begin[i].y);
 	}
+	center /= 4;
 
-	mazeTransform->compute_transform(points);
+	Mat end3d(3, 1, CV_64FC1);
+
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
+	end3d.at<double>(2, 0) = 1;
+
+	Mat H = transformTracking->get_H_init();
+
+	Mat unprojectedPoint = H.inv() * end3d;
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+
+	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
 }
 
-double** get_H(MazeTransform* mazeTransform) {
-	Mat H = mazeTransform->get_H();
-
-	double** res = new double*[3];
-	for (int i = 0; i < 3; i++) {
-		res[i] = new double[3];
-		for (int j = 0; j < 3; j++)
-			res[i][j] = H.at<double>(i, j);
+Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
+	vector<Point> end = area->getEnd();
+	Point2d center;
+	for(int i = 0; i < 3; i++) {
+		center += Point2d(end[i].x, end[i].y);
 	}
+	center /= 3;
 
-	return res;
+	Mat end3d(3, 1, CV_64FC1);
+
+	end3d.at<double>(0, 0) = center.x;
+	end3d.at<double>(1, 0) = center.y;
+	end3d.at<double>(2, 0) = 1;
+
+	Mat H = transformTracking->get_H_init();
+
+	Mat unprojectedPoint = H.inv() * end3d;
+	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
+
+	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
 }
 
-double** get_rots(MazeTransform* mazeTransform) {
-	Mat rots = mazeTransform->get_rots();
+vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int i) {
+	vector<vector<Point>> walls = area->getWall();
+	vector<Point> wall = walls[i];
 
-	double** res = new double*[3];
-	for (int i = 0; i < 3; i++) {
-		res[i] = new double[3];
-		for (int j = 0; j < 3; j++)
-			res[i][j] = rots.at<double>(i, j);
+	Mat wallMat(3, 2, CV_64FC1);
+
+	wallMat.at<double>(0, 0) = wall[0].x;
+	wallMat.at<double>(1, 0) = wall[0].y;
+	wallMat.at<double>(2, 0) = 1;
+	wallMat.at<double>(0, 1) = wall[1].x;
+	wallMat.at<double>(1, 1) = wall[1].y;
+	wallMat.at<double>(2, 1) = 1;
+
+	Mat H = transformTracking->get_H_init();
+
+	Mat unprojectedPoints = H.inv() * wallMat;
+
+	// normalize
+	for(int j = 0; j < 2; j++) {
+		unprojectedPoints.at<double>(0, j) /= unprojectedPoints.at<double>(2, j);
+		unprojectedPoints.at<double>(1, j) /= unprojectedPoints.at<double>(2, j);
 	}
 
-	return res;
+	vector<Point2d*>* result = new vector<Point2d*>;
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0) / dimX, unprojectedPoints.at<double>(1, 0)));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1)));
+
+	return result;
 }
 
-double** get_trans(MazeTransform* mazeTransform) {
-	Mat trans = mazeTransform->get_trans();
+Point2d* get_point(int j, vector<Point2d*>* wall) {
+	return (*wall)[j];
+}
 
-	double** res = new double*[3];
-	for (int i = 0; i < 3; i++) {
-		res[i] = new double[3];
-		for (int j = 0; j < 3; j++)
-			res[i][j] = trans.at<double>(i, j);
-	}
+int nb_of_walls(Area* area) {
+	return area->getWall().size();
+}
 
-	return res;
+int size(vector<Point*>* points) {
+	return points->size();
+}
+
+double get_x(Point2d* point) {
+	return point->x;
+}
+
+double get_y(Point2d* point) {
+	return point->y;
 }
 
 TransformTracking* create_transform_tracking() {
@@ -350,4 +308,58 @@ Mat* get_delta_trans(TransformTracking* transformTracking) {
 
 double at(int i, int j, Mat* mat) {
 	return mat->at<double>(i, j);
+}
+
+MazeTransform* createMazeTransform() {
+	return new MazeTransform();
+}
+
+void compute_transform(double corners[][2], MazeTransform* mazeTransform) {
+	vector<Point2d> points;
+
+	for(int i = 0; i < 4; i++) {
+		Point2d point = Point2d(corners[i][0], corners[i][1]);
+		points.push_back(point);
+	}
+
+	mazeTransform->compute_transform(points);
+}
+
+double** get_H(MazeTransform* mazeTransform) {
+	Mat H = mazeTransform->get_H();
+
+	double** res = new double*[3];
+	for(int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for(int j = 0; j < 3; j++)
+			res[i][j] = H.at<double>(i, j);
+	}
+
+	return res;
+}
+
+double** get_rots(MazeTransform* mazeTransform) {
+	Mat rots = mazeTransform->get_rots();
+
+	double** res = new double*[3];
+	for(int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for(int j = 0; j < 3; j++)
+			res[i][j] = rots.at<double>(i, j);
+	}
+
+	return res;
+}
+
+double** get_trans(MazeTransform* mazeTransform) {
+	Mat trans = mazeTransform->get_trans();
+
+	double** res = new double*[3];
+	for(int i = 0; i < 3; i++) {
+		res[i] = new double[3];
+		for(int j = 0; j < 3; j++)
+			res[i][j] = trans.at<double>(i, j);
+	}
+
+	return res;
 }
