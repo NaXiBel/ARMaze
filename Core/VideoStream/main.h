@@ -24,9 +24,9 @@ DllExport void build(Core*);
 
 // calibration
 DllExport Calibrator* create_calibrator(int image_count, int square_size);
-DllExport void add_pattern_to_calibrator(Calibrator*, CameraCV*);
+DllExport void add_pattern_to_calibrator(Calibrator*, Core*);
 DllExport bool check_pattern_count(Calibrator*);
-DllExport void calibrate(Calibrator*, CameraCV*);
+DllExport void calibrate(Calibrator*, Core*);
 DllExport Mat* get_K(Calibrator*);
 DllExport Mat* get_D(Calibrator*);
 DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
@@ -34,7 +34,7 @@ DllExport void init_transform_import_KD(TransformTracking*, Area*,
 	double K00, double K01, double K02, 
 	double K10, double K11, double K12, 
 	double K20, double K21, double K22,
-	double D0, double D1, double D2, double D4);
+	double D0, double D1, double D2, double D3, double D4, double D5, double D6, double D7);
 
 DllExport void update_transform(TransformTracking*, Area*);
 DllExport void tracking(Core*);

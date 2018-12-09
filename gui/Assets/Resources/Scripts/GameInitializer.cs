@@ -14,7 +14,7 @@ public class GameInitializer : MonoBehaviour {
 
         Debug.Log("Initgo");
 
-
+    
         GameObject prefabObstacle = ((GameObject)Resources.Load("Prefabs/" + Const.OBSTACLE_PREFAB_NAME, typeof(GameObject)));
 
         GameObject o = Instantiate(prefabObstacle, Vector3.zero, Quaternion.Euler(90.0f, 0.0f, 0.0f));

@@ -281,6 +281,17 @@ void Core::Start() {
 
 }
 
+void Core::find_chessboard_for_calibrate(Calibrator* calibrator) {
+
+	Mat frame = m_CameraCV->getFrame();
+	vector<Point2d> pattern;
+	bool found = findChessboardCorners(frame, calibrator->get_pattern_size(), pattern);
+
+	if (found)
+		calibrator->add_pattern(pattern);
+
+}
+
 bool Core::get_isBuild() {
 	return m_IsBuilt;
 }
@@ -291,4 +302,8 @@ bool Core::capture_read() {
 
 Area* Core::getArea() {
 	return &m_Area;
+}
+
+CameraCV* Core::getCamera() {
+	return m_CameraCV;
 }

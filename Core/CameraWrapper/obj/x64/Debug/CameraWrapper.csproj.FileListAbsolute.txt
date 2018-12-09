@@ -66,3 +66,4 @@ C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CameraWrapper\obj\x64\Debug\Camer
 C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csproj.CopyComplete
 C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.dll
 C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.pdb
+C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csprojResolveAssemblyReference.cache

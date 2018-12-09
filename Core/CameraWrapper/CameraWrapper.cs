@@ -29,19 +29,17 @@ namespace Wrapper {
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
             [DllImport(dllpath, EntryPoint = "create_calibrator")] static public extern IntPtr CreateCalibrator(int image_count, int square_size);
-            [DllImport(dllpath, EntryPoint = "add_pattern_to_calibrator")] static public extern void AddPatternToCalibrator(IntPtr calibrator, IntPtr cameraCV);
+            [DllImport(dllpath, EntryPoint = "add_pattern_to_calibrator")] static public extern void AddPatternToCalibrator(IntPtr calibrator, IntPtr core);
             [DllImport(dllpath, EntryPoint = "check_pattern_count")] static public extern bool CheckPatternCount(IntPtr calibrator);
-            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern bool Calibrate(IntPtr calibrator, IntPtr cameraCV);
-            /*
-            DllExport Mat* get_K(Calibrator*);
-            DllExport Mat* get_D(Calibrator*);
-            DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
-            DllExport void init_transform_import_KD(TransformTracking*, Area*,
+            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern void Calibrate(IntPtr calibrator, IntPtr core);
+            [DllImport(dllpath, EntryPoint = "get_K")] static public extern IntPtr GetK(IntPtr calibrator);
+            [DllImport(dllpath, EntryPoint = "get_D")] static public extern IntPtr GetD(IntPtr calibrator);
+            [DllImport(dllpath, EntryPoint = "init_transform_import_KD")]
+            static public extern void InitTransformKD(IntPtr tranformTracking, IntPtr area, 
                 double K00, double K01, double K02,
                 double K10, double K11, double K12,
                 double K20, double K21, double K22,
-                double D0, double D1, double D2, double D4);
-            */
+                double D0, double D1, double D2, double D3, double D4, double D5, double D6, double D7);
             [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
             [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
             [DllImport(dllpath, EntryPoint = "init_transform")] static public extern void InitTransform(IntPtr tranformTracking, IntPtr area, IntPtr K, IntPtr D);
@@ -60,6 +58,7 @@ namespace Wrapper {
         }
 
         private static CameraWrapper instance = null;
+        private IntPtr calibrator;
         private IntPtr camera;
         private IntPtr core;
         private IntPtr area;
@@ -76,6 +75,7 @@ namespace Wrapper {
 
             return instance;
         }
+
         public double[] GetEndCenter()
         {
             IntPtr endPtr = embededFunctions.GetEndCenter(area, tranformTracking);
@@ -111,11 +111,56 @@ namespace Wrapper {
             }
             return walls;
         }
-
-
-
+        
         public void InitCamera() {
             this.camera = embededFunctions.CreateCameraInput();
+        }
+
+        public void CreateCalibrator()
+        {
+            calibrator = embededFunctions.CreateCalibrator(15, 50);
+        }
+
+        public void AddPatternToCalibrator()
+        {
+            embededFunctions.AddPatternToCalibrator(calibrator, core);
+        }
+
+        public bool CheckCalibrator()
+        {
+            return embededFunctions.CheckPatternCount(calibrator);
+        }
+
+        public void Calibrate()
+        {
+            embededFunctions.Calibrate(calibrator, core);
+            K = embededFunctions.GetK(calibrator);
+            D = embededFunctions.GetD(calibrator);
+        }
+
+        public double[,] GetK()
+        {
+            double[,] res = new double[3, 3]
+            {
+                {embededFunctions.At(0,0,K), embededFunctions.At(0,1,K), embededFunctions.At(0,2,K)},
+                {embededFunctions.At(1,0,K), embededFunctions.At(1,1,K), embededFunctions.At(1,2,K)},
+                {embededFunctions.At(2,0,K), embededFunctions.At(2,1,K), embededFunctions.At(2,2,K)}
+            };
+
+            return res;
+        }
+
+        public double[] GetD()
+        {
+            double[] res = new double[8]
+            {
+                embededFunctions.At(0,0,D), embededFunctions.At(1,0,D),
+                embededFunctions.At(2,0,D), embededFunctions.At(3,0,D),
+                embededFunctions.At(4,0,D), embededFunctions.At(5,0,D),
+                embededFunctions.At(6,0,D), embededFunctions.At(7,0,D)
+            };
+
+            return res;
         }
 
         public void OpenVideoStream(int id = 0) {
@@ -155,22 +200,27 @@ namespace Wrapper {
         }
 
         public bool CheckBuid() {
-            return embededFunctions.CheckBuild(camera);
+            return embededFunctions.CheckBuild(core);
         }
 
         public void Build(){
-            embededFunctions.Build(camera);
-            area = embededFunctions.GetArea(camera);
+            embededFunctions.Build(core);
+            area = embededFunctions.GetArea(core);
         }
-
-        public void CalibrateCamera()
-        {
-            embededFunctions.Calibrate(area, camera, K, D);
-        }
-
+        
         public void InitTransform() {
             tranformTracking = embededFunctions.CreateTransformTracking();
             embededFunctions.InitTransform(tranformTracking, area, K ,D);
+        }
+
+        public void InitTransformKD(double[,] K, double[] D)
+        {
+            tranformTracking = embededFunctions.CreateTransformTracking();
+            embededFunctions.InitTransformKD(tranformTracking, area,
+                K[0, 0], K[0, 1], K[0, 2],
+                K[1, 0], K[1, 1], K[1, 2],
+                K[2, 0], K[2, 1], K[2, 2],
+                D[0], D[1], D[2], D[3], D[4], D[5], D[6], D[7]);
         }
 
         public void UpdateTranform() {
@@ -178,12 +228,12 @@ namespace Wrapper {
         }
 
         public void Tracking() {
-            embededFunctions.Tracking(camera);
-            area = embededFunctions.GetArea(camera);
+            embededFunctions.Tracking(core);
+            area = embededFunctions.GetArea(core);
         }
 
         public bool CheckTracking() {
-            return embededFunctions.CheckTracking(camera);
+            return embededFunctions.CheckTracking(core);
         }
 
         public double[] GetInitRot() {

@@ -17,12 +17,14 @@ class Calibrator
 {
 public:
 
-	Calibrator(int image_count, vector<vector<Point3d>> object_points);
+	Calibrator(int image_count, vector<vector<Point3d>> object_points, Size pattern_size);
 	~Calibrator();
 
 	void add_pattern(vector<Point2d> image_point);
 	bool is_ready();
 	void run_calibration(Size image_size);
+
+	Size get_pattern_size();
 
 	Mat get_intrinsic_matrix();
 	Mat get_dist_coeffs();
@@ -30,6 +32,7 @@ public:
 private:
 
 	int m_image_count;
+	Size m_pattern_size;
 	vector<vector<Point2d>> m_patterns;
 	vector<vector<Point3d>> m_object_points;
 	Mat m_intrinsic_matrix;

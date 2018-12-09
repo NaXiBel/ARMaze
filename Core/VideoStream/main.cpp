@@ -187,30 +187,20 @@ Calibrator* create_calibrator(int image_count, int square_size) {
 	for (int i = 0; i < image_count; i++)
 		object_patterns.push_back(corners);
 
-	return new Calibrator(image_count, object_patterns);
+	return new Calibrator(image_count, object_patterns, Size(9,6));
 
 }
 
-void add_pattern_to_calibrator(Calibrator* calibrator, CameraCV* cameraCV) {
-
-	// TODO : cameraCV doit quelque part pouvoir trouver un chessboard
-	// devrait s'implementer facilement avec cv::findchessboardpattern
-	// devra retourner un boolean : pattern trouvé, ou pas
-	// et en argument OUT renvera un vector<Point2d>
-
-	// vector<Point2d> pattern;
-	// boolean found = cameraCV.findChessboard(..., pattern, ...);
-	// if(found)
-	//	calibrator.add_pattern(pattern);
-
+void add_pattern_to_calibrator(Calibrator* calibrator, Core* core) {
+	core->find_chessboard_for_calibrate(calibrator);
 }
 
 bool check_pattern_count(Calibrator* calibrator) {
 	return calibrator->is_ready();
 }
 
-void calibrate(Calibrator* calibrator, CameraCV* cameraCV) {
-	calibrator->run_calibration(Size(cameraCV->getWidth(), cameraCV->getHeigth()));
+void calibrate(Calibrator* calibrator, Core* core) {
+	calibrator->run_calibration(Size(core->getCamera()->getWidth(), core->getCamera()->getHeigth()));
 }
 
 Mat* get_K(Calibrator* calibrator) {

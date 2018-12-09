@@ -4,6 +4,7 @@
 #include "Area.h"
 #include "Homography\Homography\TransformTracking.h"
 #include "VideoStream\CameraCV.h"
+#include "VideoStream\Calibrator.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/utility.hpp>
@@ -33,6 +34,8 @@ class Core {
 		Core(CameraCV cameraCV);
 		void Start();
 
+		void find_chessboard_for_calibrate(Calibrator*);
+
 		void Video();
 		void BuildMaze();
 		void TrackingArea();
@@ -41,6 +44,7 @@ class Core {
 		bool capture_read();
 		void set_camera(CameraCV * camera);
 		Area* getArea();
+		CameraCV* getCamera();
 };
 
 #endif //CORE_H

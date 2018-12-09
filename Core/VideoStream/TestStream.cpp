@@ -6,23 +6,39 @@
 #include "opencv2/opencv.hpp"
 #include "../Core.h"
 #include "CameraCV.h"
-
+#include "main.h"
 
 using namespace cv;
 
 int main(void) {
 	String window_name = "Test class";
 
-
-	namedWindow(window_name, WINDOW_AUTOSIZE);
+	//namedWindow(window_name, WINDOW_AUTOSIZE);
 
 	//int c = waitKey(10);
-	Core *  core = new Core();
+	Core* core = createCore();
+	Calibrator* calibrator = create_calibrator(15, 50);
+
+	bool calibrated = false;
+
 	while(true) {
 		//cam->readFrame();
 		//Mat fraaame = cam->getFrame();
 
-		core->Start();
+		core->getCamera()->readFrame();
+		imshow(window_name, core->getCamera()->getFrame());
+		waitKey(50);
+		add_pattern_to_calibrator(calibrator, core);
+
+		if (!calibrated && check_pattern_count(calibrator)) {
+
+			calibrate(calibrator, core);
+			cout << "calibrated" << endl;
+			get_K(calibrator);
+			get_D(calibrator);
+
+		}
+
 		//imshow(window_name, fraaame);
 		//c = waitKey(10);
 	}
