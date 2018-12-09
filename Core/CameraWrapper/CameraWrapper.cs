@@ -65,6 +65,7 @@ namespace Wrapper {
         }
 
         private static CameraWrapper instance = null;
+        public bool FinishedBuild;
         private IntPtr camera;
         private IntPtr core;
         private IntPtr area;
@@ -142,6 +143,7 @@ namespace Wrapper {
         public void InitCore() {
             this.core = embededFunctions.CreateCore();
             this.camera = embededFunctions.getCoreCamera(this.core);
+            this.FinishedBuild = false;
         }
         public void Video() {
             embededFunctions.Video(core);
@@ -150,7 +152,7 @@ namespace Wrapper {
             return embededFunctions.CheckBuild(this.core);
         }
         public void Build() {
-            embededFunctions.Build(camera);
+            embededFunctions.Build(this.core);
             area = embededFunctions.GetArea(camera);
         }
         public IntPtr GetCoreCamera() {
@@ -175,7 +177,7 @@ namespace Wrapper {
             embededFunctions.UpdateTransform(tranformTracking, area);
         }
         public void Tracking() {
-            embededFunctions.Tracking(camera);
+            embededFunctions.Tracking(this.core);
             area = embededFunctions.GetArea(camera);
         }
         public bool CheckTracking() {
@@ -227,24 +229,23 @@ namespace Wrapper {
             CameraWrapper wrap = CameraWrapper.GetInstance();
             wrap.InitCore();
             wrap.OpenVideoStream(0);
-            wrap.Start();
+            //wrap.Start();
 
-/*            while(wrap.CheckBuid())
-                wrap.Build();
+            //while(!wrap.CheckBuid())
+            //    wrap.Build();
 
-            wrap.InitTransform();
-            do {
-                wrap.Tracking();
-                wrap.UpdateTranform();
+            //wrap.InitTransform();
+            //do {
+            //    wrap.Tracking();
+            //    wrap.UpdateTranform();
 
-                double[] rot = wrap.GetDeltaRot();
-                for(int i = 0; i < 3; i++) {
-                    Console.Write(rot[i] + " ");
-                }
+            //    double[] rot = wrap.GetDeltaRot();
+            //    for(int i = 0; i < 3; i++) {
+            //        Console.Write(rot[i] + " ");
+            //    }
+            //} while(wrap.CheckTracking());
 
-            } while(wrap.CheckTracking());
-
-            Console.ReadKey();*/
+            Console.ReadKey();
         }
     }
 }

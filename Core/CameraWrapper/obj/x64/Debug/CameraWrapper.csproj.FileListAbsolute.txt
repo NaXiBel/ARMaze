@@ -82,10 +82,9 @@ C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\normnfc.nlp
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\normnfd.nlp
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\normnfkc.nlp
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\normnfkd.nlp
-C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csprojAssemblyReference.cache
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csproj.CoreCompileInputs.cache
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.csproj.CopyComplete
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.pdb
-C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.exe.config
-C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.exe
-C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.exe
+C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.dll.config
+C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\bin\x64\Debug\CameraWrapper.dll
+C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.dll

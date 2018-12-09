@@ -13,7 +13,7 @@ public class CameraRenderer : MonoBehaviour {
     // Use this for initialization
     void Start() {
         camera = CameraWrapper.GetInstance();
-        camera.InitCamera();
+        camera.InitCore();
         camera.OpenVideoStream(0);
         this.frame = camera.GetCameraFrame();
         this.texture = new Texture2D(camera.GetFrameWidth(), camera.GetFrameHeight(), TextureFormat.BGRA32, false);
@@ -23,8 +23,7 @@ public class CameraRenderer : MonoBehaviour {
         //  Camera.main.transform.Translate(Vector3.back);
         Camera.main.orthographicSize = camera.GetFrameHeight() / 2f + 2;
         m_FinishedBuild = false;
-        // this.camera.InitCore();
-        //this.camera.DisplayCameraStream();
+        
     }
 
     // Update is called once per frame
