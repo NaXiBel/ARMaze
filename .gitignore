@@ -22,13 +22,15 @@ gui/*.unitypackage
 */*.pidb.meta
 */*.suo
 */*.csproj
-*/*.sln
+#*/*.sln
 */*.user
 */*.booproj
 .consulo/
 */*.tmp
 */*.svd
- 
+Core/x64/*
+Core/Debug/*
+
 # ============ #
 # OS generated #
 # ============ #
@@ -42,3 +44,12 @@ ehthumbs.db
 [Dd]esktop.ini
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
+Core/CameraWrapper/bin/Debug/*
+Core/VideoStream/x64/*
+
+Core/*.dll
+Core/*.lib
+Core/VideoStream/*.dll
+Core/VideoStream/*.lib
+gui/*.dll
+
