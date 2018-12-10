@@ -10,6 +10,7 @@
 #include "../Homography/Homography/TransformTracking.h"
 #include "Calibrator.h"
 
+/*** CameraCV functions ***/
 DllExport CameraCV * createCamera();
 DllExport void disposeCamera(CameraCV * cam);
 DllExport void openStream(CameraCV * cam, int id);
@@ -18,9 +19,13 @@ DllExport int getWidth(CameraCV * cam);
 DllExport int getHeight(CameraCV * cam);
 DllExport uchar * getLiveFrame(CameraCV * cam, int * sizeofMat);
 
+/*** Core functions ***/
 DllExport Core * createCore();
 DllExport bool check_build(Core*);
 DllExport void build(Core*);
+DllExport CameraCV * getCameraCV(Core*);
+DllExport void setCameraCV(Core*, CameraCV*);
+DllExport void start(Core*);
 
 // calibration
 DllExport Calibrator* create_calibrator(int image_count, int square_size);
@@ -29,6 +34,7 @@ DllExport bool check_pattern_count(Calibrator*);
 DllExport void calibrate(Calibrator*, Core*);
 DllExport Mat* get_K(Calibrator*);
 DllExport Mat* get_D(Calibrator*);
+DllExport void init_transform_default(TransformTracking*, Area*);
 DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
 DllExport void init_transform_import_KD(TransformTracking*, Area*, 
 	double K00, double K01, double K02, 

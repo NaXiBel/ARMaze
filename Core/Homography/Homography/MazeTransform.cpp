@@ -61,7 +61,7 @@ void MazeTransform::compute_transform(vector<Point2d> corners) {
 	H = findHomography(a4points, corners);
 
 	vector<float> vectNull;
-	solvePnP(a4points, corners, getIntrinsicMatrix(), vectNull , rot, trans);
+	solvePnP(a4points, corners, K, D , rot, trans);
 
 	cout << "homographie décomposée" << endl;
 

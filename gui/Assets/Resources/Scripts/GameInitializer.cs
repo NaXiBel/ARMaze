@@ -26,7 +26,7 @@ public class GameInitializer : MonoBehaviour {
 
 
         GameObject arrivalPrefab = ((GameObject)Resources.Load("Prefabs/" + Const.POINT_OF_ARRIVAL_PREFAB_NAME, typeof(GameObject)));
-        double[] end = CameraWrapper.GetInstance().GetEndCenter();
+        double[] end = CoreWrapper.GetInstance().GetEndCenter();
         //GameObject arrivalObject = Instantiate(arrivalPrefab, MazeData.MAZE_POINT_OF_ARRIVAL, Quaternion.Euler(-90.0f, 0.0f, 0.0f));
         float x_scale_arrivee = -Const.HAUTEUR_MAZE / 2f + Const.HAUTEUR_MAZE * (float)end[0];
         float y_scale_arrivee = -Const.LARGEUR_MAZE / 2f + Const.LARGEUR_MAZE * (float)end[1];
@@ -48,7 +48,7 @@ public class GameInitializer : MonoBehaviour {
          {
              MazeObstacle.Create(MazeData.ARRAY_DATAS_TEST[i, 0], MazeData.ARRAY_DATAS_TEST[i, 1]);
          }*/
-        List<double[,]> walls = CameraWrapper.GetInstance().GetWall();
+        List<double[,]> walls = CoreWrapper.GetInstance().GetWall();
         foreach(double[,] wall in walls)
         {
            // Debug.Log("(" + -10f / 2f + 10f * (float)wall[0, 0] + " , " + -10f / 2f + 10f * (float)wall[0, 1] + "); (" + -10f / 2f + 10f * (float)wall[1, 0] + " , " + -10f / 2f + 10f * (float)wall[1, 1] + ")");
