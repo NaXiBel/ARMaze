@@ -18,6 +18,7 @@ int main(void) {
 
 	//int c = waitKey(10);
 	Core *  core = new Core();
+	core->get_camera()->openStream();
 	while(true) {
 		//cam->readFrame();
 		//Mat fraaame = cam->getFrame();

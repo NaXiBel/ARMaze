@@ -3,7 +3,7 @@
 Core::Core() {
 	m_IsBuilt = false;
 	this->m_CameraCV = new CameraCV();
-	m_CameraCV->openStream();
+
 }
 
 Core::Core(CameraCV cam) {
@@ -101,13 +101,13 @@ void Core::BuildMaze() {
 	}
 
 	this->m_CameraCV->readFrame();
-	imshow("sa", this->m_CameraCV->getFrame());
+	//imshow("sa", this->m_CameraCV->getFrame());
 
 	char ca = waitKey(10);
 	Mat fr = this->m_CameraCV->getFrame();
 	cvtColor(this->m_CameraCV->getFrame(), fr, CV_BGR2GRAY); // convert gray 
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, 100, 300, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -215,7 +215,7 @@ void Core::TrackingArea() {
 		return;
 	}
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny2, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, 100, 300, 3); // NEED THRESHOLD
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -227,17 +227,17 @@ void Core::TrackingArea() {
 
 	for(int i = 0; i < m_Area.getArea().size(); ++i) {
 		if(m_Area.getArea()[i].x < Xmin) {
-			Xmin = m_Area.getArea()[i].x - 150;
+			Xmin = m_Area.getArea()[i].x - 200;
 		}
 		else if(m_Area.getArea()[i].x > Xmax) {
-			Xmax = m_Area.getArea()[i].x + 150;
+			Xmax = m_Area.getArea()[i].x + 200;
 		}
 		if(m_Area.getArea()[i].y < Ymin) {
 
-			Ymin = m_Area.getArea()[i].y - 150;
+			Ymin = m_Area.getArea()[i].y - 200;
 		}
 		else if(m_Area.getArea()[i].y > Ymax) {
-			Ymax = m_Area.getArea()[i].y + 150;
+			Ymax = m_Area.getArea()[i].y + 200;
 		}
 	}
 	if(Ymax < 0 || Xmax < 0)

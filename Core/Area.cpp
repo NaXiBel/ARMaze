@@ -267,11 +267,11 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 	int max = -1;
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 2500) {
+		if (fabs(contourArea(Mat(contours[i]))) <= m_MaxTracking - 400 && fabs(contourArea(Mat(contours[i]))) > m_MaxTracking + 400) {
 			continue;
 		}
 
-		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.05, true);
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
 
 		//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
 		int distX = abs(Xmax - Xmin);
@@ -287,17 +287,17 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 
 			for (int i = 0; i < approx.size(); ++i) {
 				if (approx[i].x < Xmin2) {
-					Xmin2 = approx[i].x - 150;
+					Xmin2 = approx[i].x - 200;
 				}
 				else if (approx[i].x > Xmax2) {
-					Xmax2 = approx[i].x + 150;
+					Xmax2 = approx[i].x + 200;
 				}
 				if (approx[i].y < Ymin2) {
 
-					Ymin2 = approx[i].y - 150;
+					Ymin2 = approx[i].y - 200;
 				}
 				else if (approx[i].y > Ymax2) {
-					Ymax2 = approx[i].y + 150;
+					Ymax2 = approx[i].y + 200;
 				}
 			}
 			if (Ymax2 < 0 || Xmax2 < 0)
@@ -316,12 +316,14 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 				if (approx[index].y < Ymin || approx[index].y > Ymax) {
 					isOk = false;
 				}
-				
-				if (sizeX > 100 || sizeY > 100) {
+
+				if (distX2 < 450 || distY2 < 450) {
 					isOk = false;
 				}
-				if (fabs(contourArea(Mat(approx))) > max) {
+				//cout << distX2 << " " << distY2 << endl; 
+				if (fabs(contourArea(Mat(approx))) >= max) {
 					max = fabs(contourArea(Mat(approx)));
+					m_MaxTracking = max;
 				}
 				else {
 					isOk = false;
@@ -334,7 +336,7 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 			
 		}
 	}
-	return true;
+
 	// find all edge
 /*	std::vector<std::vector<Point> > contours;
 	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
