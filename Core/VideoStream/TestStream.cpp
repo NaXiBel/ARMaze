@@ -11,21 +11,8 @@
 using namespace cv;
 
 int main(void) {
-	String window_name = "Test class";
-
-
-	namedWindow(window_name, WINDOW_AUTOSIZE);
-
-	//int c = waitKey(10);
-	Core *  core = new Core();
-	while(true) {
-		//cam->readFrame();
-		//Mat fraaame = cam->getFrame();
-
-		core->Start();
-		//imshow(window_name, fraaame);
-		//c = waitKey(10);
-	}
+	Core * core = new Core();
+	core->Video();
 
 	return 0;
 }

@@ -19,6 +19,11 @@ void openStream(CameraCV * cam, int id /* = 0 */) {
 	std::cout << "Camera stream opened." << std::endl;
 }
 
+void closeStream(CameraCV * cam) {
+	cam->closeStream();
+	std::cout << "Camera stream closed." << std::endl;
+}
+
 void displayStream(CameraCV * cam) {
 	cam->displayStream();
 	std::cout << "Frame displayed." << std::endl;

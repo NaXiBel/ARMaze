@@ -12,6 +12,7 @@ namespace Wrapper {
             [DllImport(dllpath, EntryPoint = "createCamera")] static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")] static public extern void DisposeCameraInput(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "openStream")] static public extern void OpenStream(IntPtr pCam, int id = 0);
+            [DllImport(dllpath, EntryPoint = "closeStream")] static public extern void CloseStream(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "displayStream")] static public extern void DisplayStream(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "getLiveFrame")] static public extern IntPtr GetLiveFrame(IntPtr pCam, out int sizeofMat);
             [DllImport(dllpath, EntryPoint = "getWidth")] static public extern int GetWidth(IntPtr pCam);
@@ -92,6 +93,9 @@ namespace Wrapper {
         }
         public void OpenVideoStream(int id = 0) {
             embededFunctions.OpenStream(this.camera, id);
+        }
+        public void CloseVideoStream() {
+            embededFunctions.CloseStream(this.camera);
         }
         public void DisplayCameraStream() {
             embededFunctions.DisplayStream(this.camera);
@@ -218,34 +222,50 @@ namespace Wrapper {
         }
 
         static void Main(string[] args) {
-            //Console.WriteLine("Testing Wrapper...");
-            //CoreWrapper wrap = CoreWrapper.GetInstance();
-            //wrap.InitCamera();
-            //wrap.OpenVideoStream(0);
-            //byte[] test = wrap.GetCameraFrame();
-            //wrap.DisplayCameraStream();
-            //Console.ReadKey();
-
             CoreWrapper wrap = CoreWrapper.GetInstance();
             wrap.InitCore();
-            wrap.OpenVideoStream(0);
-            //wrap.Start();
-
-            while(!wrap.CheckBuid())
-                wrap.Build();
-
-            wrap.InitTransform();
-            do {
-                wrap.Tracking();
-                wrap.UpdateTranform();
-
-                double[] rot = wrap.GetDeltaRot();
-                for(int i = 0; i < 3; i++) {
-                    Console.Write(rot[i] + " ");
+            while(true) {
+                ConsoleKey input = Console.ReadKey().Key;
+                if(input == ConsoleKey.I)
+                    wrap.InitCamera();
+                else if(input == ConsoleKey.S)
+                    wrap.SetCoreCamera(wrap.camera);
+                else if(input == ConsoleKey.O)
+                    wrap.OpenVideoStream(0);
+                else if(input == ConsoleKey.C) 
+                    wrap.CloseVideoStream();
+                else if(input == ConsoleKey.D)
+                    wrap.DisposeCamera();
+                else if(input == ConsoleKey.Q)
+                    break;
+                else {
+                    byte[] test = wrap.GetCameraFrame();
+                    Console.WriteLine(test[0] + " " + test[test.Length - 1]);
                 }
-            } while(wrap.CheckTracking());
+            }
 
-            Console.ReadKey();
+            /******/
+
+            //CoreWrapper wrap = CoreWrapper.GetInstance();
+            //wrap.InitCore();
+            //wrap.OpenVideoStream(0);
+            ////wrap.Start();
+
+            //while(!wrap.CheckBuid())
+            //    wrap.Build();
+
+            //wrap.InitTransform();
+            //do {
+            //    wrap.Tracking();
+            //    wrap.UpdateTranform();
+
+            //    double[] rot = wrap.GetDeltaRot();
+            //    for(int i = 0; i < 3; i++) {
+            //        Console.Write(rot[i] + " ");
+            //    }
+            //} while(wrap.CheckTracking());
+
+            //Console.ReadKey();
         }
     }
 }

@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 typedef unsigned char byte;
 
 class CameraCV {
@@ -27,6 +28,7 @@ class CameraCV {
 		CameraCV();
 		~CameraCV();
 		void openStream(int inputId = 0);
+		void closeStream();
 		cv::VideoCapture getVid();
 		bool readFrame();
 		cv::Mat getFrame();

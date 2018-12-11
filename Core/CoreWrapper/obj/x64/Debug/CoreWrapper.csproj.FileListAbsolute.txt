@@ -20,8 +20,6 @@ C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CoreWrapper.csp
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CoreWrapper.csproj.CopyComplete
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.exe
 C:\Users\alexm\Documents\ARMaze\Core\CameraWrapper\obj\x64\Debug\CameraWrapper.pdb
-C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\CoreWrapper.dll.config
-C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\CoreWrapper.dll
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\CoreWrapper.pdb
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\mscorlib.dll
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\fr\mscorlib.resources.dll
@@ -40,6 +38,8 @@ C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\normnfkc.nlp
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\normnfkd.nlp
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.csproj.CoreCompileInputs.cache
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.csproj.CopyComplete
-C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.dll
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.pdb
+C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\CoreWrapper.exe.config
+C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\bin\x64\Debug\CoreWrapper.exe
 C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.csprojAssemblyReference.cache
+C:\Users\alexm\Documents\ARMaze\Core\CoreWrapper\obj\x64\Debug\CoreWrapper.exe

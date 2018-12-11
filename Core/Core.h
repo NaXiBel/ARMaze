@@ -21,8 +21,6 @@ using namespace cv;
 class Core {
 	private:
 		CameraCV *		m_CameraCV;
-		//VideoCapture	m_Capture;
-		//Mat				m_Frame;
 		Mat				m_MaskTracker;
 		Area			m_Area;
 		bool			m_IsBuilt;

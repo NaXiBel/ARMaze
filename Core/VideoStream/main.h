@@ -14,6 +14,7 @@
 DllExport CameraCV * createCamera();
 DllExport void disposeCamera(CameraCV * cam);
 DllExport void openStream(CameraCV * cam, int id);
+DllExport void closeStream(CameraCV * cam);
 DllExport void displayStream(CameraCV * cam);
 DllExport int getWidth(CameraCV * cam);
 DllExport int getHeight(CameraCV * cam);
