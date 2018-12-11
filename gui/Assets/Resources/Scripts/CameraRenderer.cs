@@ -17,6 +17,10 @@ public class CameraRenderer : MonoBehaviour {
     private bool m_config_exists;
     private Xml2CSharp.Opencv_storage config;
 
+    public float rotOffsetX;
+    public float rotOffsetY;
+    public float rotOffsetZ;
+
     private double accTime;
 
     // Use this for initialization
@@ -32,6 +36,8 @@ public class CameraRenderer : MonoBehaviour {
         //  Camera.main.transform.Translate(Vector3.back);
         Camera.main.orthographicSize = core.GetFrameHeight() / 2f + 2;
         m_FinishedBuild = false;
+
+        /*
         
         XmlSerializer x = new XmlSerializer(typeof(Xml2CSharp.Opencv_storage));
         FileStream fs;
@@ -72,6 +78,8 @@ public class CameraRenderer : MonoBehaviour {
         }
 
         accTime = 0;
+        */
+
         // this.camera.InitCore();
         //this.camera.DisplayCameraStream();
     }
@@ -83,6 +91,8 @@ public class CameraRenderer : MonoBehaviour {
         this.texture.LoadRawTextureData(this.frame);
         this.texture.Apply();
         this.GetComponent<Renderer>().material.SetTexture("_MainTex", this.texture);
+
+        /*
 
         if(!m_calibrated && !m_config_exists)
         {
@@ -107,6 +117,8 @@ public class CameraRenderer : MonoBehaviour {
 
         }
 
+        */
+
         //this.camera.Video();
         if(!m_FinishedBuild) {
 
@@ -114,7 +126,9 @@ public class CameraRenderer : MonoBehaviour {
 
             if(core.CheckBuid()) {
                 m_FinishedBuild = true;
-                
+
+                /*
+
                 if(m_config_exists)
                 {
                     // init with XML doc values
@@ -134,6 +148,10 @@ public class CameraRenderer : MonoBehaviour {
                     core.InitTransform();
                 }
 
+                */
+
+                core.InitTransformDefault();
+
                 Debug.Log("Built");
                 double[] start = CoreWrapper.GetInstance().GetBeginCenter();
                 GameObject prefabBall = ((GameObject)Resources.Load("Prefabs/" + Const.BALL_PREFAB_NAME, typeof(GameObject)));
@@ -145,34 +163,30 @@ public class CameraRenderer : MonoBehaviour {
 
                 GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
                 maze = Instantiate(o, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+                //maze.transform.localScale = new Vector3(1.41f * 400, 400, 1);
 
                 GameObject Init = ((GameObject)Resources.Load("Prefabs/" + Const.GAMEINITIALIZER_PREFAB_NAME, typeof(GameObject)));
                 GameObject o2 = Instantiate(Init, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
 
                 double[] rot = core.GetInitRot();
-                maze.transform.rotation = Quaternion.Euler((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
+                Debug.Log("(" + rot[0] + "," + rot[1] + "," + rot[2] + ")");
+                maze.transform.rotation = 
+                    Quaternion.Euler(-(float)rot[0]  + rotOffsetX, 
+                    (float)rot[1] + rotOffsetY, 
+                    -(float)rot[2] + rotOffsetZ);
 
             }
         } else {
 
             core.Tracking();
             core.UpdateTranform();
-
+            
             double[] rot = core.GetDeltaRot();
-            /*          double[] end = camera.GetEndCenter();
-                        Debug.Log(end[0] + " " + end[1]);
-                        */
             Debug.Log(rot[0] + " " + rot[2] + " " + rot[1] + " ");
-            maze.transform.Rotate((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
-
+            maze.transform.Rotate(-(float)rot[0], (float)rot[1], -(float)rot[2]);
+            
         }
         
-    }
-
-    IEnumerator AsycnFindPattern()
-    {
-        core.AddPatternToCalibrator();
-        yield return null;
     }
 
 }

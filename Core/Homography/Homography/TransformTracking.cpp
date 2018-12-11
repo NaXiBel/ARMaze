@@ -9,19 +9,20 @@ TransformTracking::~TransformTracking()
 }
 
 void TransformTracking::init(Mat trans, Mat rot, Mat H) {
-	m_initTrans = trans;
-	m_initRot = rot;
-	m_currentTrans = m_initTrans;
-	m_currentRot = m_initRot;
+	trans.copyTo(m_initTrans);
+	rot.copyTo(m_initRot);
+	trans.copyTo(m_currentTrans);
+	rot.copyTo(m_currentRot);
 
 	m_initH = H;
 }
 
 void TransformTracking::update(Mat trans, Mat rot) {
+
 	m_deltaTrans = trans - m_currentTrans;
 	m_deltaRot = rot - m_currentRot;
-	m_currentTrans = trans;
-	m_currentRot = rot;
+	trans.copyTo(m_currentTrans);
+	rot.copyTo(m_currentRot);
 }
 
 MazeTransform* TransformTracking::get_transform() {
@@ -60,6 +61,7 @@ void TransformTracking::init_from_maze(MazeTransform* maze) {
 void TransformTracking::update_from_maze(MazeTransform* maze) {
 	current_transform = maze;
 	update(maze->get_trans(), maze->get_rots());
+	cout << "updated_from_maze" << endl;
 }
 
 Mat TransformTracking::get_H_init() {

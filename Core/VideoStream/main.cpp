@@ -65,10 +65,6 @@ void start(Core* core) {
 	core->Start();
 }
 
-//void video(Core* core) {
-//	core->Video();
-//}
-
 MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
 
 	MazeTransform maze(*K, *D);

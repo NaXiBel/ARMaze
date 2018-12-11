@@ -12,35 +12,28 @@ using namespace cv;
 
 int main(void) {
 	String window_name = "Test class";
-
-	//namedWindow(window_name, WINDOW_AUTOSIZE);
-
-	//int c = waitKey(10);
 	Core* core = createCore();
-	Calibrator* calibrator = create_calibrator(15, 50);
+	CameraCV* cameraCv = getCameraCV(core);
 
-	bool calibrated = false;
+	while(!check_build(core)) {
+		build(core);
+		Mat frame = core->get_camera()->getFrame();
+		imshow("ROT", frame);
+		waitKey(10);
+	}
 
-	while(true) {
-		//cam->readFrame();
-		//Mat fraaame = cam->getFrame();
+	TransformTracking* transformTracking = create_transform_tracking();
+	init_transform_default(transformTracking, core->getArea());
 
-		core->getCamera()->readFrame();
-		imshow(window_name, core->getCamera()->getFrame());
-		waitKey(50);
-		add_pattern_to_calibrator(calibrator, core);
+	cout << "init rot : " << transformTracking->get_init_rot() << endl;
 
-		if (!calibrated && check_pattern_count(calibrator)) {
-
-			calibrate(calibrator, core);
-			cout << "calibrated" << endl;
-			get_K(calibrator);
-			get_D(calibrator);
-
-		}
-
-		//imshow(window_name, fraaame);
-		//c = waitKey(10);
+	while (check_tracking(core)) {
+		tracking(core);
+		update_transform(transformTracking, core->getArea());
+		cout << "delta rot : " << transformTracking->get_delta_rot() << endl;
+		Mat frame = core->get_camera()->getFrame();
+		imshow("ROT", frame);
+		waitKey(10);
 	}
 
 	return 0;
