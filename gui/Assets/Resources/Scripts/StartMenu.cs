@@ -9,18 +9,21 @@ public class StartMenu : MonoBehaviour {
 	void Start () {
         _optionsPanel = GameObject.Find("OptionsPanel").gameObject;
         _creditsPanel = GameObject.Find("CreditsPanel").gameObject;
+        _mainPanel = GameObject.Find("MainPanel").gameObject;
         _optionsPanel.SetActive(false);
         _creditsPanel.SetActive(false);
+        _mainPanel.SetActive(true);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
     public string _levelToLoad = "Main";
     public GameObject _optionsPanel;
     public GameObject _creditsPanel;
+    public GameObject _mainPanel;
 
     public void StartGame()
     {
@@ -35,18 +38,22 @@ public class StartMenu : MonoBehaviour {
     }
 
     public void OpenOptions() {
+        _mainPanel.SetActive(false);
         _optionsPanel.SetActive(true);
     }
 
     public void CloseOptions() {
         _optionsPanel.SetActive(false);
+        _mainPanel.SetActive(true);
     }
 
     public void OpenCredits() {
+        _mainPanel.SetActive(false);
         _creditsPanel.SetActive(true);
     }
 
     public void CloseCredits() {
         _creditsPanel.SetActive(false);
+        _mainPanel.SetActive(true);
     }
 }
