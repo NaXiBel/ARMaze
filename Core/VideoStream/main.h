@@ -35,7 +35,7 @@ DllExport bool check_pattern_count(Calibrator*);
 DllExport void calibrate(Calibrator*, CameraCV*);
 DllExport Mat* get_K(Calibrator*);
 DllExport Mat* get_D(Calibrator*);
-DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
+
 DllExport void init_transform_import_KD(TransformTracking*, Area*, 
 	double K00, double K01, double K02, 
 	double K10, double K11, double K12, 
