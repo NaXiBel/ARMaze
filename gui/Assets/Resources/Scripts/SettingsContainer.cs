@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Wrapper;
 
 public class SettingsContainer : MonoBehaviour {
 
@@ -32,26 +33,30 @@ public class SettingsContainer : MonoBehaviour {
     public Text _threshold2MaxValue;
     private float threshold2Value;
     private List<TrackbarListener> threshold2Listeners = new List<TrackbarListener>();
-
+    private CoreWrapper core;
     void Start() {
         _canny1Bar.onValueChanged.AddListener(Canny1Changed);
         _canny2Bar.onValueChanged.AddListener(Canny2Changed);
         _threshold1Bar.onValueChanged.AddListener(Threshold1Changed);
         _threshold2Bar.onValueChanged.AddListener(Threshold2Changed);
+        core = CoreWrapper.GetInstance();
     }
 
     void Update() {
-
+        core.GetCameraFrame();
+        core.Build();
+        
     }
 
-    private void Canny1Changed(float canny1Bar) {
+        private void Canny1Changed(float canny1Bar) {
         canny1Value = int.Parse(_canny1MinValue.text) + canny1Bar * (int.Parse(_canny1MaxValue.text) - int.Parse(_canny1MinValue.text));
         _canny1Value.text = canny1Value.ToString();
-        if (canny1Listeners.Count > 0) {
+        /*if (canny1Listeners.Count > 0) {
             foreach (TrackbarListener l in canny1Listeners) {
                 l.Callback(canny1Value);
             }
-        }
+        }*/
+        core.SetCannyThreshold((int)canny1Value);
     }
 
     private void Canny2Changed(float canny2Bar) {

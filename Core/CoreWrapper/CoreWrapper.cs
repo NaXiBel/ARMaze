@@ -153,7 +153,7 @@ namespace Wrapper {
         public void SetCoreCamera(IntPtr cam) {
             embededFunctions.setCoreCamera(this.core, cam);
         }
-        public void setCannyThreshold(IntPtr core, int thresh)
+        public void SetCannyThreshold(int thresh)
         {
             embededFunctions.setCannyThreshold(this.core, thresh);
         }
