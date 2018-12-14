@@ -10,6 +10,7 @@
 #include <numeric>
 #include <iostream>
 #include <vector>
+#include <cmath>       /* acos */
 
 using namespace cv;
 
@@ -31,7 +32,9 @@ class Area {
 		} compareConvexe;
 		std::vector<std::vector<Point>> FilterInside(std::vector<std::vector<Point>> lines, std::vector<Point> polygon, std::vector<Point> bounds, int seuil = 20);
 		std::vector<std::vector<Point>> ConvertToPolygons(std::vector<Vec4i> contours);
-		
+		double getAngles(const Point & p1, const Point & corner, const Point & p2) const;
+		double getDot(const Point & v1, const Point & v2) const;
+
 	public:
 		std::vector<std::vector <Point>> getWall() const;
 		std::vector <Point> getArea() const;

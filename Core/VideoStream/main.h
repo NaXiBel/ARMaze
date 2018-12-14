@@ -25,6 +25,7 @@ DllExport bool check_build(Core*);
 DllExport void build(Core*);
 DllExport CameraCV * getCameraCV(Core*);
 DllExport void setCameraCV(Core*, CameraCV*);
+DllExport void setCannyThreshold(Core* core, int thresh);
 DllExport void start(Core*);
 
 // calibration

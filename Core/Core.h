@@ -27,8 +27,7 @@ class Core {
 		Area			m_Area;
 		bool			m_IsBuilt;
 		Rect2d			m_TrackBox;
-		int				m_TreshholdCanny1 = 50;
-		int				m_TreshholdCanny2 = 200;
+		int				m_TreshholdCanny1 = 100;
 	public:
 		Core();
 		Core(CameraCV cameraCV);
@@ -45,7 +44,7 @@ class Core {
 		Area* getArea();
 
 		void setTreshholdCanny1(int & newValue);
-		void setTreshholdCanny2(int & newValue);
+
 };
 
 #endif //CORE_H
