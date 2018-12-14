@@ -36,6 +36,7 @@ public class Maze : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		this.RotateMazeTest();
+        //public static IntPtr GetDeltaRot(IntPtr transformTracking);
+        this.RotateMazeTest();
 	}
 }

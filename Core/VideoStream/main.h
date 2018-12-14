@@ -25,6 +25,7 @@ DllExport bool check_build(Core*);
 DllExport void build(Core*);
 DllExport CameraCV * getCameraCV(Core*);
 DllExport void setCameraCV(Core*, CameraCV*);
+DllExport void setCannyThreshold(Core* core, int thresh);
 DllExport void start(Core*);
 
 // calibration
@@ -34,6 +35,7 @@ DllExport bool check_pattern_count(Calibrator*);
 DllExport void calibrate(Calibrator*, Core*);
 DllExport Mat* get_K(Calibrator*);
 DllExport Mat* get_D(Calibrator*);
+
 DllExport void init_transform_default(TransformTracking*, Area*);
 DllExport void init_transform(TransformTracking*, Area*, Mat*, Mat*);
 DllExport void init_transform_import_KD(TransformTracking*, Area*, 

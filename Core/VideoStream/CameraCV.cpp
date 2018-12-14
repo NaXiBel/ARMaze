@@ -53,4 +53,3 @@ uchar * CameraCV::getLiveFrame(int * sizeofMat) {
 
 	return this->frame.data;
 }
-

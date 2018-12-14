@@ -28,10 +28,12 @@ namespace Wrapper {
 
             [DllImport(dllpath, EntryPoint = "createCore")] static public extern IntPtr CreateCore();
             [DllImport(dllpath, EntryPoint = "video")] static public extern void Video(IntPtr core);
+            [DllImport(dllpath, EntryPoint = "calibrate")] static public extern void Calibrate(IntPtr area, IntPtr cameraCV, IntPtr K, IntPtr D);
             [DllImport(dllpath, EntryPoint = "check_build")] static public extern bool CheckBuild(IntPtr core);
             [DllImport(dllpath, EntryPoint = "build")] static public extern void Build(IntPtr core);
             [DllImport(dllpath, EntryPoint = "getCameraCV")] static public extern IntPtr getCoreCamera(IntPtr core);
             [DllImport(dllpath, EntryPoint = "setCameraCV")] static public extern void setCoreCamera(IntPtr core, IntPtr camera);
+            [DllImport(dllpath, EntryPoint = "setCannyThreshold")] static public extern void setCannyThreshold(IntPtr core, int thresh);
             [DllImport(dllpath, EntryPoint = "start")] static public extern void Start(IntPtr core);
 
             [DllImport(dllpath, EntryPoint = "create_calibrator")] static public extern IntPtr CreateCalibrator(int image_count, int square_size);
@@ -217,6 +219,10 @@ namespace Wrapper {
         public void SetCoreCamera(IntPtr cam) {
             embededFunctions.setCoreCamera(this.core, cam);
         }
+        public void setCannyThreshold(IntPtr core, int thresh)
+        {
+            embededFunctions.setCannyThreshold(this.core, thresh);
+        }
         public void Start() {
             embededFunctions.Start(this.core);
         }
@@ -229,7 +235,8 @@ namespace Wrapper {
         
         public void InitTransform() {
             tranformTracking = embededFunctions.CreateTransformTracking();
-            embededFunctions.InitTransform(tranformTracking, area, K, D);
+            embededFunctions.InitTransform(tranformTracking, area, K ,D);
+
         }
 
         public void InitTransformKD(double[,] K, double[] D)

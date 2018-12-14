@@ -69,7 +69,6 @@ public class CameraRenderer : MonoBehaviour {
                 }
 
             }
-
             return;
 
         }
@@ -98,17 +97,15 @@ public class CameraRenderer : MonoBehaviour {
 
                 GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
                 maze = Instantiate(o, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
-                //maze.transform.localScale = new Vector3(1.41f * 400, 400, 1);
 
                 GameObject Init = ((GameObject)Resources.Load("Prefabs/" + Const.GAMEINITIALIZER_PREFAB_NAME, typeof(GameObject)));
                 GameObject o2 = Instantiate(Init, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
                 
                 double[] rot = core.GetInitRot();
-                Debug.Log("(" + rot[0] + "," + rot[1] + "," + rot[2] + ")");
 
                 rotLab = new Vector3(-(float)(rot[0]) + rotOffsetX,
-                    (float)(rot[1]) + rotOffsetY,
-                    -(float)(rot[2]) + rotOffsetZ);
+                    (float)(rot[2]) + rotOffsetY,
+                    -(float)(rot[1]) + rotOffsetZ);
 
             }
         } else {
@@ -117,20 +114,18 @@ public class CameraRenderer : MonoBehaviour {
             core.UpdateTranform();
             
             double[] rot = core.GetDeltaRot();
-            Debug.Log(rot[0] + " " + rot[2] + " " + rot[1] + " ");
-            rotLab += new Vector3(-(float)rot[0], (float)(rot[1]), -(float)(rot[2]));
+            rotLab += new Vector3(-(float)rot[0], (float)(rot[2]), -(float)(rot[1]));
 
             // correction
-            float rotY = rotLab[1];
-            if(rotY > 0)
-                rotY -= 24;
+            float rotZ = rotLab[2];
+            if(rotZ > 0)
+                rotZ -= 24;
             else
-                rotY += 24;
-
-            maze.transform.rotation = Quaternion.Euler(rotLab[0], rotY, rotLab[2]);
+                rotZ += 24;
             
+            maze.transform.rotation = Quaternion.Euler(rotLab[0], rotLab[1], rotZ);
+
         }
-        
     }
 
 }

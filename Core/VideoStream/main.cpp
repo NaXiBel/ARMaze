@@ -13,6 +13,19 @@ void disposeCamera(CameraCV * cam) {
 		std::cout << "Camera deleted." << std::endl;
 	}
 }
+MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
+	MazeTransform maze(*K, *D);
+	vector<Point> corners = area->getArea();
+
+	vector<Point2d> cornersD;
+	for (int i = 0; i < 4; i++) {
+		Point p = corners[i];
+		cornersD.push_back(Point2d(p.x, p.y));
+	}
+
+	maze.compute_transform(cornersD);
+	return maze;
+}
 
 void openStream(CameraCV * cam, int id /* = 0 */) {
 	cam->openStream(id);
@@ -61,23 +74,12 @@ void setCameraCV(Core* core, CameraCV* cam) {
 	core->set_camera(cam);
 }
 
-void start(Core* core) {
-	core->Start();
+void setCannyThreshold(Core* core, int thresh) {
+	core->setTreshholdCanny1(thresh);
 }
 
-MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
-
-	MazeTransform maze(*K, *D);
-	vector<Point> corners = area->getArea();
-
-	vector<Point2d> cornersD;
-	for (int i = 0; i < 4; i++) {
-		Point p = corners[i];
-		cornersD.push_back(Point2d(p.x, p.y));
-	}
-
-	maze.compute_transform(cornersD);
-	return maze;
+void start(Core* core) {
+	core->Start();
 }
 
 MazeTransform getDefaultTransform(Area* area) {
@@ -119,7 +121,7 @@ bool check_pattern_count(Calibrator* calibrator) {
 }
 
 void calibrate(Calibrator* calibrator, Core* core) {
-	calibrator->run_calibration(Size(core->getCamera()->getWidth(), core->getCamera()->getHeigth()));
+	calibrator->run_calibration(Size(core->get_camera()->getWidth(), core->get_camera()->getHeigth()));
 }
 
 Mat* get_K(Calibrator* calibrator) {
@@ -148,7 +150,7 @@ void init_transform_import_KD(TransformTracking* transformTracking, Area* area,
 
 	Mat* K = new Mat(3, 3, CV_64FC1);
 	Mat* D = new Mat(8, 1, CV_64FC1);
-	
+
 	K->at<double>(0, 0) = K00; K->at<double>(0, 1) = K01; K->at<double>(0, 2) = K02;
 	K->at<double>(1, 0) = K10; K->at<double>(1, 1) = K11; K->at<double>(1, 2) = K12;
 	K->at<double>(2, 0) = K20; K->at<double>(2, 1) = K21; K->at<double>(2, 2) = K22;
@@ -161,7 +163,7 @@ void init_transform_import_KD(TransformTracking* transformTracking, Area* area,
 	D->at<double>(5, 0) = D5;
 	D->at<double>(6, 0) = D6;
 	D->at<double>(7, 0) = D7;
-	
+
 	MazeTransform* transform = new MazeTransform(getTransform(area, K, D));
 	transformTracking->init_from_maze(transform);
 
@@ -217,7 +219,7 @@ Point2d* get_begin_center(Area* area, TransformTracking* transformTracking) {
 	Mat unprojectedPoint = H.inv() * end3d;
 	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
-	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
+	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0) / dimY);
 }
 
 Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
@@ -239,7 +241,7 @@ Point2d* get_end_center(Area* area, TransformTracking* transformTracking) {
 	Mat unprojectedPoint = H.inv() * end3d;
 	unprojectedPoint /= unprojectedPoint.at<double>(2, 0);
 
-	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0));
+	return new Point2d(unprojectedPoint.at<double>(0, 0) / dimX, unprojectedPoint.at<double>(1, 0) / dimY);
 }
 
 vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int i) {
@@ -266,8 +268,8 @@ vector<Point2d*>* get_wall(Area* area, TransformTracking* transformTracking, int
 	}
 
 	vector<Point2d*>* result = new vector<Point2d*>;
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0) / dimX, unprojectedPoints.at<double>(1, 0)));
-	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1)));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 0) / dimX, unprojectedPoints.at<double>(1, 0) / dimY));
+	result->push_back(new Point2d(unprojectedPoints.at<double>(0, 1) / dimX, unprojectedPoints.at<double>(1, 1) / dimY));
 
 	return result;
 }
@@ -302,14 +304,6 @@ Mat* get_init_rot(TransformTracking* transformTracking) {
 
 Mat* get_delta_rot(TransformTracking* transformTracking) {
 	return new Mat(transformTracking->get_delta_rot());
-}
-
-Mat* get_init_trans(TransformTracking* transformTracking) {
-	return new Mat(transformTracking->get_init_trans());
-}
-
-Mat* get_delta_trans(TransformTracking* transformTracking) {
-	return new Mat(transformTracking->get_delta_trans());
 }
 
 double at(int i, int j, Mat* mat) {

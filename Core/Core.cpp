@@ -107,8 +107,9 @@ void Core::BuildMaze() {
 	Mat fr = this->m_CameraCV->getFrame();
 	cvtColor(this->m_CameraCV->getFrame(), fr, CV_BGR2GRAY); // convert gray 
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, 100, 300, 3); // NEED THRESHOLD
-	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+
+	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1 * 3, 3); // NEED THRESHOLD
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(4, 4));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
 	// find area 
@@ -117,33 +118,29 @@ void Core::BuildMaze() {
 		// find xmin xmax ymin ymax 
 		for(int i = 0; i < m_Area.getArea().size(); ++i) {
 			if(m_Area.getArea()[i].x < Xmin) {
-				Xmin = m_Area.getArea()[i].x + 5;
+				Xmin = m_Area.getArea()[i].x;
 			}
 			else if(m_Area.getArea()[i].x > Xmax) {
-				Xmax = m_Area.getArea()[i].x - 5;
+				Xmax = m_Area.getArea()[i].x;
 			}
 			if(m_Area.getArea()[i].y < Ymin) {
 
-				Ymin = m_Area.getArea()[i].y + 5;
+				Ymin = m_Area.getArea()[i].y;
 			}
 			else if(m_Area.getArea()[i].y > Ymax) {
-				Ymax = m_Area.getArea()[i].y - 5;
+				Ymax = m_Area.getArea()[i].y;
 			}
 		}
-
+		
 		if(Ymax < 0 || Xmax < 0)
 			return;
 
-		m_Area.setSizeX(abs((Xmax + 15) - (Xmin - 15)));
-		m_Area.setSizeY(abs((Ymax + 15) - (Ymin - 15)));
-
-		//std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[1] << std::endl;
-		//std::cout << m_Area.getArea()[1] << " " << m_Area.getArea()[2] << std::endl;
-		//std::cout << m_Area.getArea()[2] << " " << m_Area.getArea()[3] << std::endl;
-		//std::cout << m_Area.getArea()[0] << " " << m_Area.getArea()[3] << std::endl;
-//		std::cout << std::endl;
-//		std::cout << Xmin << " " << Xmax << std::endl;
-//		std::cout << Ymin << " " << Ymax << std::endl;
+		int distX = abs(Xmax - Xmin);
+		int distY = abs(Ymax - Ymin);
+		Xmin = Xmin + distX / 15;
+		Xmax = Xmax - distX / 15;
+		Ymin= Ymin + distY / 15;
+		Ymax = Ymax - distY / 15;
 
 		// ONLY TEST DISPLAY AREA
 		line(dst, m_Area.getArea()[0], m_Area.getArea()[1], Scalar(133, 255, 50), 2);
@@ -215,7 +212,8 @@ void Core::TrackingArea() {
 		return;
 	}
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, 100, 300, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1 * 3, 3); // NEED THRESHOLD
+
 	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
@@ -310,6 +308,6 @@ Area* Core::getArea() {
 	return &m_Area;
 }
 
-CameraCV* Core::getCamera() {
-	return m_CameraCV;
+void Core::setTreshholdCanny1(int & newValue) {
+	m_TreshholdCanny1 = newValue;
 }

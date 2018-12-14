@@ -1,5 +1,5 @@
 #include "Area.h"
-
+# define M_PI           3.14159265358979323846  /* pi */
 std::vector<std::vector<Point>> Area::getWall() const
 {
 	return m_Wall;
@@ -67,18 +67,32 @@ bool Area::buildEdge(const Mat & canny) {
 		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
 			continue;
 		}
-		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
+		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.01, true);
 
 		if (approx.size() == 4) {
 			if (fabs(contourArea(Mat(approx))) > max) {
+				
+				double maxA = 0;
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > maxA) {
+						maxA = angle;
+					}
+					if (max > 0.2) {
+						break;
+					}
+				}
 				max = fabs(contourArea(Mat(approx)));
 				m_Area = approx;
+
 			}
 		}
+		
 	}
 
 	if (max == 0)
 		return false;
+	
 	return true;
 }
 
@@ -89,7 +103,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 	// find start and end
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 1000) {
+		if (fabs(contourArea(Mat(contours[i]))) <= 200) {
 			continue;
 		}
 		// Approximate contour with accuracy proportional
@@ -129,6 +143,18 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 						isOk = false;
 					}
 				}
+				double max = 0;
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > max) {
+						max = angle;
+					}
+					if (max > 0.2) {
+						isOk = false;
+						break;
+					}
+				}
+
 				if (isOk) {
 					m_Start = approx;
 				}
@@ -143,7 +169,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 
 bool Area::buildWalls(const Mat & mask) {
 	std::vector<Vec4i> Hugue;
-	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 30, 15, 10);
+	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 30, 25, 30);
 
 	std::vector<Point> square = m_Start;
 
@@ -256,8 +282,18 @@ std::vector<std::vector<Point>> Area::FilterInside(std::vector<std::vector<Point
 	return(result);
 }
 
-
-
+double Area::getAngles(const Point & p1, const Point & corner, const Point & p2) const {
+	Point v1 = p1 - corner;
+	Point v2 = p2 - corner;
+	double a = sqrt(getDot(v1, v1));
+	double b = sqrt(getDot(v2, v2));
+	if (a * b == 0)
+		return 0;
+	return abs(getDot(v1, v2) / (a * b));
+}
+double Area::getDot(const Point & v1, const Point & v2) const {
+	return (v1.x * v2.x + v1.y * v2.y);
+}
 
 bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY) {
 	std::vector<std::vector<Point> > contours;
@@ -271,7 +307,7 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 			continue;
 		}
 
-		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.01, true);
 
 		//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
 		int distX = abs(Xmax - Xmin);
@@ -317,7 +353,7 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 					isOk = false;
 				}
 
-				if (distX2 < 450 || distY2 < 450) {
+				if (distX2 < 550 || distY2 < 550) {
 					isOk = false;
 				}
 				//cout << distX2 << " " << distY2 << endl; 
@@ -328,12 +364,21 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 				else {
 					isOk = false;
 				}
-				
+				double max = 0; 
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > max) {
+						max = angle;
+					}
+					if (max > 0.2 ) {
+						isOk = false;
+						break;
+					}
+				}
 			}
 			if (isOk) {
 				m_Area = approx;
 			}
-			
 		}
 	}
 

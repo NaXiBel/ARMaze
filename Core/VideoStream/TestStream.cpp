@@ -10,7 +10,7 @@
 
 using namespace cv;
 
-int main(void) {
+int test(void) {
 	String window_name = "Test class";
 	Core* core = createCore();
 	CameraCV* cameraCv = getCameraCV(core);

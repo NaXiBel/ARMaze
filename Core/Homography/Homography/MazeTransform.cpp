@@ -94,9 +94,9 @@ void MazeTransform::compute_transform(vector<Point2d> corners) {
 
 	vector<Point3f> a4points;
 	a4points.push_back(Point3f(0, 0, 0));
-	a4points.push_back(Point3f(dimX*200, 0, 0));
-	a4points.push_back(Point3f(dimX*200, dimY*200, 0));
-	a4points.push_back(Point3f(0, dimY*200, 0));
+	a4points.push_back(Point3f(dimX, 0, 0));
+	a4points.push_back(Point3f(dimX, dimY, 0));
+	a4points.push_back(Point3f(0, dimY, 0));
 
 	H = findHomography(a4points, corners);
 
