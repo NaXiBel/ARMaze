@@ -90,10 +90,11 @@ public class CameraRenderer : MonoBehaviour {
                 double[] start = CoreWrapper.GetInstance().GetBeginCenter();
                 GameObject prefabBall = ((GameObject)Resources.Load("Prefabs/" + Const.BALL_PREFAB_NAME, typeof(GameObject)));
                 float x_unity = -Const.HAUTEUR_MAZE / 2 + Const.HAUTEUR_MAZE * (float)start[0];
-                float y_unity = -Const.LARGEUR_MAZE / 2 + Const.LARGEUR_MAZE * (float)start[1];
+                float y_unity = (-Const.LARGEUR_MAZE / 2 + Const.LARGEUR_MAZE * (float)start[1]) - 10.15f;
 
-                GameObject objetBall = Instantiate(prefabBall, new Vector3(3.0f, 388.0f, -5.0f), Quaternion.Euler(90.0f, 0.0f, 0.0f));
-                
+                Vector3 spawnPosition = new Vector3(x_unity, 400.0f, y_unity);
+                GameObject objetBall = Instantiate(prefabBall, spawnPosition , Quaternion.Euler(90.0f, 0.0f, 0.0f));
+                objetBall.GetComponent<Ball>().spawnPosition = spawnPosition;
 
                 GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
                 maze = Instantiate(o, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.Euler(0.0f, 0.0f, 0.0f));
@@ -105,7 +106,7 @@ public class CameraRenderer : MonoBehaviour {
 
                 rotLab = new Vector3(-(float)(rot[0]) + rotOffsetX,
                     (float)(rot[2]) + rotOffsetY,
-                    (float)(rot[1]) + rotOffsetZ);
+                    -(float)(rot[1]) + rotOffsetZ);
 
             }
         } else {
@@ -114,7 +115,7 @@ public class CameraRenderer : MonoBehaviour {
             core.UpdateTranform();
             
             double[] rot = core.GetDeltaRot();
-            rotLab += new Vector3(-(float)rot[0], (float)(rot[2]), (float)(rot[1]));
+            rotLab += new Vector3(-(float)rot[0], (float)(rot[2]), -(float)(rot[1]));
 
             // correction
             float rotZ = rotLab[2];

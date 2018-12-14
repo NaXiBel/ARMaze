@@ -30,7 +30,7 @@ public class GameInitializer : MonoBehaviour {
         //GameObject arrivalObject = Instantiate(arrivalPrefab, MazeData.MAZE_POINT_OF_ARRIVAL, Quaternion.Euler(-90.0f, 0.0f, 0.0f));
         float x_scale_arrivee = -Const.HAUTEUR_MAZE / 2f + Const.HAUTEUR_MAZE * (float)end[0];
         float y_scale_arrivee = -Const.LARGEUR_MAZE / 2f + Const.LARGEUR_MAZE * (float)end[1];
-        GameObject arrivalObject = Instantiate(arrivalPrefab, new Vector3(x_scale_arrivee, 0f, y_scale_arrivee), Quaternion.Euler(-90.0f, 0.0f, 0.0f));
+        GameObject arrivalObject = Instantiate(arrivalPrefab, new Vector3(x_scale_arrivee, 1.0f, y_scale_arrivee), Quaternion.Euler(-90.0f, 0.0f, 0.0f));
         arrivalObject.transform.parent = GameObject.Find(Const.MAZE_GAMEOBJECT_NAME).transform;
         arrivalObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
 
@@ -62,7 +62,9 @@ public class GameInitializer : MonoBehaviour {
             MazeObstacle.Create(new Vector3 (x_scale_wall_start, 1f, y_scale_wall_start), new Vector3(x_scale_wall_end, 1f, y_scale_wall_end));
         }
 
-        GameObject.Find(Const.MAZE_GAMEOBJECT_NAME).transform.position = new Vector3(3.0f, 368.0f, -5.0f);
+        GameObject mazeObject = GameObject.Find(Const.MAZE_GAMEOBJECT_NAME);
+        mazeObject.transform.position = new Vector3(0.8f, 394.74f, -10.15f);
+        mazeObject.transform.localScale = new Vector3(1.4f, 1.0f, 1.0f);
         
     }
 

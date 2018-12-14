@@ -6,6 +6,7 @@ public class Ball : MonoBehaviour {
 	private int i = 0;
 	private bool sleeping;
 	private Vector3 oldPosition;
+    public Vector3 spawnPosition;
 	private void InitializeBall() {
 		this.sleeping = false;
 
@@ -52,11 +53,25 @@ public class Ball : MonoBehaviour {
 		this.oldPosition = this.transform.position;
 	}
 
-	/**
+    private void Update()
+    {   
+        if(this.transform.position.y < 350.0f)
+        {
+            this.transform.position = this.spawnPosition;
+            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
+
+        this.GetComponent<Rigidbody>().velocity /= 1.05f;
+
+
+
+    }
+
+    /**
 		Physique Unity : lorsqu'une collision est détectée, le rigidbody
 		se met en "veille"
 	 */
-	private void OnCollisionEnter(Collision other) {
+    private void OnCollisionEnter(Collision other) {
 		this.sleeping = true;
 	}
 
