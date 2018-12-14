@@ -1,27 +1,31 @@
 // g++ -I"C:\Program Files\opencv\build\include" -L"C:\Program Files\opencv\release\lib" -g -o Test.exe TestStream.cxx -lopencv_core343 -lopencv_imgproc343 -lopencv_highgui343 -lopencv_imgcodecs343 -lopencv_videoio343
 
-#define TEST_CLASS
+#define TEST_CORE
 
-#ifdef TEST_CLASS
+#ifdef TEST_CORE
 #include "opencv2/opencv.hpp"
+#include "../Core.h"
 #include "CameraCV.h"
+
 
 using namespace cv;
 
 int test(void) {
 	String window_name = "Test class";
-	CameraCV * cam = new CameraCV();
+
 
 	namedWindow(window_name, WINDOW_AUTOSIZE);
 
-	cam->openStream();
+	//int c = waitKey(10);
+	Core *  core = new Core();
+	core->get_camera()->openStream();
+	while(true) {
+		//cam->readFrame();
+		//Mat fraaame = cam->getFrame();
 
-	int c = waitKey(10);
-	while((char)c != 'q') {
-		Mat fraaame = cam->getFrame();
-		cam->Start();
-		imshow(window_name, fraaame);
-		c = waitKey(10);
+		core->Start();
+		//imshow(window_name, fraaame);
+		//c = waitKey(10);
 	}
 
 	return 0;

@@ -19,27 +19,31 @@
 using namespace cv;
 
 class Core {
-
 	private:
-		VideoCapture	 m_Capture;
-		Mat				 m_Frame;
-		Mat				 m_MaskTracker;
-		Area			 m_Area;
-		bool			 m_IsBuilt;
-		Rect2d			 m_TrackBox;
-
+		CameraCV *		m_CameraCV;
+		//VideoCapture	m_Capture;
+		//Mat				m_Frame;
+		Mat				m_MaskTracker;
+		Area			m_Area;
+		bool			m_IsBuilt;
+		Rect2d			m_TrackBox;
+		int				m_TreshholdCanny1 = 100;
 	public:
 		Core();
-		void Start();
+		Core(CameraCV cameraCV);
 
+		void Start();
 		void Video();
 		void BuildMaze();
 		void TrackingArea();
 
 		bool get_isBuild();
 		bool capture_read();
-		void set_frame(Mat frame);
+		CameraCV * get_camera();
+		void set_camera(CameraCV * camera);
 		Area* getArea();
+
+		void setTreshholdCanny1(int & newValue);
 
 };
 

@@ -1,5 +1,5 @@
 #include "Area.h"
-
+# define M_PI           3.14159265358979323846  /* pi */
 std::vector<std::vector<Point>> Area::getWall() const
 {
 	return m_Wall;
@@ -67,18 +67,32 @@ bool Area::buildEdge(const Mat & canny) {
 		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
 			continue;
 		}
-		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
+		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.01, true);
 
 		if (approx.size() == 4) {
 			if (fabs(contourArea(Mat(approx))) > max) {
+				
+				double maxA = 0;
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > maxA) {
+						maxA = angle;
+					}
+					if (max > 0.2) {
+						break;
+					}
+				}
 				max = fabs(contourArea(Mat(approx)));
 				m_Area = approx;
+
 			}
 		}
+		
 	}
 
 	if (max == 0)
 		return false;
+	
 	return true;
 }
 
@@ -89,7 +103,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 	// find start and end
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 1000) {
+		if (fabs(contourArea(Mat(contours[i]))) <= 200) {
 			continue;
 		}
 		// Approximate contour with accuracy proportional
@@ -129,6 +143,18 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 						isOk = false;
 					}
 				}
+				double max = 0;
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > max) {
+						max = angle;
+					}
+					if (max > 0.2) {
+						isOk = false;
+						break;
+					}
+				}
+
 				if (isOk) {
 					m_Start = approx;
 				}
@@ -143,7 +169,7 @@ bool Area::buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, c
 
 bool Area::buildWalls(const Mat & mask) {
 	std::vector<Vec4i> Hugue;
-	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 30, 15, 10);
+	HoughLinesP(mask, Hugue, 1, CV_PI / 180, 30, 25, 30);
 
 	std::vector<Point> square = m_Start;
 
@@ -256,42 +282,132 @@ std::vector<std::vector<Point>> Area::FilterInside(std::vector<std::vector<Point
 	return(result);
 }
 
+double Area::getAngles(const Point & p1, const Point & corner, const Point & p2) const {
+	Point v1 = p1 - corner;
+	Point v2 = p2 - corner;
+	double a = sqrt(getDot(v1, v1));
+	double b = sqrt(getDot(v2, v2));
+	if (a * b == 0)
+		return 0;
+	return abs(getDot(v1, v2) / (a * b));
+}
+double Area::getDot(const Point & v1, const Point & v2) const {
+	return (v1.x * v2.x + v1.y * v2.y);
+}
 
-
-
-bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax) {
+bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY) {
 	std::vector<std::vector<Point> > contours;
 	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 	std::vector<Point> approx;
 	// find start and end
+	int max = -1;
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= 2000) {
+		if (fabs(contourArea(Mat(contours[i]))) <= m_MaxTracking - 400 && fabs(contourArea(Mat(contours[i]))) > m_MaxTracking + 400) {
 			continue;
 		}
 
-		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.1, true);
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.01, true);
 
-
-
+		//	std::cout << "COORD : " << Xmin << " " << Xmax << std::endl;
+		int distX = abs(Xmax - Xmin);
+		int distY = abs(Ymax - Ymin);
 		if (approx.size() == 4)
 		{
+
+			// initialisation 
+			int Xmin2 = INT_MAX;
+			int Xmax2 = INT_MIN;
+			int Ymin2 = INT_MAX;
+			int Ymax2 = INT_MIN;
+
+			for (int i = 0; i < approx.size(); ++i) {
+				if (approx[i].x < Xmin2) {
+					Xmin2 = approx[i].x - 200;
+				}
+				else if (approx[i].x > Xmax2) {
+					Xmax2 = approx[i].x + 200;
+				}
+				if (approx[i].y < Ymin2) {
+
+					Ymin2 = approx[i].y - 200;
+				}
+				else if (approx[i].y > Ymax2) {
+					Ymax2 = approx[i].y + 200;
+				}
+			}
+			if (Ymax2 < 0 || Xmax2 < 0)
+				return false;
+			int distX2 = abs(Xmax2 - Xmin2);
+			int distY2 = abs(Ymax2 - Ymin2);
+
+			int sizeX = abs(distX - distX2);
+			int sizeY = abs(distY - distY2);
+
 			bool isOk = true;
 			for (int index = 0; index < approx.size(); ++index) {
-				if ((approx[index].x < Xmin && approx[index].x > Xmin - 25)|| (approx[index].x > Xmax && approx[index].x < Xmax + 25)) {
+				if (approx[index].x < Xmin  || approx[index].x > Xmax) {
 					isOk = false;
 				}
 				if (approx[index].y < Ymin || approx[index].y > Ymax) {
 					isOk = false;
 				}
+
+				if (distX2 < 550 || distY2 < 550) {
+					isOk = false;
+				}
+				//cout << distX2 << " " << distY2 << endl; 
+				if (fabs(contourArea(Mat(approx))) >= max) {
+					max = fabs(contourArea(Mat(approx)));
+					m_MaxTracking = max;
+				}
+				else {
+					isOk = false;
+				}
+				double max = 0; 
+				for (int j = 0; j < 4; ++j) {
+					double angle = getAngles(approx[j % 4], approx[(j + 1) % 4], approx[(j + 2) % 4]);
+					if (angle > max) {
+						max = angle;
+					}
+					if (max > 0.2 ) {
+						isOk = false;
+						break;
+					}
+				}
 			}
 			if (isOk) {
 				m_Area = approx;
 			}
-			
 		}
 	}
+
+
+	// find all edge
+/*	std::vector<std::vector<Point> > contours;
+	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+	std::vector<Point> approx;
+	sort(contours.begin(), contours.end(), compareConvexe); // sort connection
+
+	double max = 0;
+	for (int index = 0; index < contours.size(); ++index) {
+		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
+			continue;
+		}
+		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
+
+		if (approx.size() == 4) {
+			if (fabs(contourArea(Mat(approx))) > max) {
+				max = fabs(contourArea(Mat(approx)));
+				m_Area = approx;
+			}
+		}
+	}
+
+	if (max == 0)
+		return false;*/
 	return true;
+
 }
 
 

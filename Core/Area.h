@@ -10,6 +10,7 @@
 #include <numeric>
 #include <iostream>
 #include <vector>
+#include <cmath>       /* acos */
 
 using namespace cv;
 
@@ -25,11 +26,14 @@ class Area {
 		std::vector <Point>				 m_End;
 		Point							 m_StartCenter;
 		Point							 m_EndCenter;
+		int								 m_MaxTracking = 3000;
 		struct myclass {
 			bool operator() (std::vector <Point> p1, std::vector <Point> p2) { return (p1.size() < p2.size()); }
 		} compareConvexe;
 		std::vector<std::vector<Point>> FilterInside(std::vector<std::vector<Point>> lines, std::vector<Point> polygon, std::vector<Point> bounds, int seuil = 20);
 		std::vector<std::vector<Point>> ConvertToPolygons(std::vector<Vec4i> contours);
+		double getAngles(const Point & p1, const Point & corner, const Point & p2) const;
+		double getDot(const Point & v1, const Point & v2) const;
 
 	public:
 		std::vector<std::vector <Point>> getWall() const;
@@ -49,7 +53,7 @@ class Area {
 		bool buildEdge(const Mat & canny);
 		bool buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
 		bool buildWalls(const Mat & mask);
-		bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
+		bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY);
 };
 
 #endif //AREA_H
