@@ -6,8 +6,7 @@ namespace Wrapper {
 
     public class CoreWrapper {
         public struct embededFunctions {
-            //const string dllpath = @".\VideoStream.dll";
-            const string dllpath = @"C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\x64\Debug\VideoStream.dll";
+            const string dllpath = @".\VideoStream.dll";
 
             [DllImport(dllpath, EntryPoint = "createCamera")] static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")] static public extern void DisposeCameraInput(IntPtr pCam);

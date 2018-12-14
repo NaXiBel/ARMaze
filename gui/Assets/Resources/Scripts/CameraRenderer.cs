@@ -21,6 +21,8 @@ public class CameraRenderer : MonoBehaviour {
     public float rotOffsetY;
     public float rotOffsetZ;
 
+    private Vector3 rotLab;
+
     private double accTime;
 
     // Use this for initialization
@@ -36,57 +38,12 @@ public class CameraRenderer : MonoBehaviour {
         //  Camera.main.transform.Translate(Vector3.back);
         Camera.main.orthographicSize = core.GetFrameHeight() / 2f + 2;
         m_FinishedBuild = false;
-
-        /*
         
-        XmlSerializer x = new XmlSerializer(typeof(Xml2CSharp.Opencv_storage));
-        FileStream fs;
-
-        core.CreateCalibrator();
-
-        // check if the XML exists
-        try
-        {
-            fs = new FileStream("CameraConfig.xml", FileMode.Open);
-        }
-        catch(FileNotFoundException e)
-        {
-            Debug.Log("file not found");
-            fs = null;
-        }
-
-        m_config_exists = false;
-        m_calibrated = false;
-        
-        if (fs != null)
-        {
-            try
-            {
-                config = (Xml2CSharp.Opencv_storage)x.Deserialize(fs);
-            }
-            catch(XmlException e)
-            {
-                Debug.Log("Cannot deserialize");
-                config = null;
-            }
-
-            if ( config != null)
-            {
-                m_config_exists = true;
-                m_calibrated = true;
-            }
-        }
-
-        accTime = 0;
-        */
-
-        // this.camera.InitCore();
-        //this.camera.DisplayCameraStream();
     }
 	
 	// Update is called once per frame
 	void Update() {
-
+        
         this.frame = core.GetCameraFrame();
         this.texture.LoadRawTextureData(this.frame);
         this.texture.Apply();
@@ -124,34 +81,12 @@ public class CameraRenderer : MonoBehaviour {
 
             core.Build();
 
-            if(core.CheckBuid()) {
+            if (core.CheckBuid())
+            {
                 m_FinishedBuild = true;
 
-                /*
-
-                if(m_config_exists)
-                {
-                    // init with XML doc values
-                    core.InitTransformKD(new double[3,3]{
-                        {config.CameraParams.K00, config.CameraParams.K01, config.CameraParams.K02},
-                        {config.CameraParams.K10, config.CameraParams.K11, config.CameraParams.K12},
-                        {config.CameraParams.K20, config.CameraParams.K21, config.CameraParams.K22}
-                    }, new double[8]{
-                    config.CameraParams.D0, config.CameraParams.D1,
-                    config.CameraParams.D2, config.CameraParams.D3,
-                    config.CameraParams.D4, config.CameraParams.D5,
-                    config.CameraParams.D6, config.CameraParams.D7});
-                }
-                else
-                {
-                    // init with calibration
-                    core.InitTransform();
-                }
-
-                */
-
                 core.InitTransformDefault();
-
+                
                 Debug.Log("Built");
                 double[] start = CoreWrapper.GetInstance().GetBeginCenter();
                 GameObject prefabBall = ((GameObject)Resources.Load("Prefabs/" + Const.BALL_PREFAB_NAME, typeof(GameObject)));
@@ -167,13 +102,13 @@ public class CameraRenderer : MonoBehaviour {
 
                 GameObject Init = ((GameObject)Resources.Load("Prefabs/" + Const.GAMEINITIALIZER_PREFAB_NAME, typeof(GameObject)));
                 GameObject o2 = Instantiate(Init, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
-
+                
                 double[] rot = core.GetInitRot();
                 Debug.Log("(" + rot[0] + "," + rot[1] + "," + rot[2] + ")");
-                maze.transform.rotation = 
-                    Quaternion.Euler(-(float)rot[0]  + rotOffsetX, 
-                    (float)rot[1] + rotOffsetY, 
-                    -(float)rot[2] + rotOffsetZ);
+
+                rotLab = new Vector3(-(float)(rot[0]) + rotOffsetX,
+                    (float)(rot[1]) + rotOffsetY,
+                    -(float)(rot[2]) + rotOffsetZ);
 
             }
         } else {
@@ -183,7 +118,16 @@ public class CameraRenderer : MonoBehaviour {
             
             double[] rot = core.GetDeltaRot();
             Debug.Log(rot[0] + " " + rot[2] + " " + rot[1] + " ");
-            maze.transform.Rotate(-(float)rot[0], (float)rot[1], -(float)rot[2]);
+            rotLab += new Vector3(-(float)rot[0], (float)(rot[1]), -(float)(rot[2]));
+
+            // correction
+            float rotY = rotLab[1];
+            if(rotY > 0)
+                rotY -= 24;
+            else
+                rotY += 24;
+
+            maze.transform.rotation = Quaternion.Euler(rotLab[0], rotY, rotLab[2]);
             
         }
         

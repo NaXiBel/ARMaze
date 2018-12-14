@@ -19,6 +19,47 @@ Mat getIntrinsicMatrix() {
 	return K;
 }
 
+// Checks if a matrix is a valid rotation matrix.
+bool isRotationMatrix(Mat &R)
+{
+	Mat Rt;
+	transpose(R, Rt);
+	Mat shouldBeIdentity = Rt * R;
+	Mat I = Mat::eye(3, 3, shouldBeIdentity.type());
+
+	return  norm(I, shouldBeIdentity) < 1e-6;
+
+}
+
+// Calculates rotation matrix to euler angles
+// The result is the same as MATLAB except the order
+// of the euler angles ( x and z are swapped ).
+Mat rotationMatrixToEulerAngles(Mat &R)
+{
+
+	assert(isRotationMatrix(R));
+
+	float sy = sqrt(R.at<double>(0, 0) * R.at<double>(0, 0) + R.at<double>(1, 0) * R.at<double>(1, 0));
+
+	bool singular = sy < 1e-6; // If
+
+	float x, y, z;
+	if (!singular)
+	{
+		x = atan2(R.at<double>(2, 1), R.at<double>(2, 2));
+		y = atan2(-R.at<double>(2, 0), sy);
+		z = atan2(R.at<double>(1, 0), R.at<double>(0, 0));
+	}
+	else
+	{
+		x = atan2(-R.at<double>(1, 2), R.at<double>(1, 1));
+		y = atan2(-R.at<double>(2, 0), sy);
+		z = 0;
+	}
+	return Mat(3, 1, CV_64FC1,{ x, y, z });
+
+}
+
 bool sortByY(Point2d p1, Point2d p2) {
 	return p1.y < p2.y;
 }
@@ -61,43 +102,16 @@ void MazeTransform::compute_transform(vector<Point2d> corners) {
 
 	vector<float> vectNull;
 
-	/*
-	Mat R(3, 3, CV_64FC1);
-
-	float norm1 = (float)norm(H.col(0));
-	float norm2 = (float)norm(H.col(1));
-	float tnorm = (norm1 + norm2) / 2.0f;
-
-	Mat p1 = H.col(0);       // Pointer to first column of H
-	Mat p2 = R.col(0);    // Pointer to first column of pose (empty)
-
-	cv::normalize(H.col(0), R.col(0));   // Normalize the rotation, and copies the column to pose
-
-	p1 = H.col(1);           // Pointer to second column of H
-	p2 = R.col(1);        // Pointer to second column of pose (empty)
-
-	cv::normalize(H.col(1), R.col(1));   // Normalize the rotation and copies the column to pose
-
-	p1 = R.col(0);
-	p2 = R.col(1);
-
-	Mat p3 = R.col(0).cross(R.col(1));   // Computes the cross-product of p1 and p2
-	Mat c2 = R.col(2);    // Pointer to third column of pose
-	p3.copyTo(R.col(2));       // Third column is the crossproduct of columns one and two
-
-	trans = H.col(2) / tnorm;  //vector t [R|t] is the last column of pose
-
-	Rodrigues(R, rot);
-	*/
-
+	// find the rotation
 	solvePnP(a4points, corners, K, vectNull, rot, trans);
+	
+	// transform it into euler angles
 	Rodrigues(rot, rot);
-
 	Mat cameraMatrix, rotMatrix, transVect, rotMatrixX, rotMatrixY, rotMatrixZ;
 	double* _r = rot.ptr<double>();
-	double projMatrix[12] = { _r[0],_r[1],_r[2],trans.at<double>(0,0),
-		_r[3],_r[4],_r[5],trans.at<double>(1,0),
-		_r[6],_r[7],_r[8],trans.at<double>(2,0) };
+	double projMatrix[12] = { _r[0],_r[1],_r[2],0,
+		_r[3],_r[4],_r[5],0,
+		_r[6],_r[7],_r[8],0 };
 
 	decomposeProjectionMatrix(Mat(3, 4, CV_64FC1, projMatrix),
 		cameraMatrix,
