@@ -7,10 +7,6 @@ CameraCV::CameraCV() {
 CameraCV::~CameraCV() {
 }
 
-cv::VideoCapture CameraCV::getVid() {
-	return this->capture;
-}
-
 void CameraCV::openStream(int inputId /* = 0 */) {
 	this->capture.open(inputId);
 	if(!this->capture.isOpened()) {
@@ -31,16 +27,28 @@ bool CameraCV::readFrame() {
 	return this->capture.read(this->frame);
 }
 
-cv::Mat CameraCV::getFrame() {
+cv::VideoCapture CameraCV::getVid() const {
+	return this->capture;
+}
+
+cv::Mat CameraCV::getFrame() const {
 	return this->frame;
 }
 
-int CameraCV::getWidth() {
+int CameraCV::getWidth() const {
 	return this->frame.cols;
 }
 
-int CameraCV::getHeigth() {
+int CameraCV::getHeigth() const {
 	return this->frame.rows;
+}
+
+uchar * CameraCV::getLiveFrame(int * sizeofMat) {
+	this->capture.read(this->frame);
+	cv::cvtColor(this->frame, this->frame, CV_BGR2BGRA, 4);
+	*sizeofMat = this->frame.rows * this->frame.cols * 4; //this->frame.total() * this->frame.elemSize();
+
+	return this->frame.data;
 }
 
 void CameraCV::displayStream() {
@@ -55,13 +63,5 @@ void CameraCV::displayStream() {
 			break;
 		}
 	}
-}
-
-uchar * CameraCV::getLiveFrame(int * sizeofMat) {
-	this->capture.read(this->frame);
-	cv::cvtColor(this->frame, this->frame, CV_BGR2BGRA, 4);
-	*sizeofMat = this->frame.rows * this->frame.cols * 4; //this->frame.total() * this->frame.elemSize();
-
-	return this->frame.data;
 }
 

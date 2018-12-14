@@ -267,15 +267,15 @@ void Core::TrackingArea() {
 	}
 }
 
-bool Core::get_isBuild() {
-	return m_IsBuilt;
-}
-
 bool Core::capture_read() {
 	return this->m_CameraCV->readFrame();
 }
 
-CameraCV * Core::get_camera() {
+bool Core::get_isBuild() const {
+	return m_IsBuilt;
+}
+
+CameraCV * Core::get_camera() const {
 	return this->m_CameraCV;
 }
 

@@ -12,6 +12,7 @@ public class CameraRenderer : MonoBehaviour {
     private GameObject maze;
     // Use this for initialization
     void Start() {
+        Console.WriteLine("Start...");
         core = CoreWrapper.GetInstance();
         core.InitCore();
         core.OpenVideoStream(0);
@@ -23,55 +24,56 @@ public class CameraRenderer : MonoBehaviour {
         //  Camera.main.transform.Translate(Vector3.back);
         Camera.main.orthographicSize = core.GetFrameHeight() / 2f + 2;
         m_FinishedBuild = false;
-        
+        Console.WriteLine("Start done.");
     }
 
     // Update is called once per frame
     void Update() {
 
-        //this.camera.Video();
-        if(!m_FinishedBuild) {
-            this.frame = core.GetCameraFrame();
+        ////this.camera.Video();
+        //if(!m_FinishedBuild) {
+        //    this.frame = core.GetCameraFrame();
 
-            core.Build();
+        //    core.Build();
 
-            if(core.CheckBuid()) {
-                m_FinishedBuild = true;
-                core.InitTransform();
-                Debug.Log("Built");
-                double[] start = CoreWrapper.GetInstance().GetBeginCenter();
-                GameObject prefabBall = ((GameObject)Resources.Load("Prefabs/" + Const.BALL_PREFAB_NAME, typeof(GameObject)));
-                float x_unity = -Const.HAUTEUR_MAZE / 2 + Const.HAUTEUR_MAZE * (float)start[0];
-                float y_unity = -Const.LARGEUR_MAZE / 2 + Const.LARGEUR_MAZE * (float)start[1];
+        //    if(core.CheckBuid()) {
+        //        m_FinishedBuild = true;
+        //        core.InitTransform();
+        //        Debug.Log("Built");
+        //        double[] start = CoreWrapper.GetInstance().GetBeginCenter();
+        //        GameObject prefabBall = ((GameObject)Resources.Load("Prefabs/" + Const.BALL_PREFAB_NAME, typeof(GameObject)));
+        //        float x_unity = -Const.HAUTEUR_MAZE / 2 + Const.HAUTEUR_MAZE * (float)start[0];
+        //        float y_unity = -Const.LARGEUR_MAZE / 2 + Const.LARGEUR_MAZE * (float)start[1];
 
-                GameObject objetBall = Instantiate(prefabBall, new Vector3(x_unity, 5f, y_unity), Quaternion.Euler(90.0f, 0.0f, 0.0f));
+        //        GameObject objetBall = Instantiate(prefabBall, new Vector3(x_unity, 5f, y_unity), Quaternion.Euler(90.0f, 0.0f, 0.0f));
 
 
-                GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
-                maze = Instantiate(o, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        //        GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
+        //        maze = Instantiate(o, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
 
-                GameObject Init = ((GameObject)Resources.Load("Prefabs/" + Const.GAMEINITIALIZER_PREFAB_NAME, typeof(GameObject)));
-                GameObject o2 = Instantiate(Init, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+        //        GameObject Init = ((GameObject)Resources.Load("Prefabs/" + Const.GAMEINITIALIZER_PREFAB_NAME, typeof(GameObject)));
+        //        GameObject o2 = Instantiate(Init, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
 
-                double[] rot = core.GetInitRot();
-                maze.transform.rotation = Quaternion.Euler((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
+        //        double[] rot = core.GetInitRot();
+        //        maze.transform.rotation = Quaternion.Euler((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
 
-            }
-        } else {
-            //            do {
-            this.frame = core.GetCameraFrame();
+        //    }
+        //} else {
+        //    //            do {
+        //    this.frame = core.GetCameraFrame();
 
-            core.Tracking();
-            core.UpdateTranform();
+        //    core.Tracking();
+        //    core.UpdateTranform();
 
-            double[] rot = core.GetDeltaRot();
-            /*          double[] end = camera.GetEndCenter();
-                        Debug.Log(end[0] + " " + end[1]);
-                        */
-            Debug.Log(rot[0] + " " + rot[2] + " " + rot[1] + " ");
-            maze.transform.Rotate((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
+        //    double[] rot = core.GetDeltaRot();
+        //    /*          double[] end = camera.GetEndCenter();
+        //                Debug.Log(end[0] + " " + end[1]);
+        //                */
+        //    Debug.Log(rot[0] + " " + rot[2] + " " + rot[1] + " ");
+        //    maze.transform.Rotate((float)rot[0] * 180 / Mathf.PI, (float)rot[2] * 180 / Mathf.PI, (float)rot[1] * 180 / Mathf.PI);
 
-        }
+        //}
+        this.frame = core.GetCameraFrame();
         this.texture.LoadRawTextureData(this.frame);
         this.texture.Apply();
         this.GetComponent<Renderer>().material.SetTexture("_MainTex", this.texture);

@@ -29,13 +29,13 @@ class CameraCV {
 		~CameraCV();
 		void openStream(int inputId = 0);
 		void closeStream();
-		cv::VideoCapture getVid();
 		bool readFrame();
-		cv::Mat getFrame();
-		int getWidth();
-		int getHeigth();
-		void displayStream();
+		cv::VideoCapture getVid() const;
+		cv::Mat getFrame() const;
+		int getWidth() const;
+		int getHeigth() const;
 		uchar * getLiveFrame(int * sizeofMat);
+		void displayStream();
 };
 
 #endif

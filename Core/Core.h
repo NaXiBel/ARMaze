@@ -36,9 +36,9 @@ class Core {
 		void BuildMaze();
 		void TrackingArea();
 
-		bool get_isBuild();
 		bool capture_read();
-		CameraCV * get_camera();
+		bool get_isBuild() const;
+		CameraCV * get_camera() const;
 		void set_camera(CameraCV * camera);
 		Area* getArea();
 
