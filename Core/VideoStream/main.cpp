@@ -107,7 +107,7 @@ void add_pattern_to_calibrator(Calibrator* calibrator, CameraCV* cameraCV) {
 
 	// TODO : cameraCV doit quelque part pouvoir trouver un chessboard
 	// devrait s'implementer facilement avec cv::findchessboardpattern
-	// devra retourner un boolean : pattern trouvé, ou pas
+	// devra retourner un boolean : pattern trouvï¿½, ou pas
 	// et en argument OUT renvera un vector<Point2d>
 
 	// vector<Point2d> pattern;
@@ -298,7 +298,6 @@ Mat* get_init_rot(TransformTracking* transformTracking) {
 	return new Mat(transformTracking->get_init_rot());
 }
 
-<<<<<<< HEAD
 MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
 	MazeTransform maze(*K, *D);
 	vector<Point> corners = area->getArea();
@@ -332,7 +331,7 @@ void add_pattern_to_calibrator(Calibrator* calibrator, CameraCV* cameraCV) {
 
 	// TODO : cameraCV doit quelque part pouvoir trouver un chessboard
 	// devrait s'implementer facilement avec cv::findchessboardpattern
-	// devra retourner un boolean : pattern trouvé, ou pas
+	// devra retourner un boolean : pattern trouvï¿½, ou pas
 	// et en argument OUT renvera un vector<Point2d>
 
 	// vector<Point2d> pattern;
@@ -403,18 +402,6 @@ void update_transform(TransformTracking* transformTracking, Area* area) {
 
 	maze->compute_transform(cornersD);
 	transformTracking->update_from_maze(maze);
-=======
-Mat* get_delta_rot(TransformTracking* transformTracking) {
-	return new Mat(transformTracking->get_delta_rot());
-}
-
-Mat* get_init_trans(TransformTracking* transformTracking) {
-	return new Mat(transformTracking->get_init_trans());
-}
-
-Mat* get_delta_trans(TransformTracking* transformTracking) {
-	return new Mat(transformTracking->get_delta_trans());
->>>>>>> improve_core
 }
 
 double at(int i, int j, Mat* mat) {
