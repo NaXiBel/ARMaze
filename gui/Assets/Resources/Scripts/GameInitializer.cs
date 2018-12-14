@@ -61,6 +61,8 @@ public class GameInitializer : MonoBehaviour {
 
             MazeObstacle.Create(new Vector3 (x_scale_wall_start, 1f, y_scale_wall_start), new Vector3(x_scale_wall_end, 1f, y_scale_wall_end));
         }
+
+        GameObject.Find(Const.MAZE_GAMEOBJECT_NAME).transform.position = new Vector3(3.0f, 368.0f, -5.0f);
         
     }
 
