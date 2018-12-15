@@ -181,11 +181,15 @@ public class CameraRenderer : MonoBehaviour {
     public void Pause()
     {
         paused = true;
+        Rigidbody physicBall = GameObject.FindGameObjectWithTag("Ball").GetComponent<Rigidbody>();
+        physicBall.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     public void UnPause()
     {
         paused = false;
+        Rigidbody physicBall = GameObject.FindGameObjectWithTag("Ball").GetComponent<Rigidbody>();
+        physicBall.constraints = RigidbodyConstraints.None;
     }
 
 }
