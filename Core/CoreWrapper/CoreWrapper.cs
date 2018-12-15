@@ -34,6 +34,9 @@ namespace Wrapper {
             [DllImport(dllpath, EntryPoint = "getCameraCV")] static public extern IntPtr getCoreCamera(IntPtr core);
             [DllImport(dllpath, EntryPoint = "setCameraCV")] static public extern void setCoreCamera(IntPtr core, IntPtr camera);
             [DllImport(dllpath, EntryPoint = "setCannyThreshold")] static public extern void setCannyThreshold(IntPtr core, int thresh);
+            [DllImport(dllpath, EntryPoint = "setCannyThreshold2")] static public extern void setCannyThreshold2(IntPtr core, int thresh);
+            [DllImport(dllpath, EntryPoint = "setKernelThreshold1")] static public extern void setKernelThreshold1(IntPtr core, int thresh);
+            [DllImport(dllpath, EntryPoint = "setKernelThreshold2")] static public extern void setKernelThreshold2(IntPtr core, int thresh);
             [DllImport(dllpath, EntryPoint = "start")] static public extern void Start(IntPtr core);
 
             [DllImport(dllpath, EntryPoint = "create_calibrator")] static public extern IntPtr CreateCalibrator(int image_count, int square_size);
@@ -219,10 +222,23 @@ namespace Wrapper {
         public void SetCoreCamera(IntPtr cam) {
             embededFunctions.setCoreCamera(this.core, cam);
         }
-        public void setCannyThreshold(IntPtr core, int thresh)
+        public void SetCannyThreshold(int thresh)
         {
             embededFunctions.setCannyThreshold(this.core, thresh);
         }
+        public void SetCannyThreshold2(int thresh)
+        {
+            embededFunctions.setCannyThreshold2(this.core, thresh);
+        }
+        public void SetKernelThreshold1(int thresh)
+        {
+            embededFunctions.setKernelThreshold1(this.core, thresh);
+        }
+        public void SetKernelThreshold2(int thresh)
+        {
+            embededFunctions.setKernelThreshold2(this.core, thresh);
+        }
+
         public void Start() {
             embededFunctions.Start(this.core);
         }

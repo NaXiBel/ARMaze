@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Wrapper;
 public class SettingsContainer : MonoBehaviour {
 
     public Scrollbar _canny1Bar;
@@ -32,56 +32,69 @@ public class SettingsContainer : MonoBehaviour {
     public Text _threshold2MaxValue;
     private float threshold2Value;
     private List<TrackbarListener> threshold2Listeners = new List<TrackbarListener>();
+    public static bool m_canShow;
+    public CoreWrapper core;
 
     void Start() {
         _canny1Bar.onValueChanged.AddListener(Canny1Changed);
         _canny2Bar.onValueChanged.AddListener(Canny2Changed);
         _threshold1Bar.onValueChanged.AddListener(Threshold1Changed);
         _threshold2Bar.onValueChanged.AddListener(Threshold2Changed);
+        m_canShow = false;
+        core = CoreWrapper.GetInstance();
+        core.InitCore();
+        core.OpenVideoStream(0);
+        core.GetCameraFrame();
     }
 
     void Update() {
-
     }
 
     private void Canny1Changed(float canny1Bar) {
         canny1Value = int.Parse(_canny1MinValue.text) + canny1Bar * (int.Parse(_canny1MaxValue.text) - int.Parse(_canny1MinValue.text));
         _canny1Value.text = canny1Value.ToString();
-        if (canny1Listeners.Count > 0) {
+        /*if (canny1Listeners.Count > 0) {
             foreach (TrackbarListener l in canny1Listeners) {
                 l.Callback(canny1Value);
             }
-        }
+        }*/
+        core.SetCannyThreshold((int)canny1Value);
     }
 
     private void Canny2Changed(float canny2Bar) {
         canny2Value = int.Parse(_canny2MinValue.text) + canny2Bar * (int.Parse(_canny2MaxValue.text) - int.Parse(_canny2MinValue.text));
         _canny2Value.text = canny2Value.ToString();
-        if (canny2Listeners.Count > 0) {
+        /*if (canny2Listeners.Count > 0) {
             foreach (TrackbarListener l in canny2Listeners) {
                 l.Callback(canny2Value);
             }
-        }
+        }*/
+        core.SetCannyThreshold2((int)canny2Value);
+
     }
 
     private void Threshold1Changed(float threshold1Bar) {
         threshold1Value = int.Parse(_threshold1MinValue.text) + threshold1Bar * (int.Parse(_threshold1MaxValue.text) - int.Parse(_threshold1MinValue.text));
         _threshold1Value.text = threshold1Value.ToString();
-        if (threshold1Listeners.Count > 0) {
+        /*if (threshold1Listeners.Count > 0) {
             foreach (TrackbarListener l in threshold1Listeners) {
                 l.Callback(threshold1Value);
             }
-        }
+        }*/
+        core.SetKernelThreshold1((int)threshold1Value);
+
     }
 
     private void Threshold2Changed(float threshold2Bar) {
         threshold2Value = int.Parse(_threshold2MinValue.text) + threshold2Bar * (int.Parse(_threshold2MaxValue.text) - int.Parse(_threshold2MinValue.text));
         _threshold2Value.text = threshold2Value.ToString();
-        if (threshold2Listeners.Count > 0) {
+        /*if (threshold2Listeners.Count > 0) {
             foreach (TrackbarListener l in threshold2Listeners) {
                 l.Callback(threshold2Value);
             }
-        }
+        }*/
+        core.SetKernelThreshold2((int)threshold2Value);
+
     }
 
     public void AddCanny1Listener(TrackbarListener l) {

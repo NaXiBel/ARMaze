@@ -77,6 +77,16 @@ void setCameraCV(Core* core, CameraCV* cam) {
 void setCannyThreshold(Core* core, int thresh) {
 	core->setTreshholdCanny1(thresh);
 }
+void setCannyThreshold2(Core* core, int thresh) {
+	core->setTreshholdCanny2(thresh);
+}
+void setKernelThreshold1(Core* core, int thresh) {
+	core->setTreshholdKernel1(thresh);
+}
+void setKernelThreshold2(Core* core, int thresh) {
+	core->setTreshholdKernel2(thresh);
+}
+
 
 void start(Core* core) {
 	core->Start();

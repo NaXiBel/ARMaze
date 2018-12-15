@@ -3,7 +3,7 @@
 Core::Core() {
 	m_IsBuilt = false;
 	this->m_CameraCV = new CameraCV();
-
+	m_Area = Area();
 }
 
 Core::Core(CameraCV cam) {
@@ -91,7 +91,6 @@ void Core::BuildMaze() {
 
 	Mat dst = this->m_CameraCV->getFrame().clone(); // ONLY FOR TEST 
 
-	m_Area = Area();
 
 	bool isOk = true;
 
@@ -109,7 +108,7 @@ void Core::BuildMaze() {
 	Mat canny;
 
 	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1 * 3, 3); // NEED THRESHOLD
-	Mat kernel = getStructuringElement(MORPH_RECT, Size(4, 4));
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(m_Kernel1, m_Kernel1));
 	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
 	// find area 
@@ -212,10 +211,10 @@ void Core::TrackingArea() {
 		return;
 	}
 	Mat canny;
-	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny1, m_TreshholdCanny1 * 3, 3); // NEED THRESHOLD
+	Canny(this->m_CameraCV->getFrame(), canny, m_TreshholdCanny2, m_TreshholdCanny2 * 3, 3); // NEED THRESHOLD
 
-	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
+//	Mat kernel = getStructuringElement(MORPH_RECT, Size(m_Kernel2, m_Kernel2));
+//	morphologyEx(canny, canny, MORPH_CLOSE, kernel); // erode + dilate : remove small holes (dark regions).
 
 	// initialisation 
 	int Xmin = INT_MAX;
@@ -225,17 +224,17 @@ void Core::TrackingArea() {
 
 	for(int i = 0; i < m_Area.getArea().size(); ++i) {
 		if(m_Area.getArea()[i].x < Xmin) {
-			Xmin = m_Area.getArea()[i].x - 200;
+			Xmin = m_Area.getArea()[i].x - 400;
 		}
 		else if(m_Area.getArea()[i].x > Xmax) {
-			Xmax = m_Area.getArea()[i].x + 200;
+			Xmax = m_Area.getArea()[i].x + 400;
 		}
 		if(m_Area.getArea()[i].y < Ymin) {
 
-			Ymin = m_Area.getArea()[i].y - 200;
+			Ymin = m_Area.getArea()[i].y - 400;
 		}
 		else if(m_Area.getArea()[i].y > Ymax) {
-			Ymax = m_Area.getArea()[i].y + 200;
+			Ymax = m_Area.getArea()[i].y + 400;
 		}
 	}
 	if(Ymax < 0 || Xmax < 0)
@@ -309,5 +308,14 @@ Area* Core::getArea() {
 }
 
 void Core::setTreshholdCanny1(int & newValue) {
-	m_TreshholdCanny1 = newValue;
+	m_TreshholdCanny1 = newValue * 3;
+}
+void Core::setTreshholdCanny2(int & newValue) {
+	m_TreshholdCanny2 = newValue * 3;
+}
+void Core::setTreshholdKernel1(int & newValue) {
+	m_Kernel1 = newValue / 20;
+}
+void Core::setTreshholdKernel2(int & newValue) {
+	m_Kernel2 = newValue / 20;
 }

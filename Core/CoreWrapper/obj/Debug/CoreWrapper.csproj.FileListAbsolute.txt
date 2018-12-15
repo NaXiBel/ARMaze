@@ -9,7 +9,6 @@ C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CoreWrapper\obj\Debug\CoreWrapper
 C:\Users\loicb\Documents\ARMazeRot\ARMaze\Core\CoreWrapper\obj\Debug\CoreWrapper.pdb
 D:\ARMaze\Core\CoreWrapper\bin\Debug\CoreWrapper.dll
 D:\ARMaze\Core\CoreWrapper\bin\Debug\CoreWrapper.pdb
-D:\ARMaze\Core\CoreWrapper\bin\Debug\UnityEngine.xml
 D:\ARMaze\Core\CoreWrapper\obj\Debug\CoreWrapper.csprojAssemblyReference.cache
 D:\ARMaze\Core\CoreWrapper\obj\Debug\CoreWrapper.csproj.CoreCompileInputs.cache
 D:\ARMaze\Core\CoreWrapper\obj\Debug\CoreWrapper.csproj.CopyComplete

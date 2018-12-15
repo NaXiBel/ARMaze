@@ -28,8 +28,8 @@ public class CameraRenderer : MonoBehaviour {
     // Use this for initialization
     void Start() {
         core = CoreWrapper.GetInstance();
-        core.InitCore();
-        core.OpenVideoStream(0);
+        /*core.InitCore();
+        core.OpenVideoStream(0);*/
         this.frame = core.GetCameraFrame();
         this.texture = new Texture2D(core.GetFrameWidth(), core.GetFrameHeight(), TextureFormat.BGRA32, false);
         this.transform.localScale = new Vector3(core.GetFrameWidth(), core.GetFrameHeight(), 1);
@@ -105,7 +105,7 @@ public class CameraRenderer : MonoBehaviour {
                 double[] rot = core.GetInitRot();
 
                 rotLab = new Vector3(-(float)(rot[0]) + rotOffsetX,
-                    (float)(rot[2]) + rotOffsetY,
+                    -(float)(rot[2]) + rotOffsetY,
                     -(float)(rot[1]) + rotOffsetZ);
 
             }
@@ -115,16 +115,18 @@ public class CameraRenderer : MonoBehaviour {
             core.UpdateTranform();
             
             double[] rot = core.GetDeltaRot();
-            rotLab += new Vector3(-(float)rot[0], (float)(rot[2]), -(float)(rot[1]));
+            rotLab += new Vector3(-(float)rot[0], -(float)(rot[2]), -(float)(rot[1]));
 
             // correction
             float rotZ = rotLab[2];
             if(rotZ > 0)
-                rotZ -= 24;
+                rotZ -= 35.50f;
             else
-                rotZ += 24;
-            
-            maze.transform.rotation = Quaternion.Euler(rotLab[0], rotLab[1], rotZ);
+                rotZ += 35.5f;
+
+            Quaternion previousRotation = maze.transform.rotation;
+            Quaternion nextRotation = Quaternion.Euler(rotLab[0], rotLab[1], rotZ);
+            maze.transform.rotation = Quaternion.Lerp(previousRotation, nextRotation, Time.deltaTime * 15.0f);
 
         }
     }

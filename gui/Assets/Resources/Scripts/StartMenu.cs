@@ -40,6 +40,7 @@ public class StartMenu : MonoBehaviour {
     public void OpenOptions() {
         _mainPanel.SetActive(false);
         _optionsPanel.SetActive(true);
+
     }
 
     public void CloseOptions() {

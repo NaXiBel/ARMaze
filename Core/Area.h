@@ -26,7 +26,7 @@ private:
 	std::vector <Point>				 m_End;
 	Point							 m_StartCenter;
 	Point							 m_EndCenter;
-	int								 m_MaxTracking = 3000;
+	int								 m_MaxTracking = 1500;
 	struct myclass {
 		bool operator() (std::vector <Point> p1, std::vector <Point> p2) { return (p1.size() < p2.size()); }
 	} compareConvexe;
@@ -55,7 +55,7 @@ public:
 	bool buildStartEnd(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax);
 	bool buildWalls(const Mat & mask);
 	bool tracking(const Mat & mask, const int & Xmin, const int & Xmax, const int & Ymin, const int & Ymax, const int distX, const int distY);
-
+	void setMaxTracking(int newValue);
 };
 
 #endif //AREA_H

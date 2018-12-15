@@ -303,7 +303,7 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 	int max = -1;
 	for (int i = 0; i < contours.size(); i++)
 	{
-		if (fabs(contourArea(Mat(contours[i]))) <= m_MaxTracking - 400 && fabs(contourArea(Mat(contours[i]))) > m_MaxTracking + 400) {
+		if (fabs(contourArea(Mat(contours[i]))) <= m_MaxTracking) {
 			continue;
 		}
 
@@ -323,17 +323,17 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 
 			for (int i = 0; i < approx.size(); ++i) {
 				if (approx[i].x < Xmin2) {
-					Xmin2 = approx[i].x - 200;
+					Xmin2 = approx[i].x - 400;
 				}
 				else if (approx[i].x > Xmax2) {
-					Xmax2 = approx[i].x + 200;
+					Xmax2 = approx[i].x + 400;
 				}
 				if (approx[i].y < Ymin2) {
 
-					Ymin2 = approx[i].y - 200;
+					Ymin2 = approx[i].y - 400;
 				}
 				else if (approx[i].y > Ymax2) {
-					Ymax2 = approx[i].y + 200;
+					Ymax2 = approx[i].y + 400;
 				}
 			}
 			if (Ymax2 < 0 || Xmax2 < 0)
@@ -353,13 +353,13 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 					isOk = false;
 				}
 
-				if (distX2 < 550 || distY2 < 550) {
+				if (sizeX > 250 || sizeY > 250) {
 					isOk = false;
 				}
 				//cout << distX2 << " " << distY2 << endl; 
 				if (fabs(contourArea(Mat(approx))) >= max) {
 					max = fabs(contourArea(Mat(approx)));
-					m_MaxTracking = max;
+					//m_MaxTracking = max;
 				}
 				else {
 					isOk = false;
@@ -370,7 +370,7 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 					if (angle > max) {
 						max = angle;
 					}
-					if (max > 0.2 ) {
+					if (max > 0.75 ) {
 						isOk = false;
 						break;
 					}
@@ -381,33 +381,11 @@ bool Area::tracking(const Mat & mask, const int & Xmin, const int & Xmax, const 
 			}
 		}
 	}
-
-	// find all edge
-/*	std::vector<std::vector<Point> > contours;
-	findContours(mask.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-	std::vector<Point> approx;
-	sort(contours.begin(), contours.end(), compareConvexe); // sort connection
-
-	double max = 0;
-	for (int index = 0; index < contours.size(); ++index) {
-		if (fabs(contourArea(Mat(contours[index]))) <= 2500) {
-			continue;
-		}
-		approxPolyDP(Mat(contours[index]), approx, arcLength(cv::Mat(contours[index]), true) * 0.1, true);
-
-		if (approx.size() == 4) {
-			if (fabs(contourArea(Mat(approx))) > max) {
-				max = fabs(contourArea(Mat(approx)));
-				m_Area = approx;
-			}
-		}
-	}
-
-	if (max == 0)
-		return false;*/
 	return true;
 
 }
 
-
+void Area::setMaxTracking(int newValue) {
+	m_MaxTracking = newValue * 50;
+}
 

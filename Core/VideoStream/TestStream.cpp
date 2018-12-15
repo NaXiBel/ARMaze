@@ -10,30 +10,22 @@
 
 using namespace cv;
 
-int test(void) {
+int main(void) {
 	String window_name = "Test class";
-	Core* core = createCore();
-	CameraCV* cameraCv = getCameraCV(core);
 
-	while(!check_build(core)) {
-		build(core);
-		Mat frame = core->get_camera()->getFrame();
-		imshow("ROT", frame);
-		waitKey(10);
-	}
 
-	TransformTracking* transformTracking = create_transform_tracking();
-	init_transform_default(transformTracking, core->getArea());
+	namedWindow(window_name, WINDOW_AUTOSIZE);
 
-	cout << "init rot : " << transformTracking->get_init_rot() << endl;
+	//int c = waitKey(10);
+	Core *  core = new Core();
+	core->get_camera()->openStream();
+	while (true) {
+		//cam->readFrame();
+		//Mat fraaame = cam->getFrame();
 
-	while (check_tracking(core)) {
-		tracking(core);
-		update_transform(transformTracking, core->getArea());
-		cout << "delta rot : " << transformTracking->get_delta_rot() << endl;
-		Mat frame = core->get_camera()->getFrame();
-		imshow("ROT", frame);
-		waitKey(10);
+		core->Start();
+		//imshow(window_name, fraaame);
+		//c = waitKey(10);
 	}
 
 	return 0;
