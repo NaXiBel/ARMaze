@@ -13,6 +13,7 @@ void disposeCamera(CameraCV * cam) {
 		std::cout << "Camera deleted." << std::endl;
 	}
 }
+
 MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
 	MazeTransform maze(*K, *D);
 	vector<Point> corners = area->getArea();
@@ -27,9 +28,8 @@ MazeTransform getTransform(Area* area, Mat* K, Mat* D) {
 	return maze;
 }
 
-void openStream(CameraCV * cam, int id /* = 0 */) {
-	cam->openStream(id);
-	std::cout << "Camera stream opened." << std::endl;
+bool openStream(CameraCV * cam, int id /* = 0 */) {
+	return cam->openStream(id);
 }
 
 void displayStream(CameraCV * cam) {
@@ -304,6 +304,14 @@ Mat* get_init_rot(TransformTracking* transformTracking) {
 
 Mat* get_delta_rot(TransformTracking* transformTracking) {
 	return new Mat(transformTracking->get_delta_rot());
+}
+
+Mat* get_init_trans(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_init_trans());
+}
+
+Mat* get_delta_trans(TransformTracking* transformTracking) {
+	return new Mat(transformTracking->get_delta_trans());
 }
 
 double at(int i, int j, Mat* mat) {

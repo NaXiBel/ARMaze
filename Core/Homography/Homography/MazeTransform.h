@@ -14,9 +14,9 @@ using namespace cv;
 static double dimX = 1.41428571429;
 static double dimY = 1.00000000000;
 static double FX = 640.;
-static double FY = 480.;
+static double FY = 640.;
 static double X0 = 320.;
-static double Y0 = 240.;
+static double Y0 = 220.;
 
 class MazeTransform
 {

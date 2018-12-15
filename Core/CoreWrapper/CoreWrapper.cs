@@ -10,7 +10,7 @@ namespace Wrapper {
 
             [DllImport(dllpath, EntryPoint = "createCamera")] static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")] static public extern void DisposeCameraInput(IntPtr pCam);
-            [DllImport(dllpath, EntryPoint = "openStream")] static public extern void OpenStream(IntPtr pCam, int id = 0);
+            [DllImport(dllpath, EntryPoint = "openStream")] static public extern bool OpenStream(IntPtr pCam, int id = 0);
             [DllImport(dllpath, EntryPoint = "displayStream")] static public extern void DisplayStream(IntPtr pCam);
             [DllImport(dllpath, EntryPoint = "getLiveFrame")] static public extern IntPtr GetLiveFrame(IntPtr pCam, out int sizeofMat);
             [DllImport(dllpath, EntryPoint = "getWidth")] static public extern int GetWidth(IntPtr pCam);
@@ -175,8 +175,8 @@ namespace Wrapper {
         public void DisposeCamera() {
             embededFunctions.DisposeCameraInput(this.camera);
         }
-        public void OpenVideoStream(int id = 0) {
-            embededFunctions.OpenStream(this.camera, id);
+        public bool OpenVideoStream(int id = 0) {
+            return  embededFunctions.OpenStream(this.camera, id);
         }
         public void DisplayCameraStream() {
             embededFunctions.DisplayStream(this.camera);

@@ -106,12 +106,12 @@ void MazeTransform::compute_transform(vector<Point2d> corners) {
 	solvePnP(a4points, corners, K, vectNull, rot, trans);
 	
 	// transform it into euler angles
-	Rodrigues(rot, rot);
 	Mat cameraMatrix, rotMatrix, transVect, rotMatrixX, rotMatrixY, rotMatrixZ;
-	double* _r = rot.ptr<double>();
-	double projMatrix[12] = { _r[0],_r[1],_r[2],0,
-		_r[3],_r[4],_r[5],0,
-		_r[6],_r[7],_r[8],0 };
+	Rodrigues(rot, rotMatrix);
+	double* _r = rotMatrix.ptr<double>();
+	double projMatrix[12] = { _r[0],_r[1],_r[2], trans.at<double>(0,0),
+		_r[3],_r[4],_r[5],trans.at<double>(1,0),
+		_r[6],_r[7],_r[8],trans.at<double>(2,0) };
 
 	decomposeProjectionMatrix(Mat(3, 4, CV_64FC1, projMatrix),
 		cameraMatrix,

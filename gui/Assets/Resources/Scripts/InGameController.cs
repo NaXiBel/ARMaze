@@ -3,8 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class InGameController : MonoBehaviour {
+
+    enum State
+    {
+        INIT, // searching the maze
+        RUNNING, // maze found, timer starts
+        PAUSED, // game paused
+        FINISHED // game finished
+    }
+
     public string _levelToLoad = "ARMaze";
     private GameObject _gameOverPanel;
     private GameObject _winPanel;
@@ -15,7 +25,7 @@ public class InGameController : MonoBehaviour {
     private Text _pauseScore;
     private float _startTime;
     private float _time;
-    private bool _isPaused;
+    private State _state;
 
     // Use this for initialization
     void Start () {
@@ -33,13 +43,13 @@ public class InGameController : MonoBehaviour {
         _inGamePanel.SetActive(true);
         this._startTime = 0f;
         this._time = 0f;
-        this._isPaused = false;
-
+        this._state = State.INIT;
+        _inGameScore.text = "Initializing the maze";
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (!this._isPaused) {
+        if (_state == State.RUNNING) {
             this._time += (float)Math.Round((double)Time.deltaTime,2);
             //this._time = (float)(Math.Truncate((double)Time.timeSinceLevelLoad * 100.0) / 100.0);
             //this._time = (float)Math.Round(this._time, 2);
@@ -47,16 +57,54 @@ public class InGameController : MonoBehaviour {
         }
     }
 
-    public void OpenPause() {
-        this._isPaused = true;
+    public void StartTimer()
+    {
+        _state = State.RUNNING;
+    }
+
+    public void Win()
+    {
+        _state = State.FINISHED;
+        _winPanel.SetActive(true);
+        _inGamePanel.SetActive(false);
+    }
+
+    public void Loose()
+    {
+        _state = State.FINISHED;
+        _gameOverPanel.SetActive(true);
+        _inGamePanel.SetActive(false);
+    }
+
+    public void Pause() {
+        
+        if(_state != State.INIT)
+            this._state = State.PAUSED;
         _inGamePanel.SetActive(false);
         _pausePanel.SetActive(true);
         this._pauseScore.text = this._time.ToString();
     }
 
-    public void ClosePause() {
+    public void Resume() {
         _inGamePanel.SetActive(true);
         _pausePanel.SetActive(false);
-        this._isPaused = false;
+        if(_state != State.INIT)
+            this._state = State.RUNNING;
     }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene("ARMaze");
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("InGame");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+    
 }

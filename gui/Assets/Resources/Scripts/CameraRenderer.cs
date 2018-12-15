@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEditor;
 using Wrapper;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 
 public class CameraRenderer : MonoBehaviour {
+
+    private bool cameraOk;
     private byte[] frame;
     private CoreWrapper core;
     private Texture2D texture = null;
@@ -24,12 +27,24 @@ public class CameraRenderer : MonoBehaviour {
     private Vector3 rotLab;
 
     private double accTime;
+    private bool showPopUp = false;
+    public InGameController inGameController;
+
+    private bool paused = false;
 
     // Use this for initialization
     void Start() {
+
         core = CoreWrapper.GetInstance();
         core.InitCore();
-        core.OpenVideoStream(0);
+        cameraOk = core.OpenVideoStream(0);
+
+        if(!cameraOk)
+        {
+            showPopUp = true;
+            return;
+        }
+
         this.frame = core.GetCameraFrame();
         this.texture = new Texture2D(core.GetFrameWidth(), core.GetFrameHeight(), TextureFormat.BGRA32, false);
         this.transform.localScale = new Vector3(core.GetFrameWidth(), core.GetFrameHeight(), 1);
@@ -40,10 +55,39 @@ public class CameraRenderer : MonoBehaviour {
         m_FinishedBuild = false;
         
     }
-	
-	// Update is called once per frame
-	void Update() {
-        
+
+    private void OnGUI()
+    {
+        if(showPopUp)
+            GUI.Window(0, new Rect((Screen.width / 2) - 150, (Screen.height / 2) - 75
+            , 300, 250), ShowGUI, "Error");
+    }
+
+    void ShowGUI(int windowID)
+    {
+        // You may put a label to show a message to the player
+
+        GUI.Label(new Rect(65, 40, 200, 30), "Cannot open the camera stream");
+
+        // You may put a button to close the pop up too
+
+        if(GUI.Button(new Rect(50, 150, 75, 30), "OK"))
+        {
+            showPopUp = false;
+            // you may put other code to run according to your game too
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+        if(paused)
+            return;
+
+        if(!cameraOk)
+            return;
+
         this.frame = core.GetCameraFrame();
         this.texture.LoadRawTextureData(this.frame);
         this.texture.Apply();
@@ -93,8 +137,7 @@ public class CameraRenderer : MonoBehaviour {
                 float y_unity = -Const.LARGEUR_MAZE / 2 + Const.LARGEUR_MAZE * (float)start[1];
 
                 GameObject objetBall = Instantiate(prefabBall, new Vector3(x_unity, 5f, y_unity), Quaternion.Euler(90.0f, 0.0f, 0.0f));
-
-
+                
                 GameObject o = ((GameObject)Resources.Load("Prefabs/" + Const.MAZE_PREFAB_NAME, typeof(GameObject)));
                 maze = Instantiate(o, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 0.0f));
 
@@ -104,8 +147,10 @@ public class CameraRenderer : MonoBehaviour {
                 double[] rot = core.GetInitRot();
 
                 rotLab = new Vector3(-(float)(rot[0]) + rotOffsetX,
-                    (float)(rot[2]) + rotOffsetY,
+                    -(float)(rot[2]) + rotOffsetY,
                     -(float)(rot[1]) + rotOffsetZ);
+
+                inGameController.StartTimer();
 
             }
         } else {
@@ -114,18 +159,21 @@ public class CameraRenderer : MonoBehaviour {
             core.UpdateTranform();
             
             double[] rot = core.GetDeltaRot();
-            rotLab += new Vector3(-(float)rot[0], (float)(rot[2]), -(float)(rot[1]));
-
-            // correction
-            float rotZ = rotLab[2];
-            if(rotZ > 0)
-                rotZ -= 24;
-            else
-                rotZ += 24;
+            rotLab += new Vector3(-(float)rot[0], -(float)(rot[2]), -(float)(rot[1]));
             
-            maze.transform.rotation = Quaternion.Euler(rotLab[0], rotLab[1], rotZ);
+            maze.transform.rotation = Quaternion.Euler(rotLab);
 
         }
+    }
+
+    public void Pause()
+    {
+        paused = true;
+    }
+
+    public void UnPause()
+    {
+        paused = false;
     }
 
 }
