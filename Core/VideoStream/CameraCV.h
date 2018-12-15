@@ -4,13 +4,11 @@
 #define CAMERA_H
 
 #include "../Area.h"
-#include "../Homography\Homography\TransformTracking.h"
+#include "../Homography/Homography/TransformTracking.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/utility.hpp>
 #include <opencv2/core/ocl.hpp>
-#include <opencv2/tracking/tracking.hpp>
-#include <opencv2/tracking/tracker.hpp>
 #include <opencv2/imgproc.hpp>
 #include <numeric>
 #include <iostream>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -6,7 +7,7 @@ namespace Wrapper {
 
     public class CoreWrapper {
         public struct embededFunctions {
-            const string dllpath = @".\VideoStream.dll";
+            const string dllpath = @"./VideoStream.dylib";
 
             [DllImport(dllpath, EntryPoint = "createCamera")] static public extern IntPtr CreateCameraInput();
             [DllImport(dllpath, EntryPoint = "disposeCamera")] static public extern void DisposeCameraInput(IntPtr pCam);
@@ -321,6 +322,7 @@ namespace Wrapper {
             //Console.ReadKey();
 
             CoreWrapper wrap = CoreWrapper.GetInstance();
+            Console.WriteLine(Directory.GetCurrentDirectory());
             wrap.InitCore();
             wrap.OpenVideoStream(0);
             //wrap.Start();
