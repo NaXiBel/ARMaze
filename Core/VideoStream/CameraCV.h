@@ -26,7 +26,7 @@ class CameraCV {
 	public :
 		CameraCV();
 		~CameraCV();
-		void openStream(int inputId = 0);
+		bool openStream(int inputId = 0);
 		cv::VideoCapture getVid();
 		bool readFrame();
 		cv::Mat getFrame();

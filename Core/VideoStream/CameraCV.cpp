@@ -11,12 +11,13 @@ cv::VideoCapture CameraCV::getVid() {
 	return this->capture;
 }
 
-void CameraCV::openStream(int inputId /* = 0 */) {
+bool CameraCV::openStream(int inputId /* = 0 */) {
 	this->capture.open(inputId);
 	if(!this->capture.isOpened()) {
 		printf("--(!)Error opening video capture\n");
-		return;
+		return false;
 	}
+	return true;
 }
 
 bool CameraCV::readFrame() {
