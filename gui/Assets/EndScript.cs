@@ -6,9 +6,11 @@ public class EndScript : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name.Equals("Ball"))
+        if(other.gameObject.tag.Equals("Ball"))
         {
             GameObject.Find("InGame").GetComponent<InGameController>().Win();
+            GameObject.Find("VideoStream").GetComponent<CameraRenderer>().Pause();
+            //GameObject.FindGameObjectWithTag("Maze").SetActive(false);
         }
     }
 
