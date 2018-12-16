@@ -190,7 +190,7 @@ void Core::BuildMaze() {
 			}
 		}
 		//cv::imshow("mask", mask);
-		cv::imshow("dst", dst);
+		//cv::imshow("dst", dst);
 
 	}
 
@@ -268,8 +268,8 @@ void Core::TrackingArea() {
 	line(dst, m_Area.getArea()[0], m_Area.getArea()[3], Scalar(133, 255, 50), 2);
 	m_Area.setSizeX(abs(Xmax - Xmin));
 	m_Area.setSizeY(abs(Ymax - Ymin));
-	imshow("Tracker", dst);
-	imshow("MaskTracker", mask);
+	//imshow("Tracker", dst);
+	//imshow("MaskTracker", mask);
 	int c = waitKey(10);
 	if ((char)c == 'q') {
 		return;
